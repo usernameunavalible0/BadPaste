@@ -516,6 +516,13 @@
     <ClInclude Include="Hooks\TFPlayer\TFPlayer.h" />
     <ClInclude Include="Hooks\BaseEntity\BaseEntity.h" />
     <ClInclude Include="Hooks\BasePlayer\BasePlayer.h" />
+    <ClInclude Include="SDK\hl2_src\game\shared\tf\tf_weaponbase_gun.h" />
+    <ClInclude Include="SDK\hl2_src\game\shared\tf\tf_weaponbase_melee.h" />
+    <ClInclude Include="SDK\hl2_src\game\shared\tf\tf_weapon_knife.h" />
+    <ClInclude Include="SDK\hl2_src\game\shared\tf\tf_weapon_pipebomblauncher.h" />
+    <ClInclude Include="SDK\hl2_src\game\shared\tf\tf_weapon_compound_bow.h" />
+    <ClInclude Include="SDK\hl2_src\game\shared\tf\tf_weapon_medigun.h" />
+    <ClInclude Include="SDK\hl2_src\game\shared\tf\tf_weapon_sniperrifle.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="SDK\hl2_src\game\server\base.txt" />

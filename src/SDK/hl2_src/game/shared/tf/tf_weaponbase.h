@@ -138,7 +138,7 @@ public:
 	virtual bool				CalcIsAttackCriticalHelper() = 0;
 	virtual bool				CalcIsAttackCriticalHelperNoCrits() = 0;
 	virtual ETFDmgCustom		GetPenetrateType() const = 0;
-	virtual void				GetProjectileFireSetup(CTFPlayer* pPlayer, Vector vecOffset, Vector* vecSrc, QAngle* angForward, bool bHitTeammates = true, float flEndDist = 2000.f) = 0;
+	virtual void				GetProjectileFireSetup(C_TFPlayer* pPlayer, Vector vecOffset, Vector* vecSrc, QAngle* angForward, bool bHitTeammates = true, float flEndDist = 2000.f) = 0;
 	virtual QAngle				GetSpreadAngles(void) = 0;
 	virtual bool				IsFiring(void) const = 0;
 	virtual bool				AreRandomCritsEnabled(void) = 0;

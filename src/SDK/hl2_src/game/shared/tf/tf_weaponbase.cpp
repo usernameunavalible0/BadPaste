@@ -1,7 +1,7 @@
 #pragma once
 
-#include "tf_weaponbase.h"
 #include "../../client/tf/c_tf_player.h"
+#include "tf_weaponbase.h"
 
 bool C_TFWeaponBase::CanFireCiriticalShotHelper(const bool bHeadShot)
 {

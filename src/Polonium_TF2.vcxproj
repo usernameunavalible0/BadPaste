@@ -338,6 +338,13 @@
     <ClInclude Include="SDK\hl2_src\game\client\view_scene.h" />
     <ClInclude Include="SDK\hl2_src\game\shared\ai_activity.h" />
     <ClInclude Include="SDK\hl2_src\game\shared\econ\econ_item_inventory.h" />
+    <ClInclude Include="SDK\hl2_src\game\shared\tf\tf_weaponbase_gun.h" />
+    <ClInclude Include="SDK\hl2_src\game\shared\tf\tf_weaponbase_melee.h" />
+    <ClInclude Include="SDK\hl2_src\game\shared\tf\tf_weapon_compound_bow.h" />
+    <ClInclude Include="SDK\hl2_src\game\shared\tf\tf_weapon_knife.h" />
+    <ClInclude Include="SDK\hl2_src\game\shared\tf\tf_weapon_medigun.h" />
+    <ClInclude Include="SDK\hl2_src\game\shared\tf\tf_weapon_pipebomblauncher.h" />
+    <ClInclude Include="SDK\hl2_src\game\shared\tf\tf_weapon_sniperrifle.h" />
     <ClInclude Include="SDK\hl2_src\public\gcsdk\gcclient_sharedobjectcache.h" />
     <ClInclude Include="SDK\hl2_src\public\gcsdk\sharedobject.h" />
     <ClInclude Include="SDK\hl2_src\public\gcsdk\sharedobjectcache.h" />

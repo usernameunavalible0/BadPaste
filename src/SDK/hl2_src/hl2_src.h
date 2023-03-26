@@ -48,7 +48,11 @@
 #include "game/shared/movetype_push.h"
 #include "game/shared/npcevent.h"
 #include "game/shared/triggers_shared.h"
-#include "game/shared/tf/tf_weaponbase.h"
+#include "game/shared/tf/tf_weaponbase_gun.h"
+#include "game/shared/tf/tf_weapon_compound_bow.h"
+#include "game/shared/tf/tf_weapon_knife.h"
+#include "game/shared/tf/tf_weapon_medigun.h"
+#include "game/shared/tf/tf_weapon_sniperrifle.h"
 
 #include "public/tier1/checksum_md5.h"
 #include "public/tier1/KeyValues.h"
