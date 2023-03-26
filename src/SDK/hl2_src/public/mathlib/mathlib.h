@@ -12,6 +12,7 @@
 #include "../tier0/commonmacros.h"
 #include "vector.h"
 #include "vector2d.h"
+#include "../../../Globals/Globals.h"
 
 #include "math_pfns.h"
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../Globals/Globals.h"
 #include "../../Util/Util.h"
 
 class RecvTable;

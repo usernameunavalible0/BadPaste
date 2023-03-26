@@ -128,6 +128,7 @@
     <ClCompile Include="Hooks\TFPlayer\TFPlayer.cpp" />
     <ClCompile Include="Hooks\BaseEntity\BaseEntity.cpp" />
     <ClCompile Include="Hooks\BasePlayer\BasePlayer.cpp" />
+    <ClCompile Include="SDK\EntityCache\EntityCache.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entry\Entry.h" />
@@ -523,6 +524,7 @@
     <ClInclude Include="SDK\hl2_src\game\shared\tf\tf_weapon_compound_bow.h" />
     <ClInclude Include="SDK\hl2_src\game\shared\tf\tf_weapon_medigun.h" />
     <ClInclude Include="SDK\hl2_src\game\shared\tf\tf_weapon_sniperrifle.h" />
+    <ClInclude Include="SDK\EntityCache\EntityCache.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="SDK\hl2_src\game\server\base.txt" />

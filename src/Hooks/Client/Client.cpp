@@ -27,6 +27,8 @@ void __fastcall BaseClient::LevelShutdown::Detour(void* ecx, void* edx)
 	g_Globals.m_nMaxEntities = -1;
 
 	Table.Original<FN>(Index)(ecx, edx);
+
+	G::EntityCache.Clear();
 }
 
 void __fastcall BaseClient::CreateMove::Detour(void* ecx, void* edx, int sequence_number, float input_sample_frametime, bool active)
@@ -38,6 +40,11 @@ void __fastcall BaseClient::FrameStageNotify::Detour(void* ecx, void* edx, Clien
 {
 	Table.Original<FN>(Index)(ecx, edx, curStage);
 
+	if (curStage == ClientFrameStage_t::FRAME_NET_UPDATE_START)
+	{
+		G::EntityCache.Clear();
+	}
+
 	if (curStage == ClientFrameStage_t::FRAME_NET_UPDATE_END)
 	{
 		g_Globals.m_bIsInGame = I::EngineClient->IsInGame();
@@ -47,6 +54,7 @@ void __fastcall BaseClient::FrameStageNotify::Detour(void* ecx, void* edx, Clien
 		{
 			g_Globals.m_nMaxClients = I::EngineClient->GetMaxClients();
 			g_Globals.m_nMaxEntities = I::ClientEntityList->GetMaxEntities();
+			G::EntityCache.Fill();
 		}
 	}
 }
