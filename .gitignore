@@ -1,0 +1,8 @@
+bin
+obj
+.vs
+*.db
+*.ipch
+*.db-wal
+*.db-shm
+*.opendb
