@@ -165,6 +165,7 @@
     <ClCompile Include="DllMain.cpp" />
     <ClCompile Include="Entry\Entry.cpp" />
     <ClCompile Include="Features\ESP\ESP.cpp" />
+    <ClCompile Include="Features\Menu\InputHelper\InputHelper.cpp" />
     <ClCompile Include="Features\Misc\Misc.cpp" />
     <ClCompile Include="Features\Prediction\Prediction.cpp" />
     <ClCompile Include="Features\Vars.cpp" />
@@ -294,6 +295,7 @@
   <ItemGroup>
     <ClInclude Include="Entry\Entry.h" />
     <ClInclude Include="Features\ESP\ESP.h" />
+    <ClInclude Include="Features\Menu\InputHelper\InputHelper.h" />
     <ClInclude Include="Features\Misc\Misc.h" />
     <ClInclude Include="Features\Prediction\Prediction.h" />
     <ClInclude Include="Features\Vars.h" />

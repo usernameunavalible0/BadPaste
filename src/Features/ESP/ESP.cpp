@@ -4,7 +4,7 @@
 
 void CFeatures_ESP::Render(C_TFPlayer* pLocal)
 {
-	if (!Vars::ESP::Enabled)
+	if (!Vars::ESP::Enabled.m_Var)
 		return;
 
 	int x, y, w, h;
@@ -27,12 +27,12 @@ void CFeatures_ESP::Render(C_TFPlayer* pLocal)
 		{
 			case ETFClientClass::CTFPlayer:
 			{
-				if (!Vars::ESP::Players::Enabled)
+				if (!Vars::ESP::Players::Enabled.m_Var)
 					break;
 
 				C_TFPlayer* pPlayer = pEntity->As<C_TFPlayer*>();
 
-				if (pPlayer->deadflag() || (Vars::ESP::Players::IgnoreTeam && pPlayer->InLocalTeam()))
+				if (pPlayer->deadflag() || (Vars::ESP::Players::IgnoreTeam.m_Var && pPlayer->InLocalTeam()))
 					break;
 
 				if (!GetDynamicBounds(pPlayer, x, y, w, h))
@@ -48,7 +48,7 @@ void CFeatures_ESP::Render(C_TFPlayer* pLocal)
 				int nDrawY = y + (h / 2);
 
 				player_info_t pi;
-				if (Vars::ESP::Players::Name && I::EngineClient->GetPlayerInfo(n, &pi))
+				if (Vars::ESP::Players::Name.m_Var && I::EngineClient->GetPlayerInfo(n, &pi))
 				{
 					uchar16 szName[MAX_PLAYER_NAME_LENGTH];
 					Q_UTF8ToUTF16(UTIL_SafeName(pi.name), szName, MAX_PLAYER_NAME_LENGTH);
@@ -57,13 +57,13 @@ void CFeatures_ESP::Render(C_TFPlayer* pLocal)
 					nDrawY += G::Draw.GetFontHeight(EFonts::ESP_NAME);
 				}
 
-				if (Vars::ESP::Players::HealthText)
+				if (Vars::ESP::Players::HealthText.m_Var)
 				{
 					G::Draw.String(EFonts::ESP, nDrawX, nDrawY, clrHealth, TXT_CENTERXY, L"%i / %ihp", nHealth, nMaxHealth);
 					nDrawY += G::Draw.GetFontHeight(EFonts::ESP);
 				}
 
-				if (Vars::ESP::Players::ActiveWeapon)
+				if (Vars::ESP::Players::ActiveWeapon.m_Var)
 				{
 					C_BaseCombatWeapon* pWeapon = pPlayer->GetActiveWeapon();
 
@@ -78,12 +78,12 @@ void CFeatures_ESP::Render(C_TFPlayer* pLocal)
 			}
 			case ETFClientClass::CObjectSentrygun:
 			{
-				if (!Vars::ESP::Buildings::Enabled)
+				if (!Vars::ESP::Buildings::Enabled.m_Var)
 					break;
 
 				C_ObjectSentrygun* pSentry = pEntity->As<C_ObjectSentrygun*>();
 
-				if (Vars::ESP::Buildings::IgnoreTeam && pSentry->InLocalTeam())
+				if (Vars::ESP::Buildings::IgnoreTeam.m_Var && pSentry->InLocalTeam())
 					break;
 				
 				if (!GetDynamicBounds(pSentry, x, y, w, h))
@@ -98,19 +98,19 @@ void CFeatures_ESP::Render(C_TFPlayer* pLocal)
 				const int nDrawX = x + (w / 2);
 				int nDrawY = y + (h / 2);
 
-				if (Vars::ESP::Buildings::Name)
+				if (Vars::ESP::Buildings::Name.m_Var)
 				{
 					G::Draw.String(EFonts::ESP_NAME, nDrawX, nDrawY, clrTeam, TXT_CENTERXY, L"sentrygun");
 					nDrawY += G::Draw.GetFontHeight(EFonts::ESP_NAME);
 				}
 
-				if (Vars::ESP::Buildings::HealthText)
+				if (Vars::ESP::Buildings::HealthText.m_Var)
 				{
 					G::Draw.String(EFonts::ESP, nDrawX, nDrawY, clrHealth, TXT_CENTERXY, L"%i / %ihp", nHealth, nMaxHealth);
 					nDrawY += G::Draw.GetFontHeight(EFonts::ESP);
 				}
 
-				if (Vars::ESP::Buildings::Info)
+				if (Vars::ESP::Buildings::Info.m_Var)
 				{
 					int nShells, nMaxShells, nRockets, nMaxRockets;
 					pSentry->GetAmmoCount(nShells, nMaxShells, nRockets, nMaxRockets);
@@ -129,12 +129,12 @@ void CFeatures_ESP::Render(C_TFPlayer* pLocal)
 			}
 			case ETFClientClass::CObjectDispenser:
 			{
-				if (!Vars::ESP::Buildings::Enabled)
+				if (!Vars::ESP::Buildings::Enabled.m_Var)
 					break;
 
 				C_ObjectDispenser* pDispenser = pEntity->As<C_ObjectDispenser*>();
 
-				if (Vars::ESP::Buildings::IgnoreTeam && pDispenser->InLocalTeam())
+				if (Vars::ESP::Buildings::IgnoreTeam.m_Var && pDispenser->InLocalTeam())
 					break;
 
 				if (!GetDynamicBounds(pDispenser, x, y, w, h))
@@ -149,19 +149,19 @@ void CFeatures_ESP::Render(C_TFPlayer* pLocal)
 				const int nDrawX = x + (w / 2);
 				int nDrawY = y + (h / 2);
 
-				if (Vars::ESP::Buildings::Name)
+				if (Vars::ESP::Buildings::Name.m_Var)
 				{
 					G::Draw.String(EFonts::ESP_NAME, nDrawX, nDrawY, clrTeam, TXT_CENTERXY, L"dispenser");
 					nDrawY += G::Draw.GetFontHeight(EFonts::ESP_NAME);
 				}
 
-				if (Vars::ESP::Buildings::HealthText)
+				if (Vars::ESP::Buildings::HealthText.m_Var)
 				{
 					G::Draw.String(EFonts::ESP, nDrawX, nDrawY, clrHealth, TXT_CENTERXY, L"%i / %ihp", nHealth, nMaxHealth);
 					nDrawY += G::Draw.GetFontHeight(EFonts::ESP);
 				}
 
-				if (Vars::ESP::Buildings::Info)
+				if (Vars::ESP::Buildings::Info.m_Var)
 				{
 					G::Draw.String(EFonts::ESP_WEAPON, nDrawX, nDrawY, COLOR_GREY, TXT_CENTERXY, L"metal: %i / %i", pDispenser->m_iAmmoMetal(), pDispenser->GetMaxMetal());
 					nDrawY += G::Draw.GetFontHeight(EFonts::ESP_WEAPON);
@@ -171,12 +171,12 @@ void CFeatures_ESP::Render(C_TFPlayer* pLocal)
 			}
 			case ETFClientClass::CObjectTeleporter:
 			{
-				if (!Vars::ESP::Buildings::Enabled)
+				if (!Vars::ESP::Buildings::Enabled.m_Var)
 					break;
 
 				C_ObjectTeleporter* pTeleport = pEntity->As<C_ObjectTeleporter*>();
 
-				if (Vars::ESP::Buildings::IgnoreTeam && pTeleport->InLocalTeam())
+				if (Vars::ESP::Buildings::IgnoreTeam.m_Var && pTeleport->InLocalTeam())
 					break;
 
 				if (!GetDynamicBounds(pTeleport, x, y, w, h))
@@ -191,19 +191,19 @@ void CFeatures_ESP::Render(C_TFPlayer* pLocal)
 				const int nDrawX = x + (w / 2);
 				int nDrawY = y + (h / 2);
 
-				if (Vars::ESP::Buildings::Name)
+				if (Vars::ESP::Buildings::Name.m_Var)
 				{
 					G::Draw.String(EFonts::ESP_NAME, nDrawX, nDrawY, clrTeam, TXT_CENTERXY, L"teleport");
 					nDrawY += G::Draw.GetFontHeight(EFonts::ESP_NAME);
 				}
 
-				if (Vars::ESP::Buildings::HealthText)
+				if (Vars::ESP::Buildings::HealthText.m_Var)
 				{
 					G::Draw.String(EFonts::ESP, nDrawX, nDrawY, clrHealth, TXT_CENTERXY, L"%i / %ihp", nHealth, nMaxHealth);
 					nDrawY += G::Draw.GetFontHeight(EFonts::ESP);
 				}
 
-				if (Vars::ESP::Buildings::Info)
+				if (Vars::ESP::Buildings::Info.m_Var)
 				{
 					const float flChargeTime = pTeleport->GetChargeTime();
 

@@ -6,7 +6,7 @@ using namespace Hooks;
 
 const char* __fastcall TFWeaponBase::GetTracerType::Detour(C_TFWeaponBase* pThis, void* edx)
 {
-	return Vars::Visual::Tracers ? "merasmus_zap" : Func.Original<FN>()(pThis, edx);
+	return Vars::Visual::Tracers.m_Var ? "merasmus_zap" : Func.Original<FN>()(pThis, edx);
 }
 
 void TFWeaponBase::Initialize()

@@ -129,6 +129,7 @@
     <ClCompile Include="Hooks\BaseEntity\BaseEntity.cpp" />
     <ClCompile Include="Hooks\BasePlayer\BasePlayer.cpp" />
     <ClCompile Include="SDK\EntityCache\EntityCache.cpp" />
+    <ClCompile Include="Features\Menu\InputHelper\InputHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entry\Entry.h" />
@@ -525,6 +526,7 @@
     <ClInclude Include="SDK\hl2_src\game\shared\tf\tf_weapon_medigun.h" />
     <ClInclude Include="SDK\hl2_src\game\shared\tf\tf_weapon_sniperrifle.h" />
     <ClInclude Include="SDK\EntityCache\EntityCache.h" />
+    <ClInclude Include="Features\Menu\InputHelper\InputHelper.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="SDK\hl2_src\game\server\base.txt" />

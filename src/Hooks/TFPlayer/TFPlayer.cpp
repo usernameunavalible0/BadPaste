@@ -6,7 +6,7 @@ using namespace Hooks;
 
 void __fastcall TFPlayer::FireBullet::Detour(C_TFPlayer* pThis, void* edx, C_TFWeaponBase* pWpn, FireBulletsInfo_t& info, bool bDoEffects, int nDamageType, int nCustomDamageType)
 {
-	if (Vars::Visual::Tracers)
+	if (Vars::Visual::Tracers.m_Var)
 	{
 		C_TFPlayer* pLocal = UTIL_TFPlayerByIndex(g_Globals.m_nLocalIndex);
 

@@ -6,7 +6,7 @@ using namespace Hooks;
 
 void __fastcall BasePlayer::CalcPlayerView::Detour(C_BasePlayer* pThis, void* edx, Vector& eyeOrigin, QAngle& eyeAngles, float& fov)
 {
-	if (Vars::Visual::RemoveVisualRecoil && pThis) //Did this in l4d2 when Spookman told me to, so doing it here comes from him.
+	if (Vars::Visual::RemoveVisualRecoil.m_Var && pThis) //Did this in l4d2 when Spookman told me to, so doing it here comes from him.
 	{
 		const QAngle vOldPunch = pThis->m_vecPunchAngle();
 

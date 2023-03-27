@@ -4,7 +4,7 @@
 
 void CFeatures_Misc::Run(C_TFPlayer* pLocal, CUserCmd* cmd)
 {
-	if (Vars::Misc::Bunnyhop)
+	if (Vars::Misc::Bunnyhop.m_Var)
 		Bunnyhop(pLocal, cmd);
 }
 

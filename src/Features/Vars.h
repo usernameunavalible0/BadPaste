@@ -1,39 +1,47 @@
 #pragma once
 
+template <class T>
+class CVar
+{
+public:
+	T m_Var;
+	const wchar_t* m_szDisplayName;
+};
+
 namespace Vars
 {
 	namespace ESP
 	{
-		inline bool Enabled = true;
+		inline CVar<bool> Enabled{ true, L"Enabled" };
 
 		namespace Players
 		{
-			inline bool Enabled = true;
-			inline bool IgnoreTeam = true;
-			inline bool ActiveWeapon = true;
-			inline bool HealthText = true;
-			inline bool Name = true;
+			inline CVar<bool> Enabled{ true, L"Enabled" };
+			inline CVar<bool> IgnoreTeam{ true, L"Ignore Team" };
+			inline CVar<bool> ActiveWeapon{ false, L"Active Weapon" };
+			inline CVar<bool> HealthText{ true, L"Health Text" };
+			inline CVar<bool> Name{ true, L"Name" };
 		}
 
 		namespace Buildings
 		{
-			inline bool Enabled = true;
-			inline bool IgnoreTeam = false;
-			inline bool HealthText = true;
-			inline bool Name = true;
-			inline bool Info = true;
+			inline CVar<bool> Enabled{ true, L"Enabled" };
+			inline CVar<bool> IgnoreTeam{ false, L"Ignore Team" };
+			inline CVar<bool> HealthText{ true, L"Health Text" };
+			inline CVar<bool> Name{ true, L"Name" };
+			inline CVar<bool> Info{ true, L"Type" };
 		}
 	}
 
 	namespace Visual
 	{
-		inline bool RemoveVisualRecoil = true;
-		inline bool Tracers = false;
+		inline CVar<bool> RemoveVisualRecoil{ true, L"Remove Visual Recoil" };
+		inline CVar<bool> Tracers{ false, L"Tracers" };
 	}
 
 	namespace Misc
 	{
-		inline bool Bunnyhop = true;
-		inline bool BypassPure = true;
+		inline CVar<bool> Bunnyhop{ true, L"Bunnyhop" };
+		inline CVar<bool> BypassPure{ true, L"Bypass Pure" };
 	}
 }

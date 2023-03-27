@@ -6,7 +6,7 @@ using namespace Hooks;
 
 CPureServerWhitelist* __cdecl CL_Main::CL_LoadWhitelist::Detour(INetworkStringTable* pTable, const char* pName)
 {
-	return Vars::Misc::BypassPure ? NULL : Func.Original<FN>()(pTable, pName);
+	return Vars::Misc::BypassPure.m_Var ? NULL : Func.Original<FN>()(pTable, pName);
 }
 
 void __cdecl CL_Main::CL_Move::Detour(float accumulated_extra_samples, bool bFinalTick)
