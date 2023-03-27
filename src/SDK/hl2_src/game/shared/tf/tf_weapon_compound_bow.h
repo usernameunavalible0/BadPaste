@@ -23,8 +23,6 @@ public:
 
 	virtual void				LowerBow(void) = 0;
 
-	virtual bool				OwnerCanJump(void) = 0;
-
 private:
 
 	virtual void				StartBurningEffect(void) = 0;

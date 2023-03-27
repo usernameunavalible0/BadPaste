@@ -27,8 +27,6 @@ class C_TFSniperRifle : public C_TFWeaponBaseGun
 {
 public:
 	virtual						~C_TFSniperRifle() = 0;
-	
-	virtual bool				OwnerCanJump(void) = 0;
 
 	virtual void				HandleZooms(void) = 0;
 

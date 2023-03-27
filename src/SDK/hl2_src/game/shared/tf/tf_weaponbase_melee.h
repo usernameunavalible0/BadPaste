@@ -31,6 +31,7 @@ public:
 
 	virtual bool				DoSwingTrace(trace_t& trace) = 0;
 	virtual void				Smack(void) = 0;
+    virtual float               GetSmackTime(int idfk) = 0;
 	virtual void				DoMeleeDamage(C_BaseEntity* ent, trace_t& trace) = 0;
 	virtual void				DoMeleeDamage(C_BaseEntity* ent, trace_t& trace, float flDamageMod) = 0;
 
@@ -44,6 +45,11 @@ public:
 protected:
 
 	virtual void				Swing(C_TFPlayer* pPlayer) = 0;
+    
+public:
+    
+    //im just guessing here lol
+    virtual void                PlaySwingSound(void) = 0;
 };
 
 #endif // TF_WEAPONBASE_MELEE_H

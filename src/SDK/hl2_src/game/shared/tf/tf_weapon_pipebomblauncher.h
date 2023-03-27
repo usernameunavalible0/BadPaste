@@ -41,6 +41,7 @@ public:
 	virtual bool				DetonateRemotePipebombs(bool bFizzle) = 0;
 	virtual bool				ModifyPipebombsInView(int iEffect) = 0;
 	virtual void				AddPipeBomb(CTFGrenadePipebombProjectile* pBomb) = 0;
+    virtual void                SetInternalChargeBeginTime(float fTime) = 0;
 
 	M_NETVAR(m_flChargeBeginTime, float, "CTFPipebombLauncher", "m_flChargeBeginTime");
 };
