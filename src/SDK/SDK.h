@@ -7,6 +7,9 @@
 #define FAILED_TO_INITIALIZE false
 #define FAILED_TO_HOOK false
 
+#define FONT_MENU EFonts::MENU_TAHOMA
+#define REGISTERED_USER "Developer"
+
 class CUtil
 {
 public:

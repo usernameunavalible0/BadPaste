@@ -188,6 +188,21 @@ void CDraw::Circle(const int x, const int y, const int radius, const int segment
 	}
 }
 
+void CDraw::Texture(const int x, const int y, const int x1, const int y1, const Color clr, const char* tex)
+{
+	static int nTexture = -1;
+
+	if (nTexture == -1)
+	{
+		nTexture = I::MatSystemSurface->CreateNewTextureID();
+		I::MatSystemSurface->DrawSetTextureFile(nTexture, tex, true, false);
+	}
+
+	I::MatSystemSurface->DrawSetColor(clr);
+	I::MatSystemSurface->DrawSetTexture(nTexture);
+	I::MatSystemSurface->DrawTexturedRect(x, y, x1, y1);
+}
+
 void CDraw::ReloadMatrix()
 {
 	CViewSetup View;

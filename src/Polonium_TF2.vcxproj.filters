@@ -130,6 +130,8 @@
     <ClCompile Include="Hooks\BasePlayer\BasePlayer.cpp" />
     <ClCompile Include="SDK\EntityCache\EntityCache.cpp" />
     <ClCompile Include="Features\Menu\InputHelper\InputHelper.cpp" />
+    <ClCompile Include="Hooks\VGuiSurface\VGuiSurface.cpp" />
+    <ClCompile Include="Features\Menu\Menu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entry\Entry.h" />
@@ -527,6 +529,8 @@
     <ClInclude Include="SDK\hl2_src\game\shared\tf\tf_weapon_sniperrifle.h" />
     <ClInclude Include="SDK\EntityCache\EntityCache.h" />
     <ClInclude Include="Features\Menu\InputHelper\InputHelper.h" />
+    <ClInclude Include="Hooks\VGuiSurface\VGuiSurface.h" />
+    <ClInclude Include="Features\Menu\Menu.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="SDK\hl2_src\game\server\base.txt" />

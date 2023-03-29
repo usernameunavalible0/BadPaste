@@ -166,6 +166,7 @@
     <ClCompile Include="Entry\Entry.cpp" />
     <ClCompile Include="Features\ESP\ESP.cpp" />
     <ClCompile Include="Features\Menu\InputHelper\InputHelper.cpp" />
+    <ClCompile Include="Features\Menu\Menu.cpp" />
     <ClCompile Include="Features\Misc\Misc.cpp" />
     <ClCompile Include="Features\Prediction\Prediction.cpp" />
     <ClCompile Include="Features\Vars.cpp" />
@@ -186,6 +187,7 @@
     <ClCompile Include="Hooks\TFPlayer\TFPlayer.cpp" />
     <ClCompile Include="Hooks\TFWeaponBase\TFWeaponBase.cpp" />
     <ClCompile Include="Hooks\VGuiPanel\VGuiPanel.cpp" />
+    <ClCompile Include="Hooks\VGuiSurface\VGuiSurface.cpp" />
     <ClCompile Include="Hooks\ViewRender\ViewRender.cpp" />
     <ClCompile Include="Hooks\WndProc\WndProc.cpp" />
     <ClCompile Include="SDK\ConVars\ConVars.cpp" />
@@ -296,6 +298,7 @@
     <ClInclude Include="Entry\Entry.h" />
     <ClInclude Include="Features\ESP\ESP.h" />
     <ClInclude Include="Features\Menu\InputHelper\InputHelper.h" />
+    <ClInclude Include="Features\Menu\Menu.h" />
     <ClInclude Include="Features\Misc\Misc.h" />
     <ClInclude Include="Features\Prediction\Prediction.h" />
     <ClInclude Include="Features\Vars.h" />
@@ -316,6 +319,7 @@
     <ClInclude Include="Hooks\TFPlayer\TFPlayer.h" />
     <ClInclude Include="Hooks\TFWeaponBase\TFWeaponBase.h" />
     <ClInclude Include="Hooks\VGuiPanel\VGuiPanel.h" />
+    <ClInclude Include="Hooks\VGuiSurface\VGuiSurface.h" />
     <ClInclude Include="Hooks\ViewRender\ViewRender.h" />
     <ClInclude Include="Hooks\WndProc\WndProc.h" />
     <ClInclude Include="SDK\ConVars\ConVars.h" />

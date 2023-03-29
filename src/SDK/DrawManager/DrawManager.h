@@ -54,6 +54,7 @@ public:
 	void CornerRect(const int x, const int y, const int w, const int h, const int _x, const int _y, const Color color);
 	void OutlinedCircle(const int x, const int y, const int radius, const int segments, const Color clr);
 	void Circle(const int x, const int y, const int radius, const int segments, const Color clr);
+	void Texture(const int x, const int y, const int x1, const int y1, const Color clr, const char* tex);
 
 public:
 	int GetFontHeight(const EFonts& font);
