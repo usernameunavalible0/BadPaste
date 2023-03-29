@@ -33,7 +33,7 @@ void __fastcall EngineVGui::Paint::Detour(void* ecx, void* edx, int mode)
 			F::Menu.Run();
 
 			if (!F::Menu.m_bOpen)
-				G::Draw.String(EFonts::DEBUG, 5, 5, { 204, 204, 204, 255 }, TXT_DEFAULT, L"Polonium TF2");
+				G::Draw.String(EFonts::DEBUG, 5, 5, { 204, 204, 204, 255 }, TXT_DEFAULT, L"Inferno TF2");
 		}
 		pfFinishDrawing(I::MatSystemSurface);
 	}

@@ -1,10 +1,12 @@
 #include "WndProc.h"
 
+#include "../../Features/Menu/Menu.h"
+
 using namespace Hooks;
 
 LRESULT CALLBACK WndProc::Detour(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	return CallWindowProcW(oWndProc, hwnd, uMsg, wParam, lParam);
+	return (F::Menu.m_bOpen && (I::EngineVGui->IsGameUIVisible() || F::Menu.m_bTyping)) ? 1u : CallWindowProcW(oWndProc, hwnd, uMsg, wParam, lParam);
 }
 
 void WndProc::Initialize()

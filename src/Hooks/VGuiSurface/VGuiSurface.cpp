@@ -1,5 +1,7 @@
 #include "VGuiSurface.h"
 
+#include "../../Features/Menu/Menu.h"
+
 using namespace Hooks;
 
 void __fastcall VGuiSurface::OnScreenSizeChanged::Detour(void* ecx, void* edx, int oldWidth, int oldHeight)
@@ -12,7 +14,7 @@ void __fastcall VGuiSurface::OnScreenSizeChanged::Detour(void* ecx, void* edx, i
 
 void __fastcall VGuiSurface::LockCursor::Detour(void* ecx, void* edx)
 {
-	Table.Original<FN>(Index)(ecx, edx);
+	F::Menu.m_bOpen ? I::VGuiSurface->UnlockCursor() : Table.Original<FN>(Index)(ecx, edx);
 }
 
 void VGuiSurface::Initialize()
