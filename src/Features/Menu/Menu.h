@@ -11,7 +11,8 @@ private:
 
 	void Separator();
 	bool CheckBox(CVar<bool>& Var, const wchar_t* const szToolTip);
-	bool Button(const wchar_t* Label, bool Active = false, int WidthOverride = 0, int HeightOverride = 0);
+	bool Button(const wchar_t* Label, bool Active = false, int WidthOverride = 0, int HeightOverride = 0, int SpacingOverride = 0);
+	bool TextureButton(const char* Texture, int x, int y, bool Active = false, int WidthOverride = 0, int HeightOverride = 0);
 	bool ComboBox(CVar<int>& Var, const std::vector<CVar<int>>& List);
 	bool InputFloat(CVar<float>& Var, float Min, float Max, float Step = 1.0f, const wchar_t* Fmt = L"%f");
 	bool InputInt(CVar<int>& Var, int Min, int Max, int Step = 1);

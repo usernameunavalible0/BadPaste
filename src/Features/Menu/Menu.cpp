@@ -70,12 +70,12 @@ bool CMenu::CheckBox(CVar<bool>& Var, const wchar_t* const szToolTip)
 	return callback;
 }
 
-bool CMenu::Button(const wchar_t* Label, bool Active, int WidthOverride, int HeightOverride)
+bool CMenu::Button(const wchar_t* Label, bool Active, int WidthOverride, int HeightOverride, int SpacingOverride)
 {
 	bool callback = false;
 
 	int x = m_LastWidget.x;
-	int y = m_LastWidget.y + m_LastWidget.height + Vars::Menu::SpacingY;
+	int y = m_LastWidget.y + m_LastWidget.height + (SpacingOverride ? SpacingOverride : Vars::Menu::SpacingY);
 	int w = WidthOverride ? WidthOverride : Vars::Menu::ButtonW;
 	int h = HeightOverride ? HeightOverride : Vars::Menu::ButtonH;
 
@@ -97,6 +97,33 @@ bool CMenu::Button(const wchar_t* Label, bool Active, int WidthOverride, int Hei
 	m_LastWidget.y = y;
 	m_LastWidget.width = w;
 	m_LastWidget.height = h;
+
+	if (callback)
+		m_bReopened = true;
+
+	return callback;
+}
+
+bool CMenu::TextureButton(const char* Texture, int x, int y, bool Active, int WidthOverride, int HeightOverride)
+{
+	static bool callback = false;
+
+	int w = WidthOverride ? WidthOverride : Vars::Menu::ButtonW;
+	int h = HeightOverride ? HeightOverride : Vars::Menu::ButtonH;
+
+	if (g_InputHelper.m_nMouseX > x && g_InputHelper.m_nMouseX < x + w && g_InputHelper.m_nMouseY > y && g_InputHelper.m_nMouseY < y + h)
+	{
+		if (g_InputHelper.IsPressed(VK_LBUTTON))
+			callback = !callback;
+
+		G::Draw.Texture(x, y, x + w, y + h, Vars::Menu::Colors::WidgetActive, Texture);
+	}
+	else if (Active)
+		G::Draw.Texture(x, y, x + w, y + h, Vars::Menu::Colors::WidgetActive, Texture);
+	else
+		G::Draw.Texture(x, y, x + w, y + h, COLOR_WHITE, Texture);
+
+	G::Draw.OutlinedRect(x, y, w, h, Vars::Menu::Colors::OutlineMenu);
 
 	if (callback)
 		m_bReopened = true;
@@ -829,6 +856,123 @@ void CMenu::Run()
 				L"Team Fortress 2");
 		}
 
+		//Do the task bar
+		{
+			G::Draw.Rect(
+				0,
+				g_Globals.m_nScreenHeight - 40,
+				g_Globals.m_nScreenWidht,
+				40,
+				Vars::Menu::Colors::WindowBackground
+			);
+
+			G::Draw.OutlinedRect(
+				0,
+				g_Globals.m_nScreenHeight - 40,
+				g_Globals.m_nScreenWidht,
+				40,
+				Vars::Menu::Colors::OutlineMenu
+			);
+
+			static bool m_bMainButton = false;
+			if (TextureButton("vgui/info", 0, g_Globals.m_nScreenHeight - 40, m_bMainButton, 40, 40))
+				m_bMainButton = true;
+			else
+				m_bMainButton = false;
+
+			if (m_bMainButton)
+			{
+				G::Draw.Rect(
+					0,
+					g_Globals.m_nScreenHeight - 240,
+					300,
+					200,
+					Vars::Menu::Colors::WindowBackground
+				);
+
+				G::Draw.OutlinedRect(
+					0,
+					g_Globals.m_nScreenHeight - 240,
+					300,
+					200,
+					Vars::Menu::Colors::OutlineMenu
+				);
+
+				G::Draw.Texture(
+					0,
+					g_Globals.m_nScreenHeight - 240,
+					80,
+					g_Globals.m_nScreenHeight - 160,
+					COLOR_WHITE,
+					"hud/afterburn"
+				);
+
+				G::Draw.OutlinedRect(
+					0,
+					g_Globals.m_nScreenHeight - 240,
+					80,
+					80,
+					Vars::Menu::Colors::OutlineMenu
+				);
+
+				G::Draw.OutlinedRect(
+					82,
+					g_Globals.m_nScreenHeight - 236,
+					216,
+					G::Draw.GetFontHeight(EFonts::MENU_CONSOLAS) * 2,
+					Vars::Menu::Colors::OutlineMenu
+				);
+
+				G::Draw.OutlinedRect(
+					82,
+					g_Globals.m_nScreenHeight - 210,
+					216,
+					G::Draw.GetFontHeight(EFonts::MENU_CONSOLAS) * 2,
+					Vars::Menu::Colors::OutlineMenu
+				);
+
+				G::Draw.OutlinedRect(
+					82,
+					g_Globals.m_nScreenHeight - 184,
+					216,
+					G::Draw.GetFontHeight(EFonts::MENU_CONSOLAS) * 2,
+					Vars::Menu::Colors::OutlineMenu
+				);
+
+				G::Draw.String(EFonts::MENU_CONSOLAS,
+					86,
+					g_Globals.m_nScreenHeight - 236 + G::Draw.GetFontHeight(EFonts::MENU_CONSOLAS),
+					Vars::Menu::Colors::Text,
+					TXT_CENTERY,
+					L"Unknown User"
+				);
+
+				G::Draw.String(EFonts::MENU_CONSOLAS,
+					86,
+					g_Globals.m_nScreenHeight - 210 + G::Draw.GetFontHeight(EFonts::MENU_CONSOLAS),
+					{ 70, 70, 70, 255 },
+					TXT_CENTERY,
+					L"<Custom Name>"
+				);
+
+				G::Draw.String(EFonts::MENU_CONSOLAS,
+					86,
+					g_Globals.m_nScreenHeight - 184 + G::Draw.GetFontHeight(EFonts::MENU_CONSOLAS),
+					{ 70, 70, 70, 255 },
+					TXT_CENTERY,
+					L"<Disconnect Reason>"
+				);
+
+				m_LastWidget = { 0, g_Globals.m_nScreenHeight - 160 };
+
+				//TODO: Add functionality to these
+				Button(L"CL_FullUpdate", false, 0, 0, 2);
+				Button(L"SND_Restart", false, 0, 0, 2);
+				Button(L"StopSound", false, 0, 0, 2);
+				Button(L"Status", false, 0, 0, 2);
+				Button(L"Retry", false, 0, 0, 2);
+			}
+		}
 	}
 
 	I::MatSystemSurface->DrawSetAlphaMultiplier(1.0f);

@@ -188,11 +188,17 @@ void CDraw::Circle(const int x, const int y, const int radius, const int segment
 	}
 }
 
+
+
 void CDraw::Texture(const int x, const int y, const int x1, const int y1, const Color clr, const char* tex)
 {
+	//well fuck me this function is incredibly stupid
 	static int nTexture = -1;
+	static char texturename[1024];
 
-	if (nTexture == -1)
+	I::MatSystemSurface->DrawGetTextureFile(nTexture, texturename, sizeof(texturename));
+
+	if (texturename != tex)
 	{
 		nTexture = I::MatSystemSurface->CreateNewTextureID();
 		I::MatSystemSurface->DrawSetTextureFile(nTexture, tex, true, false);
@@ -201,6 +207,8 @@ void CDraw::Texture(const int x, const int y, const int x1, const int y1, const 
 	I::MatSystemSurface->DrawSetColor(clr);
 	I::MatSystemSurface->DrawSetTexture(nTexture);
 	I::MatSystemSurface->DrawTexturedRect(x, y, x1, y1);
+	I::MatSystemSurface->DeleteTextureByID(nTexture);
+	I::MatSystemSurface->DestroyTextureID(nTexture);
 }
 
 void CDraw::ReloadMatrix()
