@@ -12,13 +12,12 @@ namespace Vars
 {
 	namespace Menu
 	{
-		inline Rect_t AboutPos = { 100, 100, 200, 240 };
-		inline Rect_t MenuPos = { 300, 300, 800, 420 };
+		inline Rect_t Position = { 100, 100, 600, 420 };
 		inline const wchar_t* Title = L"Team Fortress 2";
 		inline int TitleBarH = 16;
 
-		inline int SpacingX = 8;
-		inline int SpacingY = 4;
+		inline int SpacingX = 2;
+		inline int SpacingY = 2;
 		inline int SpacingText = 4;
 
 		inline int CheckBoxW = 14;
@@ -40,12 +39,12 @@ namespace Vars
 
 		namespace Colors
 		{
-			inline Color WindowBackground = { 30, 30, 30, 255 };
-			inline Color TitleBar = { 50, 50, 50, 255 };
+			inline Color WindowBackground = { 7, 7, 7, 255 };
+			inline Color TitleBar = { 7, 7, 7, 255 };
 			inline Color Text = { 255, 255, 255, 190 };
-			inline Color Widget = { 20, 20, 20, 255 };
-			inline Color WidgetActive = { 70, 70, 70, 255 };
-			inline Color OutlineMenu = { 255, 255, 255, 20 };
+			inline Color Widget = { 214, 19, 58, 255 };
+			inline Color WidgetActive = { 255, 26, 72, 255 };
+			inline Color OutlineMenu = { 112, 10, 31, 255 };
 		}
 	}
 
@@ -67,7 +66,7 @@ namespace Vars
 			inline CVar<bool> Enabled{ true, L"Enabled" };
 			inline CVar<bool> IgnoreTeam{ false, L"Ignore Team" };
 			inline CVar<bool> HealthText{ true, L"Health Text" };
-			inline CVar<bool> Name{ true, L"Name" };
+			inline CVar<bool> Name{ true, L"Type" };
 			inline CVar<bool> Info{ true, L"Type" };
 		}
 	}
