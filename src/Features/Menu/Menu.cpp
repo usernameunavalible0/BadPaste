@@ -2,7 +2,7 @@
 
 void CMenu::Separator()
 {
-	int x = m_LastWidget.x + m_LastWidget.width + Vars::Menu::SpacingX;
+	int x = m_LastWidget.x + m_LastWidget.width + Vars::Menu::AltSpacingX;
 	int y = Vars::Menu::Position.y;
 	int w = 0;
 	int h = 0;
@@ -62,7 +62,7 @@ bool CMenu::Button(const wchar_t* Label, bool Active, int WidthOverride, int Hei
 	bool callback = false;
 
 	int x = m_LastWidget.x;
-	int y = m_LastWidget.y + m_LastWidget.height + Vars::Menu::SpacingY;
+	int y = m_LastWidget.y + m_LastWidget.height + Vars::Menu::AltSpacingY;
 	int w = WidthOverride ? WidthOverride : Vars::Menu::ButtonW;
 	int h = HeightOverride ? HeightOverride : Vars::Menu::ButtonH;
 
@@ -127,7 +127,7 @@ void CMenu::GroupBoxStart()
 	m_LastGroupBox.y = m_LastWidget.y + m_LastWidget.height + Vars::Menu::SpacingY;
 
 	m_LastWidget.x += Vars::Menu::SpacingX;
-	m_LastWidget.y += Vars::Menu::SpacingY * 2;
+	m_LastWidget.y += Vars::Menu::SpacingY + 1;
 }
 
 void CMenu::GroupBoxEnd(const wchar_t* Label, int Width)
@@ -137,12 +137,11 @@ void CMenu::GroupBoxEnd(const wchar_t* Label, int Width)
 	int label_w, label_h;
 	I::MatSystemSurface->GetTextSize(G::Draw.m_Fonts.Element(G::Draw.m_Fonts.Find(FONT_MENU)).m_hFont, Label, label_w, label_h);
 
-	int label_mid = label_w / 2;
 	int label_x = m_LastGroupBox.x + (Width / 2);
 	int label_y = m_LastGroupBox.y - (label_h / 2);
 
-	G::Draw.Line(m_LastGroupBox.x, m_LastGroupBox.y, label_x - label_mid - Vars::Menu::SpacingText, m_LastGroupBox.y, Vars::Menu::Colors::OutlineMenu);
-	G::Draw.Line(label_x + label_mid + Vars::Menu::SpacingText, m_LastGroupBox.y, m_LastGroupBox.x + Width, m_LastGroupBox.y, Vars::Menu::Colors::OutlineMenu);
+	G::Draw.Line(m_LastGroupBox.x, m_LastGroupBox.y, label_x - (label_w / 2) - Vars::Menu::SpacingText, m_LastGroupBox.y, Vars::Menu::Colors::OutlineMenu);
+	G::Draw.Line(label_x + (label_w / 2) + Vars::Menu::SpacingText, m_LastGroupBox.y, m_LastGroupBox.x + Width, m_LastGroupBox.y, Vars::Menu::Colors::OutlineMenu);
 	G::Draw.Line(m_LastGroupBox.x + Width, m_LastGroupBox.y, m_LastGroupBox.x + Width, m_LastGroupBox.y + h, Vars::Menu::Colors::OutlineMenu);
 	G::Draw.Line(m_LastGroupBox.x + Width, m_LastGroupBox.y + h, m_LastGroupBox.x, m_LastGroupBox.y + h, Vars::Menu::Colors::OutlineMenu);
 	G::Draw.Line(m_LastGroupBox.x, m_LastGroupBox.y + h, m_LastGroupBox.x, m_LastGroupBox.y, Vars::Menu::Colors::OutlineMenu);
@@ -223,18 +222,18 @@ void CMenu::Run()
 				Vars::Menu::Colors::TitleBar);
 
 			G::Draw.OutlinedRect(
-				Vars::Menu::Position.x,
-				Vars::Menu::Position.y - Vars::Menu::TitleBarH,
-				Vars::Menu::Position.width,
-				Vars::Menu::Position.height + Vars::Menu::TitleBarH,
+				Vars::Menu::Position.x - 1,
+				Vars::Menu::Position.y - Vars::Menu::TitleBarH - 1,
+				Vars::Menu::Position.width + 1,
+				Vars::Menu::Position.height + Vars::Menu::TitleBarH + 1,
 				Vars::Menu::Colors::OutlineMenu
 			);
 
 			G::Draw.Line(
 				Vars::Menu::Position.x,
-				Vars::Menu::Position.y,
+				Vars::Menu::Position.y - 1,
 				Vars::Menu::Position.x + Vars::Menu::Position.width - 1,
-				Vars::Menu::Position.y,
+				Vars::Menu::Position.y - 1,
 				Vars::Menu::Colors::OutlineMenu
 			);
 
@@ -251,20 +250,20 @@ void CMenu::Run()
 			enum struct EMainTabs { TAB_AIM, TAB_VISUALS, TAB_MISC, TAB_CONFIGS };
 			enum struct EVisualsTabs { TAB_ESP, TAB_CHAMS, TAB_GLOW, TAB_OTHER, TAB_SKINS, TAB_COLORS };
 
-			m_LastWidget = { Vars::Menu::Position.x + Vars::Menu::SpacingX, Vars::Menu::Position.y, 0, 0 };
+			m_LastWidget = { Vars::Menu::Position.x + Vars::Menu::AltSpacingX, Vars::Menu::Position.y, 0, 0 };
 
 			static EMainTabs Tab = EMainTabs::TAB_AIM;
 			{
-				if (Button(L"Aim", Tab == EMainTabs::TAB_AIM))
+				if (Button(L"Aim", Tab == EMainTabs::TAB_AIM, Vars::Menu::ButtonWSmall, Vars::Menu::ButtonHSmall))
 					Tab = EMainTabs::TAB_AIM;
 
-				if (Button(L"Visuals", Tab == EMainTabs::TAB_VISUALS))
+				if (Button(L"Visuals", Tab == EMainTabs::TAB_VISUALS, Vars::Menu::ButtonWSmall, Vars::Menu::ButtonHSmall))
 					Tab = EMainTabs::TAB_VISUALS;
 
-				if (Button(L"Misc", Tab == EMainTabs::TAB_MISC))
+				if (Button(L"Misc", Tab == EMainTabs::TAB_MISC, Vars::Menu::ButtonWSmall, Vars::Menu::ButtonHSmall))
 					Tab = EMainTabs::TAB_MISC;
 
-				if (Button(L"Configs", Tab == EMainTabs::TAB_CONFIGS))
+				if (Button(L"Configs", Tab == EMainTabs::TAB_CONFIGS, Vars::Menu::ButtonWSmall, Vars::Menu::ButtonHSmall))
 					Tab = EMainTabs::TAB_CONFIGS;
 			}
 
@@ -278,31 +277,33 @@ void CMenu::Run()
 				{
 					Rect_t checkpoint_line = m_LastWidget;
 					checkpoint_line.x -= Vars::Menu::SpacingX;
-					checkpoint_line.y += Vars::Menu::ButtonHSmall + (Vars::Menu::SpacingY * 2);
+					checkpoint_line.y += Vars::Menu::ButtonHSmall + (Vars::Menu::AltSpacingY * 2);
 					Rect_t checkpoint_move = m_LastWidget;
+					checkpoint_move.x -= 5;
+					m_LastWidget = checkpoint_move;
 
 					if (Button(L"ESP", Tab == EVisualsTabs::TAB_ESP, Vars::Menu::ButtonWSmall, Vars::Menu::ButtonHSmall))
 						Tab = EVisualsTabs::TAB_ESP;
 
-					checkpoint_move.x += Vars::Menu::ButtonWSmall + Vars::Menu::SpacingX;
+					checkpoint_move.x += Vars::Menu::ButtonWSmall + Vars::Menu::AltSpacingX;
 					m_LastWidget = checkpoint_move;
 
 					if (Button(L"Chams", Tab == EVisualsTabs::TAB_CHAMS, Vars::Menu::ButtonWSmall, Vars::Menu::ButtonHSmall))
 						Tab = EVisualsTabs::TAB_CHAMS;
 
-					checkpoint_move.x += Vars::Menu::ButtonWSmall + Vars::Menu::SpacingX;
+					checkpoint_move.x += Vars::Menu::ButtonWSmall + Vars::Menu::AltSpacingX;
 					m_LastWidget = checkpoint_move;
 
 					if (Button(L"Glow", Tab == EVisualsTabs::TAB_GLOW, Vars::Menu::ButtonWSmall, Vars::Menu::ButtonHSmall))
 						Tab = EVisualsTabs::TAB_GLOW;
 
-					checkpoint_move.x += Vars::Menu::ButtonWSmall + Vars::Menu::SpacingX;
+					checkpoint_move.x += Vars::Menu::ButtonWSmall + Vars::Menu::AltSpacingX;
 					m_LastWidget = checkpoint_move;
 
 					if (Button(L"Other", Tab == EVisualsTabs::TAB_OTHER, Vars::Menu::ButtonWSmall, Vars::Menu::ButtonHSmall))
 						Tab = EVisualsTabs::TAB_OTHER;
 
-					checkpoint_move.x += Vars::Menu::ButtonWSmall + Vars::Menu::SpacingX;
+					checkpoint_move.x += Vars::Menu::ButtonWSmall + Vars::Menu::AltSpacingX;
 					m_LastWidget = checkpoint_move;
 
 					if (Button(L"Colors", Tab == EVisualsTabs::TAB_COLORS, Vars::Menu::ButtonWSmall, Vars::Menu::ButtonHSmall))
@@ -337,7 +338,7 @@ void CMenu::Run()
 					}
 					GroupBoxEnd(L"Players", 160);
 
-					checkpoint.x += 160 + (Vars::Menu::SpacingX * 2);
+					checkpoint.x += 160 + Vars::Menu::SpacingX;
 					m_LastWidget = checkpoint;
 
 					GroupBoxStart();

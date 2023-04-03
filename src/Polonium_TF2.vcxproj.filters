@@ -132,6 +132,8 @@
     <ClCompile Include="Hooks\VGuiSurface\VGuiSurface.cpp" />
     <ClCompile Include="Features\Menu\InputHelper\InputHelper.cpp" />
     <ClCompile Include="Features\Menu\Menu.cpp" />
+    <ClCompile Include="Features\Aimbot\AimbotGlobal\AimbotGlobal.cpp" />
+    <ClCompile Include="Features\Aimbot\AimbotMelee\AimbotMelee.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entry\Entry.h" />
@@ -531,6 +533,8 @@
     <ClInclude Include="Hooks\VGuiSurface\VGuiSurface.h" />
     <ClInclude Include="Features\Menu\InputHelper\InputHelper.h" />
     <ClInclude Include="Features\Menu\Menu.h" />
+    <ClInclude Include="Features\Aimbot\AimbotGlobal\AimbotGlobal.h" />
+    <ClInclude Include="Features\Aimbot\AimbotMelee\AimbotMelee.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="SDK\hl2_src\game\server\base.txt" />
