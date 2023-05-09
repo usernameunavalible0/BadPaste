@@ -1,6 +1,6 @@
 #include "Menu.h"
 
-void CMenu::Separator()
+void CFeatures_Menu::Separator()
 {
 	int x = m_LastWidget.x + m_LastWidget.width + Vars::Menu::AltSpacingX;
 	int y = Vars::Menu::Position.y;
@@ -15,7 +15,7 @@ void CMenu::Separator()
 	m_LastWidget.height = h;
 }
 
-bool CMenu::CheckBox(CVar<bool>& Var, const wchar_t* const szToolTip)
+bool CFeatures_Menu::CheckBox(CVar<bool>& Var, const wchar_t* const szToolTip)
 {
 	bool callback = false;
 
@@ -57,7 +57,7 @@ bool CMenu::CheckBox(CVar<bool>& Var, const wchar_t* const szToolTip)
 	return callback;
 }
 
-bool CMenu::Button(const wchar_t* Label, bool Active, int WidthOverride, int HeightOverride)
+bool CFeatures_Menu::Button(const wchar_t* Label, bool Active, int WidthOverride, int HeightOverride)
 {
 	bool callback = false;
 
@@ -91,37 +91,109 @@ bool CMenu::Button(const wchar_t* Label, bool Active, int WidthOverride, int Hei
 	return callback;
 }
 
-bool CMenu::ComboBox(CVar<int>& Var, const std::vector<CVar<int>>& List)
+bool CFeatures_Menu::ComboBox(CVar<int>& Var, const std::vector<CVar<int>>& List)
+{
+	auto FindCurItemName = [&]() -> const wchar_t*
+	{
+		for (const auto& Item : List)
+		{
+			if (Item.m_Var == Var.m_Var)
+				return Item.m_szDisplayName;
+		}
+
+		return L"UNKNOWN_ITEM";
+	};
+
+	auto FindCurItemIndex = [&]() -> int
+	{
+		for (size_t n = 0; n < List.size(); n++)
+		{
+			if (List[n].m_Var == Var.m_Var)
+				return n;
+		}
+
+		return 0;
+	};
+
+	bool callback = false;
+
+	int x = m_LastWidget.x;
+	int y = m_LastWidget.y + m_LastWidget.height + Vars::Menu::SpacingY;
+	int w = Vars::Menu::ComboBoxW;
+	int h = Vars::Menu::ComboBoxH;
+
+	static std::map<CVar<int>*, int> indexes = {};
+	static std::map<CVar<int>*, bool> inits = {};
+
+	if (!inits[&Var] || m_bReopened) {
+		indexes[&Var] = FindCurItemIndex();
+		inits[&Var] = true;
+	}
+
+	if (g_InputHelper.m_nMouseX > x && g_InputHelper.m_nMouseX < x + (w / 2) && g_InputHelper.m_nMouseY > y && g_InputHelper.m_nMouseY < y + h)
+	{
+		if (indexes[&Var] > 0)
+		{
+			if (g_InputHelper.IsPressed(VK_LBUTTON)) {
+				Var.m_Var = List[--indexes[&Var]].m_Var;
+				callback = true;
+			}
+
+			G::Draw.GradientRect(x, y, x + (w / 2), y + h, Vars::Menu::Colors::WidgetActive, Vars::Menu::Colors::Widget, true);
+		}
+	}
+
+	else if (g_InputHelper.m_nMouseX > x + (w / 2) && g_InputHelper.m_nMouseX < x + w && g_InputHelper.m_nMouseY > y && g_InputHelper.m_nMouseY < y + h)
+	{
+		if (indexes[&Var] < int(List.size() - 1))
+		{
+			if (g_InputHelper.IsPressed(VK_LBUTTON)) {
+				Var.m_Var = List[++indexes[&Var]].m_Var;
+				callback = true;
+			}
+
+			G::Draw.GradientRect(x + (w / 2), y, x + w, y + h, Vars::Menu::Colors::Widget, Vars::Menu::Colors::WidgetActive, true);
+		}
+	}
+
+	G::Draw.OutlinedRect(x, y, w, h, Vars::Menu::Colors::OutlineMenu);
+	G::Draw.String(FONT_MENU, x + (w / 2), y + (h / 2), Vars::Menu::Colors::Text, TXT_CENTERXY, FindCurItemName());
+	G::Draw.String(FONT_MENU, x + w + Vars::Menu::SpacingText, y + (h / 2), Vars::Menu::Colors::Text, TXT_CENTERY, Var.m_szDisplayName);
+
+	m_LastWidget.x = x;
+	m_LastWidget.y = y;
+	m_LastWidget.width = w;
+	m_LastWidget.height = h;
+
+	return callback;
+}
+
+bool CFeatures_Menu::InputFloat(CVar<float>& Var, float Min, float Max, float Step, const wchar_t* Fmt)
 {
     return false;
 }
 
-bool CMenu::InputFloat(CVar<float>& Var, float Min, float Max, float Step, const wchar_t* Fmt)
+bool CFeatures_Menu::InputInt(CVar<int>& Var, int Min, int Max, int Step)
 {
     return false;
 }
 
-bool CMenu::InputInt(CVar<int>& Var, int Min, int Max, int Step)
+bool CFeatures_Menu::InputColor(Color& Var, const wchar_t* Label)
 {
     return false;
 }
 
-bool CMenu::InputColor(Color& Var, const wchar_t* Label)
+bool CFeatures_Menu::InputString(const wchar_t* Label, std::wstring& output)
 {
     return false;
 }
 
-bool CMenu::InputString(const wchar_t* Label, std::wstring& output)
+bool CFeatures_Menu::InputKey(CVar<int>& output, bool bAllowNone)
 {
     return false;
 }
 
-bool CMenu::InputKey(CVar<int>& output, bool bAllowNone)
-{
-    return false;
-}
-
-void CMenu::GroupBoxStart()
+void CFeatures_Menu::GroupBoxStart()
 {
 	m_LastGroupBox.x = m_LastWidget.x;
 	m_LastGroupBox.y = m_LastWidget.y + m_LastWidget.height + Vars::Menu::SpacingY;
@@ -130,7 +202,7 @@ void CMenu::GroupBoxStart()
 	m_LastWidget.y += Vars::Menu::SpacingY + 1;
 }
 
-void CMenu::GroupBoxEnd(const wchar_t* Label, int Width)
+void CFeatures_Menu::GroupBoxEnd(const wchar_t* Label, int Width)
 {
 	int h = m_LastWidget.y - m_LastGroupBox.y + m_LastWidget.height + Vars::Menu::SpacingY;
 
@@ -153,11 +225,11 @@ void CMenu::GroupBoxEnd(const wchar_t* Label, int Width)
 	m_LastGroupBox.height = h;
 }
 
-void CMenu::DrawTooltip()
+void CFeatures_Menu::DrawTooltip()
 {
 }
 
-void CMenu::Run()
+void CFeatures_Menu::Run()
 {
 	m_bReopened = false;
 	m_bTyping = false;
@@ -350,6 +422,25 @@ void CMenu::Run()
 						CheckBox(Vars::ESP::Buildings::Info, L"Misc building info");
 					}
 					GroupBoxEnd(L"Buildings", 160);
+
+					break;
+				}
+
+				case EVisualsTabs::TAB_CHAMS:
+				{
+					GroupBoxStart();
+					{
+						CheckBox(Vars::Chams::Enabled, L"Chams Master Toggle");
+					}
+					GroupBoxEnd(L"Main", 160);
+
+					GroupBoxStart();
+					{
+						CheckBox(Vars::Chams::Players::Enabled, L"Player Chams Toggle");
+						CheckBox(Vars::Chams::Players::IgnoreTeam, L"Ignore the local team");
+						ComboBox(Vars::Chams::Players::Material, { { 1, L"Fresnel" }, {2, L"Glow"}, {3, L"Test"}, {4, L"Shaded"}, {5, L"Toxic"} });
+					}
+					GroupBoxEnd(L"Players", 160);
 
 					break;
 				}

@@ -1,4 +1,5 @@
 #include "Entry.h"
+#include "../Features/Chams/Chams.h"
 
 #define _VALIDATE(x) if (!x) { Error(#x); m_bShouldUnload = true; return; }
 
@@ -22,6 +23,8 @@ void CModuleEntry::Load()
 		g_Globals.m_nLocalIndex = I::EngineClient->GetLocalPlayer();
 
 	_VALIDATE(Hooks::Initialize());
+
+	_VALIDATE(F::Chams.Initialize());
 
 	//I::EngineClient->ClientCmd_Unrestricted("r_drawtracers_firstperson 1");
 }

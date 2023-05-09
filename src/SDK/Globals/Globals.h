@@ -1,10 +1,5 @@
 #pragma once
 
-enum struct EWeaponType
-{
-	UNKNOWN, HITSCAN, PROJECTILE, MELEE
-};
-
 class CGlobals
 {
 public:

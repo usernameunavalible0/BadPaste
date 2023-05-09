@@ -46,6 +46,9 @@ bool COffsets::Initialize()
 	m_dwLoadFromBuffer = g_Pattern.Find("engine.dll", "55 8B EC 83 EC 38 53 8B 5D 0C");
 	CHECKPATT(m_dwLoadFromBuffer);
 
+	m_dwFindKey = g_Pattern.Find("client.dll", "55 8B EC 81 EC ? ? ? ? 56 8B 75 08 57 8B F9 85 F6 0F");
+	CHECKPATT(m_dwFindKey);
+
 	m_dwCLMove = g_Pattern.Find("engine.dll", "55 8B EC 83 EC ? 83 3D ? ? ? ? 02 0F 8C ? ? 00 00 E8 ? ? ? 00 84 C0");
 	CHECKPATT(m_dwCLMove);
 

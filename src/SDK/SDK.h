@@ -18,8 +18,6 @@ public:
 
 	Color GetTeamColor(const int nTeam);
 	Color GetHealthColor(const int nHealth, const int nMaxHealth);
-
-	IMaterial* CreateMaterial(const char* szVars);
 };
 
 namespace G { inline CUtil Util; }

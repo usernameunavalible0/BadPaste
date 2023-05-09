@@ -8,7 +8,6 @@
     <ClCompile Include="SDK\NetVarManager\NetVarManager.cpp" />
     <ClCompile Include="SDK\Interfaces\Interfaces.cpp" />
     <ClCompile Include="Hooks\Hooks.cpp" />
-    <ClCompile Include="Features\Vars.cpp" />
     <ClCompile Include="Util\VFunc\VFunc.cpp" />
     <ClCompile Include="Util\Hook\MinHook\buffer.c" />
     <ClCompile Include="Util\Hook\MinHook\hook.c" />
@@ -132,6 +131,7 @@
     <ClCompile Include="Hooks\VGuiSurface\VGuiSurface.cpp" />
     <ClCompile Include="Features\Menu\InputHelper\InputHelper.cpp" />
     <ClCompile Include="Features\Menu\Menu.cpp" />
+    <ClCompile Include="Features\Chams\Chams.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entry\Entry.h" />
@@ -531,6 +531,7 @@
     <ClInclude Include="Hooks\VGuiSurface\VGuiSurface.h" />
     <ClInclude Include="Features\Menu\InputHelper\InputHelper.h" />
     <ClInclude Include="Features\Menu\Menu.h" />
+    <ClInclude Include="Features\Chams\Chams.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="SDK\hl2_src\game\server\base.txt" />

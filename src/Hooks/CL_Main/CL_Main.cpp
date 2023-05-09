@@ -45,12 +45,12 @@ void CL_Main::Initialize()
 
 	//CL_SendMove
 	{
-		//using namespace CL_SendMove;
+		using namespace CL_SendMove;
 
-		//const FN pfCLSendMove = reinterpret_cast<FN>(g_Offsets.m_dwCLSendMove);
-		//XASSERT(pfCLSendMove == nullptr);
+		const FN pfCLSendMove = reinterpret_cast<FN>(g_Offsets.m_dwCLSendMove);
+		XASSERT(pfCLSendMove == nullptr);
 
-		//if (pfCLSendMove)
-		//	XASSERT(Func.Initialize(pfCLSendMove, &Detour) == FAILED_TO_INITIALIZE);
+		if (pfCLSendMove)
+			XASSERT(Func.Initialize(pfCLSendMove, &Detour) == FAILED_TO_INITIALIZE);
 	}
 }

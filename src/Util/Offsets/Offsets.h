@@ -22,6 +22,7 @@ public:
 	DWORD m_dwCheckForSequenceChange = 0x0;
 	DWORD m_dwLoadFromBuffer = 0x0;
 	DWORD m_dwInitializeKeyValue = 0x0;
+	DWORD m_dwFindKey = 0x0;
 	DWORD m_dwPerformScreenSpaceEffects = 0x0;
 	DWORD m_dwCLMove = 0x0;
 	DWORD m_dwCLSendMove = 0x0;

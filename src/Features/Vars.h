@@ -42,8 +42,8 @@ namespace Vars
 
 		namespace Colors
 		{
-			inline Color WindowBackground = { 7, 7, 7, 255 };
-			inline Color TitleBar = { 7, 7, 7, 255 };
+			inline Color WindowBackground = { 13, 13, 13, 255 };
+			inline Color TitleBar = { 13, 13, 13, 255 };
 			inline Color Text = { 255, 255, 255, 190 };
 			inline Color Widget = { 214, 19, 58, 255 };
 			inline Color WidgetActive = { 255, 26, 72, 255 };
@@ -70,7 +70,7 @@ namespace Vars
 			inline CVar<bool> IgnoreTeam{ false, L"Ignore Team" };
 			inline CVar<bool> HealthText{ true, L"Health Text" };
 			inline CVar<bool> Name{ true, L"Type" };
-			inline CVar<bool> Info{ true, L"Type" };
+			inline CVar<bool> Info{ true, L"Info" };
 		}
 	}
 
@@ -80,6 +80,18 @@ namespace Vars
 		inline CVar<bool> Tracers{ false, L"Tracers" };
 		inline CVar<bool> Snow{ false, L"Menu Snow" };
 		inline CVar<bool> ToolTips{ false, L"Menu tooltips" };
+	}
+
+	namespace Chams
+	{
+		inline CVar<bool> Enabled{ true, L"Enabled" };
+		
+		namespace Players
+		{
+			inline CVar<bool> Enabled{ true, L"Enabled" };
+			inline CVar<int> Material{ 5, L"Material" }; // 0=Off, 1=Fresnel, 2=Glow, 3=Test, 4=Shaded, 5=Toxic
+			inline CVar<bool> IgnoreTeam{ true, L"Ignore Team" };
+		}
 	}
 
 	namespace Misc

@@ -1,4 +1,5 @@
 #include "ModelRender.h"
+#include "../../Features/Chams/Chams.h"
 
 using namespace Hooks;
 
@@ -9,6 +10,9 @@ void __fastcall ModelRender::ForcedMaterialOverride::Detour(void* ecx, void* edx
 
 void __fastcall ModelRender::DrawModelExecute::Detour(void* ecx, void* edx, const DrawModelState_t& state, const ModelRenderInfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld)
 {
+	if (F::Chams.Render(ecx, edx, state, pInfo, pCustomBoneToWorld))
+		return;
+
 	Table.Original<FN>(Index)(ecx, edx, state, pInfo, pCustomBoneToWorld);
 }
 

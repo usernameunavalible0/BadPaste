@@ -2,7 +2,7 @@
 #include "InputHelper/InputHelper.h"
 #include "../Vars.h"
 
-class CMenu
+class CFeatures_Menu
 {
 private:
 	Rect_t m_LastWidget = {};
@@ -36,4 +36,4 @@ public:
 	void Run();
 };
 
-namespace F { inline CMenu Menu; }
+namespace F { inline CFeatures_Menu Menu; }

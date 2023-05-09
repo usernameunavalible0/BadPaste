@@ -47,23 +47,3 @@ Color CUtil::GetHealthColor(const int nHealth, const int nMaxHealth)
 
 	return { static_cast<byte>(nR), static_cast<byte>(nG), 0u, 255u };
 }
-
-IMaterial* CUtil::CreateMaterial(const char* szVars)
-{
-	static int nCreated = 0;
-
-	char szOut[512];
-	sprintf_s(szOut, sizeof(szOut), "pol_mat_%i.vmt", nCreated++);
-
-	char szMat[512];
-	sprintf_s(szMat, sizeof(szMat), szVars);
-
-	KeyValues* pVals = new KeyValues;
-	g_KeyValues.Initialize(pVals, (char*)szOut);
-	g_KeyValues.LoadFromBuffer(pVals, szOut, szMat);
-
-	IMaterial* pMaterial = I::MaterialSystem->CreateMaterial(szOut, pVals);
-	pMaterial->AddRef();
-
-	return pMaterial;
-}
