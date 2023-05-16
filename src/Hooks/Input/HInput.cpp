@@ -19,7 +19,10 @@ void __fastcall Input::DecodeUserCmdFromBuffer::Detour(void* ecx, void* edx, bf_
 
 CUserCmd* __fastcall Input::GetUserCmd::Detour(void* ecx, void* edx, int sequence_number)
 {
-	return Table.Original<FN>(Index)(ecx, edx, sequence_number);
+	CUserCmd* m_pCommands = *reinterpret_cast<CUserCmd**>(reinterpret_cast<DWORD>(I::Input) + 0x0FC);
+	CUserCmd* usercmd = &m_pCommands[sequence_number % MULTIPLAYER_BACKUP];
+
+	return usercmd;
 }
 
 void Input::Initialize()

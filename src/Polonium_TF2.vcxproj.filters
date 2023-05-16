@@ -132,6 +132,7 @@
     <ClCompile Include="Features\Menu\InputHelper\InputHelper.cpp" />
     <ClCompile Include="Features\Menu\Menu.cpp" />
     <ClCompile Include="Features\Chams\Chams.cpp" />
+    <ClCompile Include="Features\Crithack\Crithack.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entry\Entry.h" />
@@ -532,6 +533,7 @@
     <ClInclude Include="Features\Menu\InputHelper\InputHelper.h" />
     <ClInclude Include="Features\Menu\Menu.h" />
     <ClInclude Include="Features\Chams\Chams.h" />
+    <ClInclude Include="Features\Crithack\Crithack.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="SDK\hl2_src\game\server\base.txt" />

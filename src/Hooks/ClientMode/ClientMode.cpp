@@ -6,6 +6,8 @@
 
 #include "../CL_Main/CL_Main.h"
 
+#include "../../Features/Crithack/Crithack.h"
+
 using namespace Hooks;
 
 void __fastcall ClientMode::OverrideView::Detour(void* ecx, void* edx, CViewSetup* pSetup)
@@ -29,6 +31,8 @@ bool __fastcall ClientMode::CreateMove::Detour(void* ecx, void* edx, float flInp
 
 		if (pWeapon)
 		{
+			F::Crithack.Run(pWeapon, cmd);
+
 			F::Prediction.Start(pLocal, cmd);
 			{
 				//Run aimbot, triggerbot etc. here

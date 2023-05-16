@@ -469,6 +469,7 @@ void CFeatures_Menu::Run()
 			{
 				GroupBoxStart();
 				{
+					CheckBox(Vars::Misc::ForceMeleeCrits, L"Forces criticals on melee weapons");
 					CheckBox(Vars::Misc::Bunnyhop, L"Automatic jumping");
 					CheckBox(Vars::Misc::BypassPure, L"Bypass sv_pure");
 				}

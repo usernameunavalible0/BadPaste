@@ -14,6 +14,12 @@ bool CConVars::Initialize()
 	cl_updaterate = I::Cvar->FindVar("cl_updaterate");
 	CHECKVAR(cl_updaterate);
 
+	tf_weapon_criticals_bucket_default = I::Cvar->FindVar("tf_weapon_criticals_bucket_default");
+	CHECKVAR(tf_weapon_criticals_bucket_default);
+
+	tf_weapon_criticals_bucket_bottom = I::Cvar->FindVar("tf_weapon_criticals_bucket_bottom");
+	CHECKVAR(tf_weapon_criticals_bucket_bottom);
+
 	//If we arrive here, return success.
 	return true;
 }

@@ -98,5 +98,6 @@ namespace Vars
 	{
 		inline CVar<bool> Bunnyhop{ true, L"Bunnyhop" };
 		inline CVar<bool> BypassPure{ true, L"Bypass Pure" };
+		inline CVar<bool> ForceMeleeCrits{ true, L"Force Melee Crits" };
 	}
 }
