@@ -534,6 +534,8 @@
     <ClInclude Include="Features\Menu\Menu.h" />
     <ClInclude Include="Features\Chams\Chams.h" />
     <ClInclude Include="Features\Crithack\Crithack.h" />
+    <ClInclude Include="SDK\hl2_src\game\shared\econ\econ_wearable.h" />
+    <ClInclude Include="SDK\hl2_src\game\shared\tf\tf_item_wearable.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="SDK\hl2_src\game\server\base.txt" />

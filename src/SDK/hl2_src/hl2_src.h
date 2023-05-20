@@ -53,6 +53,7 @@
 #include "game/shared/tf/tf_weapon_knife.h"
 #include "game/shared/tf/tf_weapon_medigun.h"
 #include "game/shared/tf/tf_weapon_sniperrifle.h"
+#include "game/shared/tf/tf_item_wearable.h"
 
 #include "public/tier1/checksum_md5.h"
 #include "public/tier1/KeyValues.h"

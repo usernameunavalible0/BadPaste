@@ -170,17 +170,220 @@ bool CFeatures_Menu::ComboBox(CVar<int>& Var, const std::vector<CVar<int>>& List
 
 bool CFeatures_Menu::InputFloat(CVar<float>& Var, float Min, float Max, float Step, const wchar_t* Fmt)
 {
-    return false;
+	bool callback = false;
+
+	int x = m_LastWidget.x;
+	int y = m_LastWidget.y + m_LastWidget.height + Vars::Menu::SpacingY;
+	int w = Vars::Menu::InputBoxW;
+	int h = Vars::Menu::InputBoxH;
+
+	if (Var.m_Var != Min)
+	{
+		if (g_InputHelper.m_nMouseX > x && g_InputHelper.m_nMouseX < x + (w / 2) && g_InputHelper.m_nMouseY > y && g_InputHelper.m_nMouseY < y + h)
+		{
+			if (g_InputHelper.IsPressedAndHeld(VK_LBUTTON)) {
+				Var.m_Var -= Step;
+				Var.m_Var = std::clamp(Var.m_Var, Min, Max);
+				callback = true;
+			}
+
+			G::Draw.GradientRect(x, y, x + (w / 2), y + h, Vars::Menu::Colors::WidgetActive, Vars::Menu::Colors::Widget, true);
+		}
+	}
+
+	if (Var.m_Var != Max)
+	{
+		if (g_InputHelper.m_nMouseX > x + (w / 2) && g_InputHelper.m_nMouseX < x + w && g_InputHelper.m_nMouseY > y && g_InputHelper.m_nMouseY < y + h)
+		{
+			if (g_InputHelper.IsPressedAndHeld(VK_LBUTTON)) {
+				Var.m_Var += Step;
+				Var.m_Var = std::clamp(Var.m_Var, Min, Max);
+				callback = true;
+			}
+
+			G::Draw.GradientRect(x + (w / 2), y, x + w, y + h, Vars::Menu::Colors::Widget, Vars::Menu::Colors::WidgetActive, true);
+		}
+	}
+
+	G::Draw.OutlinedRect(x, y, w, h, Vars::Menu::Colors::OutlineMenu);
+	G::Draw.String(FONT_MENU, x + (w / 2), y + (h / 2), Vars::Menu::Colors::Text, TXT_CENTERXY, Fmt, Var.m_Var);
+	G::Draw.String(FONT_MENU, x + w + Vars::Menu::SpacingText, y + (h / 2), Vars::Menu::Colors::Text, TXT_CENTERY, Var.m_szDisplayName);
+
+	m_LastWidget.x = x;
+	m_LastWidget.y = y;
+	m_LastWidget.width = w;
+	m_LastWidget.height = h;
+
+	return callback;
 }
 
 bool CFeatures_Menu::InputInt(CVar<int>& Var, int Min, int Max, int Step)
 {
-    return false;
+	return false;
 }
 
 bool CFeatures_Menu::InputColor(Color& Var, const wchar_t* Label)
 {
-    return false;
+	bool callback = false;
+
+	int x = m_LastWidget.x;
+	int y = m_LastWidget.y + m_LastWidget.height + Vars::Menu::SpacingY;
+	int w = Vars::Menu::InputColorBoxW;
+	int h = Vars::Menu::InputBoxH;
+	int _x = x;
+
+	int oldspacing = Vars::Menu::SpacingX;
+	Vars::Menu::SpacingX /= 2;
+
+	//red
+	{
+		if (Var.r() != 0)
+		{
+			if (g_InputHelper.m_nMouseX > x && g_InputHelper.m_nMouseX < x + (w / 2) && g_InputHelper.m_nMouseY > y && g_InputHelper.m_nMouseY < y + h)
+			{
+				if (g_InputHelper.IsPressedAndHeld(VK_LBUTTON)) {
+					Var.SetColor(Var.r() - 1, Var.g(), Var.b(), Var.a());
+					Var.SetColor(Clamp<int>(Var.r(), static_cast<byte>(0), static_cast<byte>(255)), Var.g(), Var.b(), Var.a());
+					callback = true;
+				}
+
+				G::Draw.GradientRect(x, y, x + (w / 2), y + h, Vars::Menu::Colors::WidgetActive, Vars::Menu::Colors::Widget, true);
+			}
+		}
+
+		if (Var.r() != 255)
+		{
+			if (g_InputHelper.m_nMouseX > x + (w / 2) && g_InputHelper.m_nMouseX < x + w && g_InputHelper.m_nMouseY > y && g_InputHelper.m_nMouseY < y + h)
+			{
+				if (g_InputHelper.IsPressedAndHeld(VK_LBUTTON)) {
+					Var.SetColor(Var.r() + 1, Var.g(), Var.b(), Var.a());
+					Var.SetColor(Clamp<int>(Var.r(), static_cast<byte>(0), static_cast<byte>(255)), Var.g(), Var.b(), Var.a());
+					callback = true;
+				}
+
+				G::Draw.GradientRect(x + (w / 2), y, x + w, y + h, Vars::Menu::Colors::Widget, Vars::Menu::Colors::WidgetActive, true);
+			}
+		}
+
+		G::Draw.OutlinedRect(_x, y, w, h, Vars::Menu::Colors::OutlineMenu);
+		G::Draw.String(FONT_MENU, _x + (w / 2), y + (h / 2), Vars::Menu::Colors::Text, TXT_CENTERXY, "%d", Var.r());
+		_x += w + Vars::Menu::SpacingX;
+	}
+
+	//green
+	{
+		if (Var.g() != 0)
+		{
+			if (g_InputHelper.m_nMouseX > _x && g_InputHelper.m_nMouseX < _x + (w / 2) && g_InputHelper.m_nMouseY > y && g_InputHelper.m_nMouseY < y + h)
+			{
+				if (g_InputHelper.IsPressedAndHeld(VK_LBUTTON)) {
+					Var.SetColor(Var.r(), Var.g() - 1, Var.b(), Var.a());
+					Var.SetColor(Var.r(), Clamp<int>(Var.g(), static_cast<byte>(0), static_cast<byte>(255)), Var.b(), Var.a());
+					callback = true;
+				}
+
+				G::Draw.GradientRect(_x, y, _x + (w / 2), y + h, Vars::Menu::Colors::WidgetActive, Vars::Menu::Colors::Widget, true);
+			}
+		}
+
+		if (Var.g() != 255)
+		{
+			if (g_InputHelper.m_nMouseX > _x + (w / 2) && g_InputHelper.m_nMouseX < _x + w && g_InputHelper.m_nMouseY > y && g_InputHelper.m_nMouseY < y + h)
+			{
+				if (g_InputHelper.IsPressedAndHeld(VK_LBUTTON)) {
+					Var.SetColor(Var.r(), Var.g() + 1, Var.b(), Var.a());
+					Var.SetColor(Var.r(), Clamp<int>(Var.g(), static_cast<byte>(0), static_cast<byte>(255)), Var.b(), Var.a());
+					callback = true;
+				}
+
+				G::Draw.GradientRect(_x + (w / 2), y, _x + w, y + h, Vars::Menu::Colors::Widget, Vars::Menu::Colors::WidgetActive, true);
+			}
+		}
+
+		G::Draw.OutlinedRect(_x, y, w, h, Vars::Menu::Colors::OutlineMenu);
+		G::Draw.String(FONT_MENU, _x + (w / 2), y + (h / 2), Vars::Menu::Colors::Text, TXT_CENTERXY, "%d", Var.g());
+		_x += w + Vars::Menu::SpacingX;
+	}
+
+	//blue
+	{
+		if (Var.b() != 0)
+		{
+			if (g_InputHelper.m_nMouseX > _x && g_InputHelper.m_nMouseX < _x + (w / 2) && g_InputHelper.m_nMouseY > y && g_InputHelper.m_nMouseY < y + h)
+			{
+				if (g_InputHelper.IsPressedAndHeld(VK_LBUTTON)) {
+					Var.SetColor(Var.r(), Var.g(), Var.b() - 1, Var.a());
+					Var.SetColor(Var.r(), Var.g(), Clamp<int>(Var.b(), static_cast<byte>(0), static_cast<byte>(255)), Var.a());
+					callback = true;
+				}
+
+				G::Draw.GradientRect(_x, y, _x + (w / 2), y + h, Vars::Menu::Colors::WidgetActive, Vars::Menu::Colors::Widget, true);
+			}
+		}
+
+		if (Var.b() != 255)
+		{
+			if (g_InputHelper.m_nMouseX > _x + (w / 2) && g_InputHelper.m_nMouseX < _x + w && g_InputHelper.m_nMouseY > y && g_InputHelper.m_nMouseY < y + h)
+			{
+				if (g_InputHelper.IsPressedAndHeld(VK_LBUTTON)) {
+					Var.SetColor(Var.r(), Var.g(), Var.b() + 1, Var.a());
+					Var.SetColor(Var.r(), Var.g(), Clamp<int>(Var.b(), static_cast<byte>(0), static_cast<byte>(255)), Var.a());
+					callback = true;
+				}
+
+				G::Draw.GradientRect(_x + (w / 2), y, _x + w, y + h, Vars::Menu::Colors::Widget, Vars::Menu::Colors::WidgetActive, true);
+			}
+		}
+
+		G::Draw.OutlinedRect(_x, y, w, h, Vars::Menu::Colors::OutlineMenu);
+		G::Draw.String(FONT_MENU, _x + (w / 2), y + (h / 2), Vars::Menu::Colors::Text, TXT_CENTERXY, "%d", Var.b());
+		_x += w + Vars::Menu::SpacingX;
+	}
+
+	//alpha
+	{
+		if (Var.a() != 0)
+		{
+			if (g_InputHelper.m_nMouseX > _x && g_InputHelper.m_nMouseX < _x + (w / 2) && g_InputHelper.m_nMouseY > y && g_InputHelper.m_nMouseY < y + h)
+			{
+				if (g_InputHelper.IsPressedAndHeld(VK_LBUTTON)) {
+					Var.SetColor(Var.r(), Var.g(), Var.b(), Var.a() - 1);
+					Var.SetColor(Var.r(), Var.g(), Var.b(), Clamp<int>(Var.a(), static_cast<byte>(0), static_cast<byte>(255)));
+					callback = true;
+				}
+
+				G::Draw.GradientRect(_x, y, _x + (w / 2), y + h, Vars::Menu::Colors::WidgetActive, Vars::Menu::Colors::Widget, true);
+			}
+		}
+
+		if (Var.a() != 255)
+		{
+			if (g_InputHelper.m_nMouseX > _x + (w / 2) && g_InputHelper.m_nMouseX < _x + w && g_InputHelper.m_nMouseY > y && g_InputHelper.m_nMouseY < y + h)
+			{
+				if (g_InputHelper.IsPressedAndHeld(VK_LBUTTON)) {
+					Var.SetColor(Var.r(), Var.g(), Var.b(), Var.a() + 1);
+					Var.SetColor(Var.r(), Var.g(), Var.b(), Clamp<int>(Var.a(), static_cast<byte>(0), static_cast<byte>(255)));
+					callback = true;
+				}
+
+				G::Draw.GradientRect(_x + (w / 2), y, _x + w, y + h, Vars::Menu::Colors::Widget, Vars::Menu::Colors::WidgetActive, true);
+			}
+		}
+
+		G::Draw.OutlinedRect(_x, y, w, h, Vars::Menu::Colors::OutlineMenu);
+		G::Draw.String(FONT_MENU, _x + (w / 2), y + (h / 2), Vars::Menu::Colors::Text, TXT_CENTERXY, "%d", Var.a());
+	}
+
+	G::Draw.String(FONT_MENU, _x + w + Vars::Menu::SpacingText, y + (h / 2), Vars::Menu::Colors::Text, TXT_CENTERY, Label);
+
+	Vars::Menu::SpacingX = oldspacing;
+
+	m_LastWidget.x = x;
+	m_LastWidget.y = y;
+	m_LastWidget.width = w;
+	m_LastWidget.height = h;
+
+	return callback;
 }
 
 bool CFeatures_Menu::InputString(const wchar_t* Label, std::wstring& output)
@@ -441,6 +644,19 @@ void CFeatures_Menu::Run()
 						ComboBox(Vars::Chams::Players::Material, { { 1, L"Fresnel" }, {2, L"Glow"}, {3, L"Test"}, {4, L"Shaded"}, {5, L"Toxic"} });
 					}
 					GroupBoxEnd(L"Players", 160);
+
+					if (Vars::Chams::Players::Material.m_Var == 1)
+					{
+						GroupBoxStart();
+						{
+							InputColor(Vars::Chams::Players::FresnelVars::BaseColor, L"Base Color");
+							InputColor(Vars::Chams::Players::FresnelVars::GlowColor, L"Glow Color");
+							InputFloat(Vars::Chams::Players::FresnelVars::FresnelX, -10.f, 10.f, 0.1f, L"%.1f");
+							InputFloat(Vars::Chams::Players::FresnelVars::FresnelY, -10.f, 10.f, 0.1f, L"%.1f");
+							InputFloat(Vars::Chams::Players::FresnelVars::FresnelZ, -10.f, 10.f, 0.1f, L"%.1f");
+						}
+						GroupBoxEnd(L"Fresnel Vars", 210);
+					}
 
 					break;
 				}

@@ -91,6 +91,15 @@ namespace Vars
 			inline CVar<bool> Enabled{ true, L"Enabled" };
 			inline CVar<int> Material{ 5, L"Material" }; // 0=Off, 1=Fresnel, 2=Glow, 3=Test, 4=Shaded, 5=Toxic
 			inline CVar<bool> IgnoreTeam{ true, L"Ignore Team" };
+
+			namespace FresnelVars
+			{
+				inline CVar<float> FresnelX{ 0.0, L"Fresnel X" };
+				inline CVar<float> FresnelY{ 1.0, L"Fresnel Y" };
+				inline CVar<float> FresnelZ{ 6.0, L"Fresnel Z" };
+				inline Color BaseColor = COLOR_WHITE;
+				inline Color GlowColor = COLOR_WHITE;
+			}
 		}
 	}
 
