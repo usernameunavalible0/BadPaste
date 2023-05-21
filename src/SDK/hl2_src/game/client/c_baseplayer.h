@@ -196,6 +196,21 @@ public:
 	M_NETVAR(m_szLastPlaceName, const char*, "CBasePlayer", "m_szLastPlaceName");
 
 public:
+	inline int& m_nImpulse()
+	{
+		return *reinterpret_cast<int*>(reinterpret_cast<DWORD>(this) + 0x122C);
+	}
+
+	inline bool UsingStandardWeaponsInVehicle()
+	{
+		return reinterpret_cast<bool(__thiscall*)(void*)>(g_Offsets.m_dwUsingStandardWeaponsInVehicle)(this);
+	}
+
+	inline void UpdateButtonState(const int nUserCmdButtonMask)
+	{
+		return reinterpret_cast<void(__thiscall*)(void*, int)>(g_Offsets.m_dwUpdateButtonState)(this, nUserCmdButtonMask);
+	}
+
 	static C_BasePlayer* GetLocalPlayer()
 	{
 		IClientEntity* pEntity = I::ClientEntityList->GetClientEntity(g_Globals.m_nLocalIndex);

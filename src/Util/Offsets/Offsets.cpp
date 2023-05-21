@@ -73,6 +73,12 @@ bool COffsets::Initialize()
 	m_dwFinishDrawing = g_Pattern.Find("vguimatsurface.dll", "55 8B EC 6A FF 68 ? ? ? ? 64 A1 ? ? ? ? 50 64 89 25 ? ? ? ? 51 56 6A 00");
 	CHECKPATT(m_dwFinishDrawing);
 
+	m_dwUsingStandardWeaponsInVehicle = g_Pattern.Find("client.dll", "56 57 8B F9 8B 97 ? ? ? ? 85 D2 74 52");
+	CHECKPATT(m_dwUsingStandardWeaponsInVehicle);
+
+	m_dwUpdateButtonState = g_Pattern.Find("client.dll", "55 8B EC 8B 81 ? ? ? ? 8B D0");
+	CHECKPATT(m_dwUpdateButtonState);
+
 	if (const DWORD dwClientMode = g_Pattern.Find("client.dll", "8B 0D ? ? ? ? 8B 02 D9 05"))
 		m_dwClientModeShared = (dwClientMode + 0x02);
 
@@ -91,11 +97,15 @@ bool COffsets::Initialize()
 	if (const DWORD dwRandomSeed = g_Pattern.Find("client.dll", "C7 05 ? ? ? ? ? ? ? ? 5D C3 8B 40 34"))
 		m_dwPredictionRandomSeed = (dwRandomSeed + 0x02);
 
+	if (const DWORD dwPredictionPlayer = g_Pattern.Find("client.dll", "89 3D ? ? ? ? F3"))
+		m_dwPredictionPlayer = (dwPredictionPlayer + 0x02);
+
 	CHECKPATT(m_dwGlobalVars);
 	CHECKPATT(m_dwPredictionRandomSeed);
 	CHECKPATT(m_dwInitializeKeyValue);
 	CHECKPATT(m_dwClientModeShared);
 	CHECKPATT(m_dwClientState);
+	CHECKPATT(m_dwPredictionPlayer);
 
 	//If we arrive here, return success.
 	return true;

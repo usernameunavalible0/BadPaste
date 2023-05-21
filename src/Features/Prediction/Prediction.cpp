@@ -11,7 +11,7 @@ void CFeatures_Prediction::Start(C_TFPlayer* pLocal, CUserCmd* cmd)
 
 	pLocal->m_pCurrentCommand() = cmd;
 	C_BaseEntity::SetPredictionRandomSeed((MD5_PseudoRandom(cmd->command_number) & INT_MAX));
-	//TODO: SetPredictionPlayer, UpdateButtonState
+	C_BaseEntity::SetPredictionPlayer(pLocal);
 
 	m_flOldCurTime = I::GlobalVars->curtime;
 	m_flOldFrameTime = I::GlobalVars->frametime;
@@ -43,7 +43,13 @@ void CFeatures_Prediction::Start(C_TFPlayer* pLocal, CUserCmd* cmd)
 		}
 	}
 
-	//TODO: m_nImpulse
+	if (cmd->impulse)
+	{
+		if (!pLocal->GetClientVehicle() || pLocal->UsingStandardWeaponsInVehicle())
+			pLocal->m_nImpulse() = cmd->impulse;
+	}
+
+	pLocal->UpdateButtonState(cmd->buttons);
 
 	I::ClientPrediction->SetLocalViewAngles(cmd->viewangles);
 
@@ -72,7 +78,7 @@ void CFeatures_Prediction::Finish(C_TFPlayer* pLocal)
 
 	pLocal->m_pCurrentCommand() = nullptr;
 	C_BaseEntity::SetPredictionRandomSeed(-1);
-	//TODO: SetPredictionPlayer
+	C_BaseEntity::SetPredictionPlayer(nullptr);
 
 	I::GlobalVars->curtime = m_flOldCurTime;
 	I::GlobalVars->frametime = m_flOldFrameTime;

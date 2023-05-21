@@ -36,6 +36,9 @@ public:
 	DWORD m_dwSendNetMsg = 0x0;
 	DWORD m_dwCalcPlayerView = 0x0;
 	DWORD m_dwBaseAnimatingSetupBones = 0x0;
+	DWORD m_dwPredictionPlayer = 0x0;
+	DWORD m_dwUsingStandardWeaponsInVehicle = 0x0;
+	DWORD m_dwUpdateButtonState = 0x0;
 };
 
 inline COffsets g_Offsets;

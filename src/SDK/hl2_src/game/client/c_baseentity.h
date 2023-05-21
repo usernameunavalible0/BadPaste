@@ -24,6 +24,7 @@
 #include "../shared/ehandle.h"
 
 namespace I { inline int32* PredictionRandomSeed = nullptr; }
+namespace I { inline void** PredictionPlayer = nullptr; }
 
 class IInterpolatedVar;
 class CDmgAccumulator;
@@ -43,6 +44,7 @@ class CTakeDamageInfo;
 class C_BaseCombatCharacter;
 class C_BaseCombatWeapon;
 class C_BaseEntity;
+class C_BasePlayer;
 
 struct FireBulletsInfo_t;
 struct EmitSound_t;
@@ -394,6 +396,11 @@ public:
 	static void SetPredictionRandomSeed(const int nSeed)
 	{
 		*I::PredictionRandomSeed = nSeed;
+	}
+
+	static void SetPredictionPlayer(C_BasePlayer* player)
+	{
+		*I::PredictionPlayer = player;
 	}
 
 public:
