@@ -6,17 +6,17 @@
 
 bool CKeyValUtils::LoadFromBuffer(KeyValues* key_value, char const* resource_name, const char* buffer, void* file_system, const char* path_id)
 {
-	return reinterpret_cast<int(__thiscall*)(KeyValues*, char const*, const char*, void*, const char*)>(g_Offsets.m_dwLoadFromBuffer)(key_value, resource_name, buffer, file_system, path_id);
+	return reinterpret_cast<int(__thiscall*)(KeyValues*, char const*, const char*, void*, const char*)>(U::Offsets.m_dwLoadFromBuffer)(key_value, resource_name, buffer, file_system, path_id);
 }
 
 KeyValues* CKeyValUtils::FindKey(KeyValues* key_value, const char* keyName, bool bCreate)
 {
-	return reinterpret_cast<KeyValues* (__thiscall*)(KeyValues*, const char*, bool)>(g_Offsets.m_dwFindKey)(key_value, keyName, bCreate);
+	return reinterpret_cast<KeyValues* (__thiscall*)(KeyValues*, const char*, bool)>(U::Offsets.m_dwFindKey)(key_value, keyName, bCreate);
 }
 
 KeyValues* CKeyValUtils::Initialize(KeyValues* key_value, char* name)
 {
-	return reinterpret_cast<KeyValues* (__thiscall*)(KeyValues*, char*)>(g_Offsets.m_dwInitializeKeyValue)(key_value, name);
+	return reinterpret_cast<KeyValues* (__thiscall*)(KeyValues*, char*)>(U::Offsets.m_dwInitializeKeyValue)(key_value, name);
 }
 
 KeyValues::KeyValues(const char* keyName)

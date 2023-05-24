@@ -5,8 +5,8 @@
 
 DEFINE_HOOK(IEngineVGui_Paint, void, __fastcall, void* ecx, void* edx, int mode)
 {
-	static const auto pfStartDrawing = reinterpret_cast<void(__thiscall*)(IMatSystemSurface*)>(g_Offsets.m_dwStartDrawing);
-	static const auto pfFinishDrawing = reinterpret_cast<void(__thiscall*)(IMatSystemSurface*)>(g_Offsets.m_dwFinishDrawing);
+	static const auto pfStartDrawing = reinterpret_cast<void(__thiscall*)(IMatSystemSurface*)>(U::Offsets.m_dwStartDrawing);
+	static const auto pfFinishDrawing = reinterpret_cast<void(__thiscall*)(IMatSystemSurface*)>(U::Offsets.m_dwFinishDrawing);
 
 	Func.Original<FN>()(ecx, edx, mode);
 

@@ -2,7 +2,7 @@
 
 #include "../Pattern/Pattern.h"
 
-class COffsets
+class CUtil_Offsets
 {
 public:
 	bool Initialize();
@@ -41,4 +41,4 @@ public:
 	DWORD m_dwUpdateButtonState = 0x0;
 };
 
-inline COffsets g_Offsets;
+namespace U { inline CUtil_Offsets Offsets; }

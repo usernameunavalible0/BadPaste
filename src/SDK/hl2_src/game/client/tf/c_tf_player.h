@@ -304,7 +304,7 @@ public:
 
 	inline bool IsPlayerOnSteamFriendsList()
 	{
-		return reinterpret_cast<bool(__thiscall*)(void*, void*)>(g_Offsets.m_dwIsPlayerOnSteamFriendsList)(this, this);
+		return reinterpret_cast<bool(__thiscall*)(void*, void*)>(U::Offsets.m_dwIsPlayerOnSteamFriendsList)(this, this);
 	}
 
 	inline bool IsClass(const int nClass)

@@ -164,16 +164,16 @@ bool CInterfaces::Initialize()
 	I::RunGameEngine = reinterpret_cast<IRunGameEngine*>(CreateInterface("GameUI.dll", RUNGAMEENGINE_INTERFACE_VERSION));
 	XASSERTFALSE(I::RunGameEngine == nullptr);
 
-	I::GlobalVars = *reinterpret_cast<CGlobalVarsBase**>(g_Offsets.m_dwGlobalVars);
+	I::GlobalVars = *reinterpret_cast<CGlobalVarsBase**>(U::Offsets.m_dwGlobalVars);
 	XASSERTFALSE(I::GlobalVars == nullptr);
 
-	I::ClientState = *reinterpret_cast<CClientState**>(g_Offsets.m_dwClientState);
+	I::ClientState = *reinterpret_cast<CClientState**>(U::Offsets.m_dwClientState);
 	XASSERTFALSE(I::ClientState == nullptr);
 
-	I::PredictionRandomSeed = *reinterpret_cast<int32**>(g_Offsets.m_dwPredictionRandomSeed);
+	I::PredictionRandomSeed = *reinterpret_cast<int32**>(U::Offsets.m_dwPredictionRandomSeed);
 	XASSERTFALSE(I::PredictionRandomSeed == nullptr);
 
-	I::PredictionPlayer = *reinterpret_cast<void***>(g_Offsets.m_dwPredictionPlayer);
+	I::PredictionPlayer = *reinterpret_cast<void***>(U::Offsets.m_dwPredictionPlayer);
 	XASSERTFALSE(I::PredictionPlayer == nullptr);
 
 	{

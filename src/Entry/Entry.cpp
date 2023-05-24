@@ -10,7 +10,7 @@ void CModuleEntry::Load()
 
 	MathLib_Init();
 
-	_VALIDATE(g_Offsets.Initialize());
+	_VALIDATE(U::Offsets.Initialize());
 	_VALIDATE(g_Interfaces.Initialize());
 
 	_VALIDATE(G::ConVars.Initialize());

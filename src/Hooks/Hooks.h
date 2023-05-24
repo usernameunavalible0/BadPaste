@@ -3,18 +3,18 @@
 
 class INetworkStringTable;
 
-CREATE_HOOK(CBaseEntity_BaseInterpolatePart1, g_Offsets.m_dwBaseInterpolatePart1, int, __fastcall, C_BaseEntity* pThis, void* edx, float& currentTime, Vector& oldOrigin, QAngle& oldAngles, Vector& oldVel, int& bNoMoreChanges);
-CREATE_HOOK(CBasePlayer_CalcPlayerView, g_Offsets.m_dwCalcPlayerView, void, __fastcall, C_BasePlayer* pThis, void* edx, Vector& eyeOrigin, QAngle& eyeAngles, float& fov);
-CREATE_HOOK(CL_LoadWhitelist, g_Offsets.m_dwCLLoadWhitelist, CPureServerWhitelist*, __cdecl, INetworkStringTable* pTable, const char* pName);
-CREATE_HOOK(CL_Move, g_Offsets.m_dwCLMove, void, __cdecl, float accumulated_extra_samples, bool bFinalTick);
-CREATE_HOOK(CL_SendMove, g_Offsets.m_dwCLSendMove, void, __fastcall, void* ecx, void* edx);
+CREATE_HOOK(CBaseEntity_BaseInterpolatePart1, U::Offsets.m_dwBaseInterpolatePart1, int, __fastcall, C_BaseEntity* pThis, void* edx, float& currentTime, Vector& oldOrigin, QAngle& oldAngles, Vector& oldVel, int& bNoMoreChanges);
+CREATE_HOOK(CBasePlayer_CalcPlayerView, U::Offsets.m_dwCalcPlayerView, void, __fastcall, C_BasePlayer* pThis, void* edx, Vector& eyeOrigin, QAngle& eyeAngles, float& fov);
+CREATE_HOOK(CL_LoadWhitelist, U::Offsets.m_dwCLLoadWhitelist, CPureServerWhitelist*, __cdecl, INetworkStringTable* pTable, const char* pName);
+CREATE_HOOK(CL_Move, U::Offsets.m_dwCLMove, void, __cdecl, float accumulated_extra_samples, bool bFinalTick);
+CREATE_HOOK(CL_SendMove, U::Offsets.m_dwCLSendMove, void, __fastcall, void* ecx, void* edx);
 CREATE_HOOK(IBaseClientDLL_LevelInitPreEntity, U::VFunc.Get<void*>(I::BaseClient, 5u), void, __fastcall, void* ecx, void* edx, char const* pMapName);
 CREATE_HOOK(IBaseClientDLL_LevelInitPostEntity, U::VFunc.Get<void*>(I::BaseClient, 6u), void, __fastcall, void* ecx, void* edx);
 CREATE_HOOK(IBaseClientDLL_LevelShutdown, U::VFunc.Get<void*>(I::BaseClient, 7u), void, __fastcall, void* ecx, void* edx);
 CREATE_HOOK(IBaseClientDLL_FrameStageNotify, U::VFunc.Get<void*>(I::BaseClient, 35u), void, __fastcall, void* ecx, void* edx, ClientFrameStage_t curStage);
 CREATE_HOOK(IBaseClientDLL_DispatchUserMessage, U::VFunc.Get<void*>(I::BaseClient, 36u), bool, __fastcall, void* ecx, void* edx, int msg_type, bf_read& msg_data);
-CREATE_HOOK(IClientEntityList_OnAddEntity, g_Offsets.m_dwOnAddEntity, void, __fastcall, void* ecx, void* edx, IHandleEntity* pEnt, CBaseHandle handle);
-CREATE_HOOK(IClientEntityList_OnRemoveEntity, g_Offsets.m_dwOnRemoveEntity, void, __fastcall, void* ecx, void* edx, IHandleEntity* pEnt, CBaseHandle handle);
+CREATE_HOOK(IClientEntityList_OnAddEntity, U::Offsets.m_dwOnAddEntity, void, __fastcall, void* ecx, void* edx, IHandleEntity* pEnt, CBaseHandle handle);
+CREATE_HOOK(IClientEntityList_OnRemoveEntity, U::Offsets.m_dwOnRemoveEntity, void, __fastcall, void* ecx, void* edx, IHandleEntity* pEnt, CBaseHandle handle);
 CREATE_HOOK(ClientModeShared_OverrideView, U::VFunc.Get<void*>(I::ClientMode, 16u), void, __fastcall, void* ecx, void* edx, CViewSetup* pSetup);
 CREATE_HOOK(ClientModeShared_CreateMove, U::VFunc.Get<void*>(I::ClientMode, 21u), bool, __fastcall, void* ecx, void* edx, float flInputSampleTime, CUserCmd* cmd);
 CREATE_HOOK(ClientModeShared_ShouldDrawViewModel, U::VFunc.Get<void*>(I::ClientMode, 24u), bool, __fastcall, void* ecx, void* edx);
@@ -30,16 +30,16 @@ CREATE_HOOK(CInput_DecodeUserCmdFromBuffer, U::VFunc.Get<void*>(I::Input, 7u), v
 CREATE_HOOK(CInput_GetUserCmd, U::VFunc.Get<void*>(I::Input, 8u), CUserCmd*, __fastcall, void* ecx, void* edx, int sequence_number);
 CREATE_HOOK(IVModelRender_ForcedMaterialOverride, U::VFunc.Get<void*>(I::ModelRender, 1u), void, __fastcall, void* ecx, void* edx, IMaterial* newMaterial, OverrideType_t nOverrideType);
 CREATE_HOOK(IVModelRender_DrawModelExecute, U::VFunc.Get<void*>(I::ModelRender, 19u), void, __fastcall, void* ecx, void* edx, const DrawModelState_t& state, const ModelRenderInfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld);
-CREATE_HOOK(INetChannel_SendNetMsg, g_Offsets.m_dwSendNetMsg, bool, __fastcall, CNetChan* pThis, void* edx, INetMessage& msg, bool bForceReliable, bool bVoice);
-CREATE_HOOK(INetChannel_SendDataGram, g_Offsets.m_dwSendDataGram, int, __fastcall, INetChannel* pThis, void* edx, bf_write* data);
-CREATE_HOOK(INetChannel_Shutdown, g_Offsets.m_dwShutdown, void, __fastcall, INetChannel* pThis, void* edx, const char* pReason);
-CREATE_HOOK(CSequenceTransitioner_CheckForSequenceChange, g_Offsets.m_dwCheckForSequenceChange, void, __fastcall, void* ecx, void* edx, CStudioHdr* hdr, int nCurSequence, bool bForceNewSequence, bool bInterpolate);
-CREATE_HOOK(CTFPlayer_FireBullet, g_Offsets.m_dwFireBullet, void, __fastcall, C_TFPlayer* pThis, void* edx, C_TFWeaponBase* pWpn, FireBulletsInfo_t& info, bool bDoEffects, int nDamageType, int nCustomDamageType);
-CREATE_HOOK(CTFWeaponBase_GetTracerType, g_Offsets.m_dwGetTracerType, const char*, __fastcall, C_TFWeaponBase* pThis, void* edx);
+CREATE_HOOK(INetChannel_SendNetMsg, U::Offsets.m_dwSendNetMsg, bool, __fastcall, CNetChan* pThis, void* edx, INetMessage& msg, bool bForceReliable, bool bVoice);
+CREATE_HOOK(INetChannel_SendDataGram, U::Offsets.m_dwSendDataGram, int, __fastcall, INetChannel* pThis, void* edx, bf_write* data);
+CREATE_HOOK(INetChannel_Shutdown, U::Offsets.m_dwShutdown, void, __fastcall, INetChannel* pThis, void* edx, const char* pReason);
+CREATE_HOOK(CSequenceTransitioner_CheckForSequenceChange, U::Offsets.m_dwCheckForSequenceChange, void, __fastcall, void* ecx, void* edx, CStudioHdr* hdr, int nCurSequence, bool bForceNewSequence, bool bInterpolate);
+CREATE_HOOK(CTFPlayer_FireBullet, U::Offsets.m_dwFireBullet, void, __fastcall, C_TFPlayer* pThis, void* edx, C_TFWeaponBase* pWpn, FireBulletsInfo_t& info, bool bDoEffects, int nDamageType, int nCustomDamageType);
+CREATE_HOOK(CTFWeaponBase_GetTracerType, U::Offsets.m_dwGetTracerType, const char*, __fastcall, C_TFWeaponBase* pThis, void* edx);
 CREATE_HOOK(IPanel_PaintTraverse, U::VFunc.Get<void*>(I::VGuiPanel, 41u), void, __fastcall, void* ecx, void* edx, vgui::VPANEL vguiPanel, bool forceRepaint, bool allowForce);
 CREATE_HOOK(ISurface_OnScreenSizeChanged, U::VFunc.Get<void*>(I::VGuiSurface, 111u), void, __fastcall, void* ecx, void* edx, int oldWidth, int oldHeight);
 CREATE_HOOK(ISurface_LockCursor, U::VFunc.Get<void*>(I::VGuiSurface, 62u), void, __fastcall, void* ecx, void* edx);
-CREATE_HOOK(CViewRender_PerformScreenSpaceEffects, *reinterpret_cast<DWORD*>(g_Offsets.m_dwPerformScreenSpaceEffects) + g_Offsets.m_dwPerformScreenSpaceEffects + 0x04, void, __fastcall, void* ecx, void* edx, int x, int y, int w, int h);
+CREATE_HOOK(CViewRender_PerformScreenSpaceEffects, *reinterpret_cast<DWORD*>(U::Offsets.m_dwPerformScreenSpaceEffects) + U::Offsets.m_dwPerformScreenSpaceEffects + 0x04, void, __fastcall, void* ecx, void* edx, int x, int y, int w, int h);
 
 class CGlobal_Hooks
 {

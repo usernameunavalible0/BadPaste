@@ -385,12 +385,12 @@ public:
 
 	inline bool PhysicsRunThink(const thinkmethods_t thinkMethod = THINK_FIRE_ALL_FUNCTIONS)
 	{
-		return reinterpret_cast<bool(__thiscall*)(void*, thinkmethods_t)>(g_Offsets.m_dwPhysicsRunThink)(this, thinkMethod);
+		return reinterpret_cast<bool(__thiscall*)(void*, thinkmethods_t)>(U::Offsets.m_dwPhysicsRunThink)(this, thinkMethod);
 	}
 
 	inline int SaveData(const char* const context, const int slot, const int type)
 	{
-		return reinterpret_cast<int(__thiscall*)(void*, const char*, int, int)>(g_Offsets.m_dwSaveData)(this, context, slot, type);
+		return reinterpret_cast<int(__thiscall*)(void*, const char*, int, int)>(U::Offsets.m_dwSaveData)(this, context, slot, type);
 	}
 
 	static void SetPredictionRandomSeed(const int nSeed)

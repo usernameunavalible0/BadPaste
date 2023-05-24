@@ -450,7 +450,7 @@ void ClientPrint(C_BasePlayer* player, int msg_dest, const char* msg_name, const
 
 CEntitySphereQuery::CEntitySphereQuery(const Vector& center, float radius, int flagMask, int partitionMask)
 {
-	reinterpret_cast<void(__thiscall*)(void*, const Vector&, float, int, int)>(g_Offsets.m_dwEntitySphereQuery)(this, center, radius, flagMask, partitionMask);
+	reinterpret_cast<void(__thiscall*)(void*, const Vector&, float, int, int)>(U::Offsets.m_dwEntitySphereQuery)(this, center, radius, flagMask, partitionMask);
 }
 
 C_BaseEntity* CEntitySphereQuery::GetCurrentEntity()

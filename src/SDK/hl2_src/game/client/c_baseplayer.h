@@ -203,12 +203,12 @@ public:
 
 	inline bool UsingStandardWeaponsInVehicle()
 	{
-		return reinterpret_cast<bool(__thiscall*)(void*)>(g_Offsets.m_dwUsingStandardWeaponsInVehicle)(this);
+		return reinterpret_cast<bool(__thiscall*)(void*)>(U::Offsets.m_dwUsingStandardWeaponsInVehicle)(this);
 	}
 
 	inline void UpdateButtonState(const int nUserCmdButtonMask)
 	{
-		return reinterpret_cast<void(__thiscall*)(void*, int)>(g_Offsets.m_dwUpdateButtonState)(this, nUserCmdButtonMask);
+		return reinterpret_cast<void(__thiscall*)(void*, int)>(U::Offsets.m_dwUpdateButtonState)(this, nUserCmdButtonMask);
 	}
 
 	static C_BasePlayer* GetLocalPlayer()
