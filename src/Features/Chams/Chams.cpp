@@ -1,8 +1,8 @@
 #include "Chams.h"
 #include "../Vars.h"
-#include "../../Hooks/ModelRender/ModelRender.h"
+#include "../../Hooks/Hooks.h"
 
-using namespace Hooks::ModelRender;
+using namespace Hooks::IVModelRender_DrawModelExecute;
 
 bool CFeatures_Chams::Initialize()
 {
@@ -101,7 +101,7 @@ bool CFeatures_Chams::Render(void* ecx, void* edx, const DrawModelState_t& state
 		const float fColor[3] = { clrTeam.r() / 255.f, clrTeam.g() / 255.f, clrTeam.b() / 255.f };
 		I::RenderView->SetColorModulation(fColor);
 
-		Table.Original<DrawModelExecute::FN>(DrawModelExecute::Index)(ecx, edx, state, pInfo, pCustomBoneToWorld);
+		Func.Original<FN>()(ecx, edx, state, pInfo, pCustomBoneToWorld);
 
 		I::ModelRender->ForcedMaterialOverride(nullptr);
 
@@ -145,7 +145,7 @@ bool CFeatures_Chams::Render(void* ecx, void* edx, const DrawModelState_t& state
 			pGlowColor->SetVecValue(fGlowColor[0], fGlowColor[1], fGlowColor[2]);
 		}
 
-		Table.Original<DrawModelExecute::FN>(DrawModelExecute::Index)(ecx, edx, state, pInfo, pCustomBoneToWorld);
+		Func.Original<FN>()(ecx, edx, state, pInfo, pCustomBoneToWorld);
 
 		I::ModelRender->ForcedMaterialOverride(nullptr);
 

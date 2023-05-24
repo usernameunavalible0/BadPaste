@@ -1,10 +1,16 @@
 #pragma once
 
-void**& VTable_Get(void* inst, const unsigned int offset = 0u);
-const void** VTable_Get(const void* inst, const unsigned int offset = 0u);
-
-template<typename T>
-inline T VFunc_Get(const void* inst, const unsigned int index, const unsigned int offset = 0u)
+class CUtil_VFunc
 {
-	return reinterpret_cast<T>(VTable_Get(inst, offset)[index]);
-}
+public:
+	template<typename T>
+	inline T Get(void* inst, const unsigned int index, const unsigned int offset = 0u) {
+		return reinterpret_cast<T>(Get_VTable(inst, offset)[index]);
+	}
+
+private:
+	void**& Get_VTable(void* inst, const unsigned int offset = 0u);
+	const void** Get_VTable(const void* inst, const unsigned int offset = 0u);
+};
+
+namespace U { inline CUtil_VFunc VFunc; }

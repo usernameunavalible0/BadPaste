@@ -82,22 +82,22 @@ class CBaseHudChat //: public CHudElement, public vgui::EditablePanel
 public:
 	inline void Printf(const int iFilter, const char* const fmt, ...)
 	{
-		VFunc_Get<void(__thiscall*)(void*, int, const char*)>(this, 18u)(this, iFilter, fmt);
+		U::VFunc.Get<void(__thiscall*)(void*, int, const char*)>(this, 18u)(this, iFilter, fmt);
 	}
 
 	inline void ChatPrintf(const int iPlayerIndex, const int iFilter, const char* const fmt, ...)
 	{
-		VFunc_Get<void(__thiscall*)(void*, int, int, const char*)>(this, 19u)(this, iPlayerIndex, iFilter, fmt);
+		U::VFunc.Get<void(__thiscall*)(void*, int, int, const char*)>(this, 19u)(this, iPlayerIndex, iFilter, fmt);
 	}
 
 	inline void StartMessageMode(const int iMessageModeType)
 	{
-		VFunc_Get<void(__thiscall*)(void*, int)>(this, 20u)(this, iMessageModeType);
+		U::VFunc.Get<void(__thiscall*)(void*, int)>(this, 20u)(this, iMessageModeType);
 	}
 
 	inline void StopMessageMode()
 	{
-		VFunc_Get<void(__thiscall*)(void*)>(this, 21u)(this);
+		U::VFunc.Get<void(__thiscall*)(void*)>(this, 21u)(this);
 	}
 };
 

@@ -28,32 +28,15 @@
 
 #pragma once
 
- // Size of each memory slot.
+// Size of each memory slot.
 #if defined(_M_X64) || defined(__x86_64__)
-#define MEMORY_SLOT_SIZE 64
+    #define MEMORY_SLOT_SIZE 64
 #else
-#define MEMORY_SLOT_SIZE 32
+    #define MEMORY_SLOT_SIZE 32
 #endif
 
-VOID   InitializeBuffer( VOID );
-VOID   UninitializeBuffer( VOID );
-LPVOID AllocateBuffer( LPVOID pOrigin );
-VOID   FreeBuffer( LPVOID pBuffer );
-BOOL   IsExecutableAddress( LPVOID pAddress );
-
-#define USE_NTDLL_FUNCTIONS
-
-#if !defined(_M_X64) && !defined(__x86_64__) && defined USE_NTDLL_FUNCTIONS
-
-typedef enum _MEMORY_INFORMATION_CLASS {
-	MemoryBasicInformation
-} MEMORY_INFORMATION_CLASS, * PMEMORY_INFORMATION_CLASS;
-
-EXTERN_C_START
-NTSTATUS NTAPI NtQueryVirtualMemory(HANDLE ProcessHandle, PVOID BaseAddress, MEMORY_INFORMATION_CLASS MemoryInformationClass, PVOID Buffer, ULONG Length, PULONG ResultLength);
-NTSTATUS NTAPI NtAllocateVirtualMemory(HANDLE ProcessHandle, PVOID* BaseAddress, ULONG ZeroBits, PULONG RegionSize, ULONG AllocationType, ULONG Protect);
-NTSTATUS NTAPI NtFreeVirtualMemory(HANDLE ProcessHandle, PVOID* BaseAddress, PULONG RegionSize, ULONG FreeType);
-NTSTATUS NTAPI NtProtectVirtualMemory(HANDLE ProcessHandle, PVOID* BaseAddress, PULONG NumberOfBytesToProtect, ULONG NewAccessProtection, PULONG OldAccessProtection);
-EXTERN_C_END
-
-#endif
+VOID   InitializeBuffer(VOID);
+VOID   UninitializeBuffer(VOID);
+LPVOID AllocateBuffer(LPVOID pOrigin);
+VOID   FreeBuffer(LPVOID pBuffer);
+BOOL   IsExecutableAddress(LPVOID pAddress);

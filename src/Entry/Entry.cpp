@@ -22,7 +22,7 @@ void CModuleEntry::Load()
 	if (I::EngineClient->IsInGame())
 		g_Globals.m_nLocalIndex = I::EngineClient->GetLocalPlayer();
 
-	_VALIDATE(Hooks::Initialize());
+	_VALIDATE(G::Hooks.Initialize());
 
 	_VALIDATE(F::Chams.Initialize());
 
@@ -31,7 +31,7 @@ void CModuleEntry::Load()
 
 void CModuleEntry::Unload()
 {
-	_VALIDATE(Hooks::UnInitialize());
+	_VALIDATE(G::Hooks.UnInitialize());
 
 	std::this_thread::sleep_for(std::chrono::milliseconds(100));
 

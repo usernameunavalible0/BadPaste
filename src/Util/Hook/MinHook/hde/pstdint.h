@@ -28,7 +28,7 @@
 
 #include <windows.h>
 
- // Integer types for HDE.
+// Integer types for HDE.
 typedef INT8   int8_t;
 typedef INT16  int16_t;
 typedef INT32  int32_t;

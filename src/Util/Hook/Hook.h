@@ -6,7 +6,7 @@
 
 namespace Hook
 {
-	class CFunction
+	class C_Function
 	{
 	public:
 		inline bool Initialize(void* pTarget, void* pDetour) {
@@ -23,7 +23,7 @@ namespace Hook
 		void* m_pOriginal = nullptr;
 	};
 
-	class CTable
+	class C_Table
 	{
 	public:
 		inline bool Initialize(const void* pTable)
@@ -53,12 +53,12 @@ namespace Hook
 		}
 
 	private:
-		unsigned int**            m_pBase = 0u;
+		unsigned int** m_pBase = 0u;
 		unsigned int		      m_nSize = 0u;
 		std::unique_ptr<void* []> m_pOriginals = { };
 	};
 
-	class CVMTable
+	class C_VMTHook
 	{
 	public:
 		inline bool Initialize(const void* pTable)
@@ -116,3 +116,19 @@ namespace Hook
 		std::unique_ptr<uintptr_t[]> m_pCurrent = { };
 	};
 }
+
+#define CREATE_HOOK(name, address, type, callconvo, ...) namespace Hooks \
+{ \
+	namespace name \
+	{ \
+		inline Hook::C_Function Func; \
+		using FN = type(callconvo*)(__VA_ARGS__); \
+		type callconvo Detour(__VA_ARGS__); \
+		inline void Initialize() \
+		{ \
+			XASSERT(Func.Initialize(reinterpret_cast<void*>(address), &Detour) == FAILED_TO_HOOK); \
+		} \
+	}\
+}
+
+#define DEFINE_HOOK(name, type, callconvo, ...) type callconvo Hooks::name::Detour(__VA_ARGS__)
