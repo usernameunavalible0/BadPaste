@@ -14,9 +14,21 @@ void CFeatures_Crithack::Run(C_TFWeaponBase* pWeapon, CUserCmd* cmd)
 	if (!pMelee)
 		return;
 
+	static int previousWeaponIdx = 0;
+	//Lets check if we have a new melee weapon and if we do clear the crit ticks and scan again
+	if (previousWeaponIdx != pWeapon->entindex())
+	{
+		previousWeaponIdx = pWeapon->entindex();
+		m_CritTicks.Purge();
+	}
+
 	//Lets check the next 60 command numbers for seeds that result in critical hits
 	for (int n = 0; n < 60; n++)
 	{
+		//Lets save some resources
+		if (m_CritTicks.Size() >= 256)
+			break;
+
 		//Variable to represent the command number we are checking
 		const int cmdNum = cmd->command_number + n;
 		//Then lets set the seed used by the crit system to run our own check to see if this command number grants a critical hit
@@ -32,6 +44,10 @@ void CFeatures_Crithack::Run(C_TFWeaponBase* pWeapon, CUserCmd* cmd)
 	//If we are attacking lets give ourselves a crit
 	if (cmd->buttons & IN_ATTACK)
 	{
+		//Lets avoid crashes due to m_Size < 0
+		if (m_CritTicks.IsEmpty())
+			return;
+
 		//To give ourselves that juicy crit we set our command number and random seed based on the ones we collected earlier.
 		//NOTE: This random is not nessisary I just thought it might be fun
 		const int critTick = m_CritTicks.Random();

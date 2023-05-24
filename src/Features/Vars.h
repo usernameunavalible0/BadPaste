@@ -89,7 +89,7 @@ namespace Vars
 		namespace Players
 		{
 			inline CVar<bool> Enabled{ true, L"Enabled" };
-			inline CVar<int> Material{ 5, L"Material" }; // 0=Off, 1=Fresnel, 2=Glow, 3=Test, 4=Shaded, 5=Toxic
+			inline CVar<int> Material{ 1, L"Material" }; // 0=Off, 1=Fresnel, 2=Glow, 3=Test, 4=Shaded, 5=Toxic
 			inline CVar<bool> IgnoreTeam{ true, L"Ignore Team" };
 
 			namespace FresnelVars

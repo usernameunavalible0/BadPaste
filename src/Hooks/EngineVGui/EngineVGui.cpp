@@ -29,6 +29,9 @@ void __fastcall EngineVGui::Paint::Detour(void* ecx, void* edx, int mode)
 				if (pLocal)
 				{
 					F::ESP.Render(pLocal);
+#ifdef _DEBUG
+					G::Draw.String(FONT_MENU, g_Globals.m_nScreenWidht / 2, (g_Globals.m_nScreenHeight / 2) + 5, COLOR_GREY, TXT_CENTERX, "%d", F::Crithack.m_CritTicks.Size());
+#endif
 				}
 			}
 
