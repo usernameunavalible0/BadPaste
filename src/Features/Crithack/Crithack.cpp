@@ -16,9 +16,9 @@ void CFeatures_Crithack::Run(C_TFWeaponBase* pWeapon, CUserCmd* cmd)
 
 	static int previousWeaponIdx = 0;
 	//Lets check if we have a new melee weapon and if we do clear the crit ticks and scan again
-	if (previousWeaponIdx != pWeapon->entindex())
+	if (previousWeaponIdx != pMelee->entindex())
 	{
-		previousWeaponIdx = pWeapon->entindex();
+		previousWeaponIdx = pMelee->entindex();
 		m_CritTicks.Purge();
 	}
 

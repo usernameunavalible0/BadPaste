@@ -45,6 +45,8 @@ bool CGlobal_Hooks::Initialize()
 	ISurface_OnScreenSizeChanged::Initialize();
 	ISurface_LockCursor::Initialize();
 	CViewRender_PerformScreenSpaceEffects::Initialize();
+	CTFPlayerShared_IsPlayerDominated::Initialize();
+	KeyValues_SetInt::Initialize();
 	WndProc::Initialize();
 
 	if (MH_EnableHook(MH_ALL_HOOKS) != MH_STATUS::MH_OK)

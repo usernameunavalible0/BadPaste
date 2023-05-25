@@ -152,6 +152,8 @@
     <ClCompile Include="Hooks\Definitions\ISurface_LockCursor.cpp" />
     <ClCompile Include="Hooks\Definitions\CViewRender_PerformScreenSpaceEffects.cpp" />
     <ClCompile Include="Features\Prediction\Prediction.cpp" />
+    <ClCompile Include="Hooks\Definitions\CTFPlayerShared_IsPlayerDominated.cpp" />
+    <ClCompile Include="Hooks\Definitions\KeyValues_SetInt.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entry\Entry.h" />

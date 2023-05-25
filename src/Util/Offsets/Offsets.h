@@ -39,6 +39,8 @@ public:
 	DWORD m_dwPredictionPlayer = 0x0;
 	DWORD m_dwUsingStandardWeaponsInVehicle = 0x0;
 	DWORD m_dwUpdateButtonState = 0x0;
+	DWORD m_dwIsPlayerDominated = 0x0;
+	DWORD m_dwSetInt = 0x0;
 };
 
 namespace U { inline CUtil_Offsets Offsets; }

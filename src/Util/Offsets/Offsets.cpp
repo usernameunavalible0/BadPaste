@@ -22,6 +22,8 @@ bool CUtil_Offsets::Initialize()
 	GETPATT(m_dwFindKey, "client.dll", "55 8B EC 81 EC ? ? ? ? 56 8B 75 08 57 8B F9 85 F6 0F");
 	GETPATT(m_dwUsingStandardWeaponsInVehicle, "client.dll", "56 57 8B F9 8B 97 ? ? ? ? 85 D2 74 52");
 	GETPATT(m_dwUpdateButtonState, "client.dll", "55 8B EC 8B 81 ? ? ? ? 8B D0");
+	GETPATT(m_dwIsPlayerDominated, "client.dll", "55 8B EC 56 57 8B F1 E8 ? ? ? ? 8B F8 85 FF 75 08");
+	GETPATT(m_dwSetInt, "client.dll", "55 8B EC 6A 01 ? 75 08 E8 93 D2 ? ? 85 C0 74 0A");
 
 	GETPATT(m_dwLoadFromBuffer, "engine.dll", "55 8B EC 83 EC 38 53 8B 5D 0C");
 	GETPATT(m_dwCLMove, "engine.dll", "55 8B EC 83 EC ? 83 3D ? ? ? ? 02 0F 8C ? ? 00 00 E8 ? ? ? 00 84 C0");

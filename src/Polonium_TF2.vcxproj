@@ -188,6 +188,7 @@
     <ClCompile Include="Hooks\Definitions\CL_SendMove.cpp" />
     <ClCompile Include="Hooks\Definitions\CPrediction_RunCommand.cpp" />
     <ClCompile Include="Hooks\Definitions\CSequenceTransitioner_CheckForSequenceChange.cpp" />
+    <ClCompile Include="Hooks\Definitions\CTFPlayerShared_IsPlayerDominated.cpp" />
     <ClCompile Include="Hooks\Definitions\CTFPlayer_FireBullet.cpp" />
     <ClCompile Include="Hooks\Definitions\CTFWeaponBase_GetTracerType.cpp" />
     <ClCompile Include="Hooks\Definitions\CViewRender_PerformScreenSpaceEffects.cpp" />
@@ -208,6 +209,7 @@
     <ClCompile Include="Hooks\Definitions\IVEngineClient_IsPlayingTimeDemo.cpp" />
     <ClCompile Include="Hooks\Definitions\IVModelRender_DrawModelExecute.cpp" />
     <ClCompile Include="Hooks\Definitions\IVModelRender_ForcedMaterialOverride.cpp" />
+    <ClCompile Include="Hooks\Definitions\KeyValues_SetInt.cpp" />
     <ClCompile Include="Hooks\Definitions\WndProc.cpp" />
     <ClCompile Include="Hooks\Hooks.cpp" />
     <ClCompile Include="SDK\ConVars\ConVars.cpp" />

@@ -40,6 +40,8 @@ CREATE_HOOK(IPanel_PaintTraverse, U::VFunc.Get<void*>(I::VGuiPanel, 41u), void, 
 CREATE_HOOK(ISurface_OnScreenSizeChanged, U::VFunc.Get<void*>(I::VGuiSurface, 111u), void, __fastcall, void* ecx, void* edx, int oldWidth, int oldHeight);
 CREATE_HOOK(ISurface_LockCursor, U::VFunc.Get<void*>(I::VGuiSurface, 62u), void, __fastcall, void* ecx, void* edx);
 CREATE_HOOK(CViewRender_PerformScreenSpaceEffects, *reinterpret_cast<DWORD*>(U::Offsets.m_dwPerformScreenSpaceEffects) + U::Offsets.m_dwPerformScreenSpaceEffects + 0x04, void, __fastcall, void* ecx, void* edx, int x, int y, int w, int h);
+CREATE_HOOK(CTFPlayerShared_IsPlayerDominated, U::Offsets.m_dwIsPlayerDominated, bool, __fastcall, void* ecx, void* edx, int iPlayerIndex);
+CREATE_HOOK(KeyValues_SetInt, U::Offsets.m_dwSetInt, void, __fastcall, void* ecx, void* edx, const char* keyName, int value);
 
 class CGlobal_Hooks
 {
