@@ -30,7 +30,7 @@ struct Shader_VertexArrayData_t;
 struct ShaderRenderState_t;
 class KeyValues;
 
-typedef int FileNameHandle_t;
+//typedef int FileNameHandle_t;
 
 //-----------------------------------------------------------------------------
 // Interface for materials used only within the material system

@@ -219,7 +219,51 @@ bool CFeatures_Menu::InputFloat(CVar<float>& Var, float Min, float Max, float St
 
 bool CFeatures_Menu::InputInt(CVar<int>& Var, int Min, int Max, int Step)
 {
-	return false;
+	bool callback = false;
+
+	int x = m_LastWidget.x;
+	int y = m_LastWidget.y + m_LastWidget.height + Vars::Menu::SpacingY;
+	int w = Vars::Menu::InputBoxW;
+	int h = Vars::Menu::InputBoxH;
+
+	if (Var.m_Var != Min)
+	{
+		if (g_InputHelper.m_nMouseX > x && g_InputHelper.m_nMouseX < x + (w / 2) && g_InputHelper.m_nMouseY > y && g_InputHelper.m_nMouseY < y + h)
+		{
+			if (g_InputHelper.IsPressedAndHeld(VK_LBUTTON)) {
+				Var.m_Var -= Step;
+				Var.m_Var = std::clamp(Var.m_Var, Min, Max);
+				callback = true;
+			}
+
+			G::Draw.GradientRect(x, y, x + (w / 2), y + h, Vars::Menu::Colors::WidgetActive, Vars::Menu::Colors::Widget, true);
+		}
+	}
+
+	if (Var.m_Var != Max)
+	{
+		if (g_InputHelper.m_nMouseX > x + (w / 2) && g_InputHelper.m_nMouseX < x + w && g_InputHelper.m_nMouseY > y && g_InputHelper.m_nMouseY < y + h)
+		{
+			if (g_InputHelper.IsPressedAndHeld(VK_LBUTTON)) {
+				Var.m_Var += Step;
+				Var.m_Var = std::clamp(Var.m_Var, Min, Max);
+				callback = true;
+			}
+
+			G::Draw.GradientRect(x + (w / 2), y, x + w, y + h, Vars::Menu::Colors::Widget, Vars::Menu::Colors::WidgetActive, true);
+		}
+	}
+
+	G::Draw.OutlinedRect(x, y, w, h, Vars::Menu::Colors::OutlineMenu);
+	G::Draw.String(FONT_MENU, x + (w / 2), y + (h / 2), Vars::Menu::Colors::Text, TXT_CENTERXY, "%d", Var.m_Var);
+	G::Draw.String(FONT_MENU, x + w + Vars::Menu::SpacingText, y + (h / 2), Vars::Menu::Colors::Text, TXT_CENTERY, Var.m_szDisplayName);
+
+	m_LastWidget.x = x;
+	m_LastWidget.y = y;
+	m_LastWidget.width = w;
+	m_LastWidget.height = h;
+
+	return callback;
 }
 
 bool CFeatures_Menu::InputColor(Color& Var, const wchar_t* Label)
@@ -663,14 +707,43 @@ void CFeatures_Menu::Run()
 
 				case EVisualsTabs::TAB_OTHER:
 				{
+					Rect_t checkpoint = m_LastWidget;
+
 					GroupBoxStart();
 					{
 						CheckBox(Vars::Visual::RemoveVisualRecoil, L"Removes visual weapon recoil");
 						CheckBox(Vars::Visual::Tracers, L"Bullet Tracers");
+						CheckBox(Vars::Visual::RemoveScope, L"Removes sniper scope overlay");
+						CheckBox(Vars::Visual::RemoveZoom, L"Removes sniper scope zoom");
+						InputInt(Vars::Visual::FOV, 40, 140);
+					}
+					GroupBoxEnd(L"Main", 190);
+					
+					GroupBoxStart();
+					{
+						CheckBox(Vars::Visual::Thirdperson, L"Enables thirdperson");
+						InputKey(Vars::Visual::ThirdpersonKey);
+					}
+					GroupBoxEnd(L"Thirdperson", 180);
+
+					GroupBoxStart();
+					{
 						CheckBox(Vars::Visual::Snow, L"Snow on the Menu");
 						CheckBox(Vars::Visual::ToolTips, L"Informational tooltips for the Menu");
 					}
-					GroupBoxEnd(L"Main", 190);
+					GroupBoxEnd(L"Menu", 190);
+
+					checkpoint.x += 190 + Vars::Menu::SpacingX;
+					m_LastWidget = checkpoint;
+
+					GroupBoxStart();
+					{
+						CheckBox(Vars::Visual::ViewModelSway, L"Slight weapon sway when moving camera");
+						CheckBox(Vars::Visual::ViewModel_Active, L"Toggle to enable viewmodel offsets");
+						InputInt(Vars::Visual::ViewModel_Position_Offset_Forward, -30, 30);
+						InputInt(Vars::Visual::ViewModel_Position_Offset_Right, -30, 30);
+						InputInt(Vars::Visual::ViewModel_Position_Offset_Up, -30, 30);
+					}
 
 					break;
 				}

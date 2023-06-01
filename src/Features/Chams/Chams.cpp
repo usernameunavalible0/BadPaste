@@ -6,14 +6,6 @@ using namespace Hooks::IVModelRender_DrawModelExecute;
 
 bool CFeatures_Chams::Initialize()
 {
-	/*KeyValues* pMatFresnel = new KeyValues("VertexLitGeneric");
-	pMatFresnel->SetString("$basetexture", "vgui/white_additive");
-	pMatFresnel->SetString("$bumpmap", "vgui/white_additive");
-	pMatFresnel->SetString("$color2", "[100 0.5 0.5]");
-	pMatFresnel->SetString("$selfillum", "1");
-	pMatFresnel->SetString("$selfillumfresnel", "1");
-	pMatFresnel->SetString("$selfillumfresnelminmaxexp", "[0.1 0.2 0.3]");
-	pMatFresnel->SetString("$selfillumtint", "[0 0.3 0.6]");*/
 	KeyValues* pMatFresnel = new KeyValues("VertexLitGeneric");
 	pMatFresnel->SetString("$basetexture", "vgui/white_additive");
 	pMatFresnel->SetString("$bumpmap", "models/player/shared/shared_normal");
@@ -116,6 +108,50 @@ bool CFeatures_Chams::Render(void* ecx, void* edx, const DrawModelState_t& state
 		C_TFPlayer* pPlayer = pEntity->As<C_TFPlayer*>();
 
 		if (Vars::Chams::Players::IgnoreTeam.m_Var && pPlayer->InLocalTeam())
+			return false;
+
+		I::ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
+			{
+				switch (Vars::Chams::Players::Material.m_Var)
+				{
+				case 1: return m_pMatFresnel;
+				case 2: return m_pMatGlow;
+				case 3: return m_pMatTest;
+				case 4: return m_pMatShaded;
+				case 5: return m_pMatToxic;
+				default: return nullptr;
+				}
+			}());
+
+		if (Vars::Chams::Players::Material.m_Var == 1)
+		{
+			IMaterialVar* pFresnelRanges = m_pMatFresnel->FindVar("$phongfresnelranges", NULL, false);
+			pFresnelRanges->SetVecValue(Vars::Chams::Players::FresnelVars::FresnelX.m_Var, Vars::Chams::Players::FresnelVars::FresnelY.m_Var, Vars::Chams::Players::FresnelVars::FresnelZ.m_Var);
+
+			float fBaseColor[3]; Vars::Chams::Players::FresnelVars::BaseColor.AsFloat(fBaseColor);
+			IMaterialVar* pBaseColor = m_pMatFresnel->FindVar("$selfillumtint", NULL, false);
+			pBaseColor->SetVecValue(fBaseColor[0], fBaseColor[1], fBaseColor[2]);
+
+			float fGlowColor[3]; Vars::Chams::Players::FresnelVars::GlowColor.AsFloat(fGlowColor);
+			IMaterialVar* pGlowColor = m_pMatFresnel->FindVar("$envmaptint", NULL, false);
+			pGlowColor->SetVecValue(fGlowColor[0], fGlowColor[1], fGlowColor[2]);
+		}
+
+		Func.Original<FN>()(ecx, edx, state, pInfo, pCustomBoneToWorld);
+
+		I::ModelRender->ForcedMaterialOverride(nullptr);
+
+		return true;
+	}
+
+	case ETFClientClass::CTFWearable:
+	{
+		C_TFWearable* pWearable = pEntity->As<C_TFWearable*>();
+
+		if (!pWearable->moveparent())
+			return false;
+
+		if (Vars::Chams::Players::IgnoreTeam.m_Var && pWearable->InLocalTeam())
 			return false;
 
 		I::ModelRender->ForcedMaterialOverride([&]() -> IMaterial*

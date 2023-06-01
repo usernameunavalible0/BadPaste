@@ -42,6 +42,8 @@ CREATE_HOOK(ISurface_LockCursor, U::VFunc.Get<void*>(I::VGuiSurface, 62u), void,
 CREATE_HOOK(CViewRender_PerformScreenSpaceEffects, *reinterpret_cast<DWORD*>(U::Offsets.m_dwPerformScreenSpaceEffects) + U::Offsets.m_dwPerformScreenSpaceEffects + 0x04, void, __fastcall, void* ecx, void* edx, int x, int y, int w, int h);
 CREATE_HOOK(CTFPlayerShared_IsPlayerDominated, U::Offsets.m_dwIsPlayerDominated, bool, __fastcall, void* ecx, void* edx, int iPlayerIndex);
 CREATE_HOOK(KeyValues_SetInt, U::Offsets.m_dwSetInt, void, __fastcall, void* ecx, void* edx, const char* keyName, int value);
+CREATE_HOOK(CTFPlayerShared_InCond, U::Offsets.m_dwInCond, bool, __fastcall, void* ecx, void* edx, ETFCond eCond);
+CREATE_HOOK(CTFViewModel_CalcViewModelView, U::Offsets.m_dwCalcViewModelView, void, __fastcall, void* ecx, void* edx, C_BasePlayer* owner, const Vector& eyePosition, const QAngle& eyeAngles);
 
 class CGlobal_Hooks
 {

@@ -154,6 +154,9 @@
     <ClCompile Include="Features\Prediction\Prediction.cpp" />
     <ClCompile Include="Hooks\Definitions\CTFPlayerShared_IsPlayerDominated.cpp" />
     <ClCompile Include="Hooks\Definitions\KeyValues_SetInt.cpp" />
+    <ClCompile Include="Hooks\Definitions\CTFPlayerShared_InCond.cpp" />
+    <ClCompile Include="Features\Visual\Visual.cpp" />
+    <ClCompile Include="Hooks\Definitions\CTFViewModel_CalcViewModelView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entry\Entry.h" />
@@ -539,6 +542,7 @@
     <ClInclude Include="Util\Hook\Hook.h" />
     <ClInclude Include="Hooks\Definitions\WndProc.h" />
     <ClInclude Include="Hooks\Hooks.h" />
+    <ClInclude Include="Features\Visual\Visual.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="SDK\hl2_src\game\server\base.txt" />

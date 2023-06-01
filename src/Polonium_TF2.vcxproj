@@ -171,6 +171,7 @@
     <ClCompile Include="Features\Menu\Menu.cpp" />
     <ClCompile Include="Features\Misc\Misc.cpp" />
     <ClCompile Include="Features\Prediction\Prediction.cpp" />
+    <ClCompile Include="Features\Visual\Visual.cpp" />
     <ClCompile Include="Hooks\Definitions\CBaseEntity_BaseInterpolatePart1.cpp" />
     <ClCompile Include="Hooks\Definitions\CBasePlayer_CalcPlayerView.cpp" />
     <ClCompile Include="Hooks\Definitions\CInput_DecodeUserCmdFromBuffer.cpp" />
@@ -188,8 +189,10 @@
     <ClCompile Include="Hooks\Definitions\CL_SendMove.cpp" />
     <ClCompile Include="Hooks\Definitions\CPrediction_RunCommand.cpp" />
     <ClCompile Include="Hooks\Definitions\CSequenceTransitioner_CheckForSequenceChange.cpp" />
+    <ClCompile Include="Hooks\Definitions\CTFPlayerShared_InCond.cpp" />
     <ClCompile Include="Hooks\Definitions\CTFPlayerShared_IsPlayerDominated.cpp" />
     <ClCompile Include="Hooks\Definitions\CTFPlayer_FireBullet.cpp" />
+    <ClCompile Include="Hooks\Definitions\CTFViewModel_CalcViewModelView.cpp" />
     <ClCompile Include="Hooks\Definitions\CTFWeaponBase_GetTracerType.cpp" />
     <ClCompile Include="Hooks\Definitions\CViewRender_PerformScreenSpaceEffects.cpp" />
     <ClCompile Include="Hooks\Definitions\IBaseClientDLL_DispatchUserMessage.cpp" />
@@ -326,6 +329,7 @@
     <ClInclude Include="Features\Misc\Misc.h" />
     <ClInclude Include="Features\Prediction\Prediction.h" />
     <ClInclude Include="Features\Vars.h" />
+    <ClInclude Include="Features\Visual\Visual.h" />
     <ClInclude Include="Hooks\Definitions\WndProc.h" />
     <ClInclude Include="Hooks\Hooks.h" />
     <ClInclude Include="SDK\ConVars\ConVars.h" />

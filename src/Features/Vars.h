@@ -80,6 +80,17 @@ namespace Vars
 		inline CVar<bool> Tracers{ false, L"Tracers" };
 		inline CVar<bool> Snow{ false, L"Menu Snow" };
 		inline CVar<bool> ToolTips{ false, L"Menu tooltips" };
+		inline CVar<bool> RemoveScope{ true, L"Remove Scope"};
+		inline CVar<bool> RemoveZoom{ true, L"Remove Zoom"};
+		inline CVar<int> FOV{ 90, L"FOV"};
+		inline CVar<bool> Thirdperson{ true, L"Enabled"};
+		inline CVar<int> ThirdpersonKey{ 'B', L"Toggle Key"};
+		inline CVar<bool> ViewModelSway{ true, L"View Model Sway"};
+		inline CVar<bool> ViewModel_Active{ true, L"ViewModel Offset"};
+		inline CVar<int> ViewModel_Position_Offset_Forward{ 0, L"Forward/Backward Offset"};
+		inline CVar<int> ViewModel_Position_Offset_Right{ 0, L"Left/Right Offset"};
+		inline CVar<int> ViewModel_Position_Offset_Up{ 0, L"Up/Down Offset"};
+		inline CVar<bool> ModulateWorld{ true, L"ModulateWorld"};
 	}
 
 	namespace Chams

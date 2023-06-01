@@ -1,4 +1,5 @@
 #include "../Hooks.h"
+#include "../../Features/Visual/Visual.h"
 
 DEFINE_HOOK(IBaseClientDLL_FrameStageNotify, void, __fastcall, void* ecx, void* edx, ClientFrameStage_t curStage)
 {
@@ -20,5 +21,10 @@ DEFINE_HOOK(IBaseClientDLL_FrameStageNotify, void, __fastcall, void* ecx, void* 
 			g_Globals.m_nMaxEntities = I::ClientEntityList->GetMaxEntities();
 			G::EntityCache.Fill();
 		}
+	}
+
+	if (curStage == ClientFrameStage_t::FRAME_RENDER_START)
+	{
+		F::Visual.UpdateWorldModulation();
 	}
 }

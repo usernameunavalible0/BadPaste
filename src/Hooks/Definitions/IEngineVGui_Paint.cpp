@@ -2,6 +2,7 @@
 
 #include "../../Features/ESP/ESP.h"
 #include "../../Features/Menu/Menu.h"
+#include "../../Features/Visual/Visual.h"
 
 DEFINE_HOOK(IEngineVGui_Paint, void, __fastcall, void* ecx, void* edx, int mode)
 {
@@ -23,6 +24,9 @@ DEFINE_HOOK(IEngineVGui_Paint, void, __fastcall, void* ecx, void* edx, int mode)
 				if (pLocal)
 				{
 					F::ESP.Render(pLocal);
+
+					F::Visual.Thirdperson(pLocal);
+					F::Visual.WeaponSway();
 				}
 			}
 

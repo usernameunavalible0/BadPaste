@@ -47,6 +47,8 @@ bool CGlobal_Hooks::Initialize()
 	CViewRender_PerformScreenSpaceEffects::Initialize();
 	CTFPlayerShared_IsPlayerDominated::Initialize();
 	KeyValues_SetInt::Initialize();
+	CTFPlayerShared_InCond::Initialize();
+	CTFViewModel_CalcViewModelView::Initialize();
 	WndProc::Initialize();
 
 	if (MH_EnableHook(MH_ALL_HOOKS) != MH_STATUS::MH_OK)
