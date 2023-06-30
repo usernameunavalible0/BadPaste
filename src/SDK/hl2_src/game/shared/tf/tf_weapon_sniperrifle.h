@@ -19,6 +19,14 @@ enum RifleTypes_t
 	RIFLE_CLASSIC,
 };
 
+#define TF_WEAPON_SNIPERRIFLE_CHARGE_PER_SEC	50.0
+#define TF_WEAPON_SNIPERRIFLE_UNCHARGE_PER_SEC	75.0
+#define	TF_WEAPON_SNIPERRIFLE_DAMAGE_MIN		50
+#define TF_WEAPON_SNIPERRIFLE_DAMAGE_MAX		150
+#define TF_WEAPON_SNIPERRIFLE_RELOAD_TIME		1.5f
+#define TF_WEAPON_SNIPERRIFLE_ZOOM_TIME			0.3f
+#define TF_WEAPON_SNIPERRIFLE_NO_CRIT_AFTER_ZOOM_TIME	0.2f
+
 //=============================================================================
 //
 // Sniper Rifle class.

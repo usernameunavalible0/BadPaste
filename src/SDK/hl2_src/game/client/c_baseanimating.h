@@ -195,6 +195,33 @@ public:
 		VectorTransform((pBox->bbmax + pBox->bbmin) * 0.5f, BoneMatrix[pBox->bone], vPosition);
 		return true;
 	}
+
+	inline bool GetHitboxMinsMaxsAndMatrix(const int nHitbox, Vector& vecMins, Vector& vecMaxs, matrix3x4_t& pMatrix, Vector& vecCenter)
+	{
+		const model_t* pModel = this->GetModel();
+
+		if (!pModel)
+			return false;
+
+		const studiohdr_t* pStudioHdr = I::ModelInfoClient->GetStudiomodel(pModel);
+
+		if (!pStudioHdr)
+			return false;
+
+		const mstudiobbox_t* pBox = pStudioHdr->pHitbox(nHitbox, this->m_nHitboxSet());
+
+		if (!pBox || (pBox->bone >= MAXSTUDIOBONES) || (pBox->bone < 0))
+			return false;
+
+		matrix3x4_t BoneMatrix[MAXSTUDIOBONES];
+		if (!SetupBones(BoneMatrix, MAXSTUDIOBONES, BONE_USED_BY_HITBOX, I::GlobalVars->curtime))
+			return false;
+
+		vecMins = pBox->bbmin; vecMaxs = pBox->bbmax;
+		MatrixCopy(BoneMatrix[pBox->bone], pMatrix);
+		VectorTransform((pBox->bbmax + pBox->bbmin) * 0.5f, BoneMatrix[pBox->bone], vecCenter);
+		return true;
+	}
 };
 
 #endif //C_BASEANIMATING_H

@@ -51,6 +51,15 @@ namespace Vars
 		}
 	}
 
+	namespace Aimbot
+	{
+		namespace Global
+		{
+			inline CVar<bool> Enabled{ true, L"Enabled" };
+			inline CVar<int> AimKey { VK_XBUTTON2, L"Aim Key"};
+		}
+	}
+
 	namespace ESP
 	{
 		inline CVar<bool> Enabled{ true, L"Enabled" };

@@ -325,6 +325,26 @@ public:
 		return InCond(TF_COND_ZOOMED);
 	}
 
+	inline bool IsTaunting()
+	{
+		return InCond(TF_COND_TAUNTING);
+	}
+
+	inline bool IsBonked()
+	{
+		return InCond(TF_COND_PHASE);
+	}
+
+	inline bool IsHalloweenKart()
+	{
+		return InCond(TF_COND_HALLOWEEN_KART);
+	}
+
+	inline bool IsHalloweenGhostMode()
+	{
+		return InCond(TF_COND_HALLOWEEN_GHOST_MODE);
+	}
+
 	inline bool IsInvulnerable()
 	{
 		return InCond(TF_COND_INVULNERABLE)

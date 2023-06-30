@@ -164,6 +164,8 @@
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
     <ClCompile Include="Entry\Entry.cpp" />
+    <ClCompile Include="Features\Aimbot\Aimbot.cpp" />
+    <ClCompile Include="Features\Aimbot\AimbotGlobal\AimbotGlobal.cpp" />
     <ClCompile Include="Features\Chams\Chams.cpp" />
     <ClCompile Include="Features\Crithack\Crithack.cpp" />
     <ClCompile Include="Features\ESP\ESP.cpp" />
@@ -321,6 +323,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entry\Entry.h" />
+    <ClInclude Include="Features\Aimbot\Aimbot.h" />
+    <ClInclude Include="Features\Aimbot\AimbotGlobal\AimbotGlobal.h" />
     <ClInclude Include="Features\Chams\Chams.h" />
     <ClInclude Include="Features\Crithack\Crithack.h" />
     <ClInclude Include="Features\ESP\ESP.h" />

@@ -4,5 +4,15 @@
 
 DEFINE_HOOK(CTFWeaponBase_GetTracerType, const char*, __fastcall, C_TFWeaponBase* pThis, void* edx)
 {
-	return Vars::Visual::Tracers.m_Var ? "merasmus_zap" : Func.Original<FN>()(pThis, edx);
+	if (Vars::Visual::Tracers.m_Var)
+	{
+		C_TFWeaponBase* pWeapon = G::EntityCache.GetWeapon();
+
+		if (pThis == pWeapon)
+		{
+			return "merasmus_zap";
+		}
+	}
+
+	return Func.Original<FN>()(pThis, edx);
 }

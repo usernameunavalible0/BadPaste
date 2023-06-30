@@ -20,6 +20,33 @@ DEFINE_HOOK(IBaseClientDLL_FrameStageNotify, void, __fastcall, void* ecx, void* 
 			g_Globals.m_nMaxClients = I::EngineClient->GetMaxClients();
 			g_Globals.m_nMaxEntities = I::ClientEntityList->GetMaxEntities();
 			G::EntityCache.Fill();
+
+			if (C_TFPlayer* pLocal = G::EntityCache.GetLocal())
+			{
+				for (auto pEntity : G::EntityCache.GetGroup(EEntGroup::PLAYERS_TEAMMATES))
+				{
+					C_TFPlayer* pTeammate = pEntity->As<C_TFPlayer*>();
+
+					if (pTeammate->IsAlive() || pTeammate->IsPlayerOnSteamFriendsList())
+						continue;
+
+					C_BaseEntity* pObservedPlayer = pTeammate->GetObserverTarget();
+
+					if (pObservedPlayer == pLocal)
+					{
+						switch (pTeammate->GetObserverMode())
+						{
+						case OBS_MODE_IN_EYE:
+						case OBS_MODE_CHASE:
+							break;
+						default: continue;
+						}
+
+						g_Globals.m_bIsBeingSpectated = true;
+						break;
+					}
+				}
+			}
 		}
 	}
 
