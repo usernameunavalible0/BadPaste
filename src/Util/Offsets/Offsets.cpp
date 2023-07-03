@@ -26,6 +26,7 @@ bool CUtil_Offsets::Initialize()
 	GETPATT(m_dwSetInt, "client.dll", "55 8B EC 6A 01 ? 75 08 E8 93 D2 ? ? 85 C0 74 0A");
 	GETPATT(m_dwInCond, "client.dll", "55 8B EC 83 EC 08 56 57 8B 7D 08 8B F1 83");
 	GETPATT(m_dwCalcViewModelView, "client.dll", "55 8B EC 83 EC 70 8B 55");
+	GETPATT(m_dwAttribHookValue, "client.dll", "55 8B EC 83 EC 10 8B 0D ? ? ? ? 53 56 57 33 FF");
 
 	GETPATT(m_dwLoadFromBuffer, "engine.dll", "55 8B EC 83 EC 38 53 8B 5D 0C");
 	GETPATT(m_dwCLMove, "engine.dll", "55 8B EC 83 EC ? 83 3D ? ? ? ? 02 0F 8C ? ? 00 00 E8 ? ? ? 00 84 C0");

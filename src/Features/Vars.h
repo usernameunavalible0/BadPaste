@@ -57,6 +57,27 @@ namespace Vars
 		{
 			inline CVar<bool> Enabled{ true, L"Enabled" };
 			inline CVar<int> AimKey { VK_XBUTTON2, L"Aim Key"};
+			inline CVar<bool> AutoShoot{ true, L"Auto Shoot"};
+			inline CVar<bool> AimPlayers{ true, L"Aim Players"};
+			inline CVar<bool> AimBuildings{ true, L"Aim Buildings"};
+			inline CVar<bool> IgnoreInvulnerable{ true, L"Ignore Invulnerable"};
+			inline CVar<bool> IgnoreCloaked{ true, L"Ignore Cloaked"};
+			inline CVar<bool> IgnoreTaunting{true, L"Ignore Taunting"};
+			inline CVar<bool> IgnoreFriends{ true, L"Ignore Friends"};
+		}
+
+		namespace Hitscan
+		{
+			inline CVar<bool> Enabled{ true, L"Enabled"};
+			inline CVar<int> SortMethod{ 0, L"Sort Method"};
+			inline CVar<float> AimFOV{ 15.f, L"Aim FOV"};
+			inline CVar<int> AimHitbox{ 2, L"Aim Hitbox"};
+			inline CVar<int> AimMethod{ 2, L"Aim Method"};
+			inline CVar<bool> ScopedOnly{false, L"Scoped Only"};
+			inline CVar<bool> SpectatedSmooth{ true, L"Spectated Smooth"};
+			inline CVar<int> SmoothingAmount{ 4, L"Smoothing Amount"};
+			inline CVar<bool> WaitForHeadshot{ true, L"Wait for Headshot"};
+			inline CVar<bool> WaitForCharge{ true, L"Wait for Charge"};
 		}
 	}
 

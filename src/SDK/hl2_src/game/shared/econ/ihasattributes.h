@@ -9,7 +9,7 @@
 #pragma once
 #endif
 
-//#include "attribute_manager.h"
+#include "attribute_manager.h"
 
 class CAttributeManager;
 class CAttributeContainer;

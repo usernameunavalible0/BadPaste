@@ -1,9 +1,10 @@
 #include "Aimbot.h"
+#include "AimbotHitscan/AimbotHitscan.h"
 #include "../Vars.h"
 
 void CFeatures_Aimbot::Run(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CUserCmd* cmd)
 {
-	g_Globals.m_nCurAimFOV = 0.0f;
+	g_Globals.m_flCurAimFOV = 0.0f;
 
 	if (!Vars::Aimbot::Global::Enabled.m_Var)
 		return;
@@ -31,7 +32,7 @@ void CFeatures_Aimbot::Run(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CUserCmd
 	switch (GetWeaponType(pWeapon))
 	{
 	case EWeaponType::HITSCAN: {
-		//A::Hitscan.Run(pLocal, pWeapon, cmd);
+		A::Hitscan.Run(pLocal, pWeapon, cmd);
 		break;
 	}
 	default: break;

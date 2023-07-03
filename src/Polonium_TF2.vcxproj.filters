@@ -159,6 +159,7 @@
     <ClCompile Include="SDK\EntityCache\EntityCache.cpp" />
     <ClCompile Include="Features\Aimbot\AimbotGlobal\AimbotGlobal.cpp" />
     <ClCompile Include="Features\Aimbot\Aimbot.cpp" />
+    <ClCompile Include="Features\Aimbot\AimbotHitscan\AimbotHitscan.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entry\Entry.h" />
@@ -547,6 +548,8 @@
     <ClInclude Include="Features\Aimbot\AimbotGlobal\AimbotGlobal.h" />
     <ClInclude Include="SDK\EntityCache\EntityCache.h" />
     <ClInclude Include="Features\Aimbot\Aimbot.h" />
+    <ClInclude Include="Features\Aimbot\AimbotHitscan\AimbotHitscan.h" />
+    <ClInclude Include="SDK\hl2_src\game\shared\econ\attribute_manager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="SDK\hl2_src\game\server\base.txt" />

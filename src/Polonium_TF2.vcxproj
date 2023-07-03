@@ -166,6 +166,7 @@
     <ClCompile Include="Entry\Entry.cpp" />
     <ClCompile Include="Features\Aimbot\Aimbot.cpp" />
     <ClCompile Include="Features\Aimbot\AimbotGlobal\AimbotGlobal.cpp" />
+    <ClCompile Include="Features\Aimbot\AimbotHitscan\AimbotHitscan.cpp" />
     <ClCompile Include="Features\Chams\Chams.cpp" />
     <ClCompile Include="Features\Crithack\Crithack.cpp" />
     <ClCompile Include="Features\ESP\ESP.cpp" />
@@ -325,6 +326,7 @@
     <ClInclude Include="Entry\Entry.h" />
     <ClInclude Include="Features\Aimbot\Aimbot.h" />
     <ClInclude Include="Features\Aimbot\AimbotGlobal\AimbotGlobal.h" />
+    <ClInclude Include="Features\Aimbot\AimbotHitscan\AimbotHitscan.h" />
     <ClInclude Include="Features\Chams\Chams.h" />
     <ClInclude Include="Features\Crithack\Crithack.h" />
     <ClInclude Include="Features\ESP\ESP.h" />
@@ -359,6 +361,7 @@
     <ClInclude Include="SDK\hl2_src\game\client\prediction.h" />
     <ClInclude Include="SDK\hl2_src\game\client\view_scene.h" />
     <ClInclude Include="SDK\hl2_src\game\shared\ai_activity.h" />
+    <ClInclude Include="SDK\hl2_src\game\shared\econ\attribute_manager.h" />
     <ClInclude Include="SDK\hl2_src\game\shared\econ\econ_item_inventory.h" />
     <ClInclude Include="SDK\hl2_src\game\shared\econ\econ_wearable.h" />
     <ClInclude Include="SDK\hl2_src\game\shared\tf\tf_item_wearable.h" />

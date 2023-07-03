@@ -52,6 +52,18 @@ protected:
 
 public:
 	M_NETVAR(m_flChargedDamage, float, "CTFSniperRifle", "m_flChargedDamage");
+
+	inline bool IsFullyCharged()
+	{
+		return m_flChargedDamage() >= TF_WEAPON_SNIPERRIFLE_DAMAGE_MAX;
+	}
+
+	inline int GetRifleType()
+	{
+		int iMode = 0;
+		CALL_ATTRIB_HOOK_INT(iMode, set_weapon_mode);
+		return iMode;
+	}
 };
 
 #endif // TF_WEAPON_SNIPERRIFLE_H

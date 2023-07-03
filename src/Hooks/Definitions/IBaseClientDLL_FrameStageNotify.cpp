@@ -21,6 +21,7 @@ DEFINE_HOOK(IBaseClientDLL_FrameStageNotify, void, __fastcall, void* ecx, void* 
 			g_Globals.m_nMaxEntities = I::ClientEntityList->GetMaxEntities();
 			G::EntityCache.Fill();
 
+			g_Globals.m_bIsBeingSpectated = false;
 			if (C_TFPlayer* pLocal = G::EntityCache.GetLocal())
 			{
 				for (auto pEntity : G::EntityCache.GetGroup(EEntGroup::PLAYERS_TEAMMATES))

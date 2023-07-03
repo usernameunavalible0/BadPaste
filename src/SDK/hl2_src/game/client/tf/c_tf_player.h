@@ -382,6 +382,21 @@ public:
 			|| InCond(TF_COND_MARKEDFORDEATH)
 			|| InCond(TF_COND_MARKEDFORDEATH_SILENT);
 	}
+
+	RuneTypes_t GetCarryingRuneType()
+	{
+		RuneTypes_t retVal = RUNE_NONE;
+		for (int i = 0; i < RUNE_TYPES_MAX; ++i)
+		{
+			if (InCond(GetConditionFromRuneType((RuneTypes_t)i)))
+			{
+				retVal = (RuneTypes_t)i;
+				break;
+			}
+		}
+
+		return retVal;
+	}
 };
 
 #endif //C_TF_PLAYER_H
