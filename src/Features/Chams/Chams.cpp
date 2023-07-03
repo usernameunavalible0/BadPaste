@@ -148,6 +148,7 @@ bool CFeatures_Chams::Render(void* ecx, void* edx, const DrawModelState_t& state
 	{
 		C_TFWearable* pWearable = pEntity->As<C_TFWearable*>();
 
+		//This is probably not the best way to check if wearable is being worn
 		if (!pWearable->moveparent())
 			return false;
 

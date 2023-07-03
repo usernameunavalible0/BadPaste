@@ -11,6 +11,8 @@
 
 #include "tf_weaponbase_melee.h"
 
+class C_TFPlayer;
+
 // Knives use the "set_weapon_mode" attribute to define which type of knife they are
 // Keep this enum in sync with the values used for set_weapon_mode.
 enum knife_weapontypes_t
@@ -38,6 +40,18 @@ public:
 	M_NETVAR(m_flKnifeMeltTimestamp, float, "CTFKnife", "m_flKnifeMeltTimestamp");
 
 public:
+
+	bool DoSwingTraceKnife(trace_t& trace, QAngle vAngleOverride);
+
+	bool CanPerformBackstabAgainstTarget(C_TFPlayer* pTarget, QAngle vAngleTo);
+	bool IsBehindAndFacingTarget(C_TFPlayer* pTarget, QAngle vAngleTo);
+
+	inline int GetKnifeType()
+	{
+		int iMode = 0;
+		CALL_ATTRIB_HOOK_INT(iMode, set_weapon_mode);
+		return iMode;
+	}
 
 	inline float GetProgress(void)
 	{

@@ -69,16 +69,21 @@ namespace Vars
 		namespace Hitscan
 		{
 			inline CVar<bool> Enabled{ true, L"Enabled"};
-			inline CVar<int> SortMethod{ 0, L"Sort Method"};
-			inline CVar<float> AimFOV{ 15.f, L"Aim FOV"};
-			inline CVar<int> AimHitbox{ 2, L"Aim Hitbox"};
-			inline CVar<int> AimMethod{ 2, L"Aim Method"};
+			inline CVar<int> SortMethod{ 0, L"Sort"};
+			inline CVar<float> AimFOV{ 15.f, L"FOV"};
+			inline CVar<int> AimHitbox{ 2, L"Hitbox"};
+			inline CVar<int> AimMethod{ 2, L"Aim Type"};
 			inline CVar<bool> ScopedOnly{false, L"Scoped Only"};
 			inline CVar<bool> SpectatedSmooth{ true, L"Spectated Smooth"};
-			inline CVar<int> SmoothingAmount{ 4, L"Smoothing Amount"};
-			inline CVar<bool> WaitForHeadshot{ true, L"Wait for Headshot"};
-			inline CVar<bool> WaitForCharge{ true, L"Wait for Charge"};
+			inline CVar<int> SmoothingAmount{ 4, L"Smoothing"};
+			inline CVar<bool> WaitForHeadshot{ true, L"Wait For Headshot"};
+			inline CVar<bool> WaitForCharge{ true, L"Wait For Charge"};
 		}
+	}
+
+	namespace Auto
+	{
+		inline CVar<int> AutoBackstab{2, L"Auto Backstab"}; //0 = Disabled, 1 = Legit, 2 = Rage
 	}
 
 	namespace ESP

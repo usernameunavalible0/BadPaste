@@ -28,6 +28,7 @@
 #include "../basecombatweapon_shared.h"
 #include "../econ/ihasowner.h"
 #include "../GameEventListener.h"
+#include "../util_shared.h"
 
 #define MAX_TRACER_NAME 128
 
@@ -100,6 +101,44 @@ public:
 #define TF_PARTICLE_WEAPON_BLUE_2 Vector( 0.145, 0.427, 0.55 )
 #define TF_PARTICLE_WEAPON_RED_1  Vector( 0.72, 0.22, 0.23 )
 #define TF_PARTICLE_WEAPON_RED_2  Vector( 0.5, 0.18, 0.125 )
+
+class CTraceFilterIgnoreFriendlyCombatItems : public CTraceFilterSimple
+{
+public:
+	CTraceFilterIgnoreFriendlyCombatItems(const IHandleEntity* passentity, int collisionGroup, int iIgnoreTeam, bool bIsProjectile = false)
+		: CTraceFilterSimple(passentity, collisionGroup), m_iIgnoreTeam(iIgnoreTeam)
+	{
+		m_bCallerIsProjectile = bIsProjectile;
+	}
+
+	virtual bool ShouldHitEntity(IHandleEntity* pServerEntity, int contentsMask)
+	{
+		C_BaseEntity* pEntity = EntityFromEntityHandle(pServerEntity);
+
+		// 		if ( ( pEntity->MyCombatCharacterPointer() || pEntity->MyCombatWeaponPointer() ) && pEntity->GetTeamNumber() == m_iIgnoreTeam )
+		// 			return false;
+		// 
+		// 		if ( pEntity->IsPlayer() && pEntity->GetTeamNumber() == m_iIgnoreTeam )
+		// 			return false;
+
+		if (pEntity->IsCombatItem())
+		{
+			if (pEntity->GetTeamNumber() == m_iIgnoreTeam)
+				return false;
+
+			// If source is a enemy projectile, be explicit, otherwise we fail a "IsTransparent" test downstream
+			if (m_bCallerIsProjectile)
+				return true;
+		}
+
+		return CTraceFilterSimple::ShouldHitEntity(pServerEntity, contentsMask);
+	}
+
+	int m_iIgnoreTeam;
+	bool m_bCallerIsProjectile;
+};
+
+void FindHullIntersection(const Vector& vecSrc, trace_t& tr, const Vector& mins, const Vector& maxs, C_BaseEntity* pEntity);
 
 //=============================================================================
 //

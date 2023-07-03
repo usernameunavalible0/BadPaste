@@ -19,6 +19,7 @@
 
 #define CALL_ATTRIB_HOOK_INT(retval, hookName) CALL_ATTRIB_HOOK(int, retval, hookName, this, NULL)
 #define CALL_ATTRIB_HOOK_FLOAT(retval, hookName) CALL_ATTRIB_HOOK(float, retval, hookName, this, NULL)
+#define CALL_ATTRIB_HOOK_INT_ON_OTHER( other, retval, hookName )	CALL_ATTRIB_HOOK( int, retval, hookName, other, NULL )
 
 template <class T> static T AttribHookValue(T TValue, const char* pszAttribHook, const C_BaseEntity* pEntity, CUtlVector<C_BaseEntity*>* pItemList = NULL, bool bIsGlobalConstString = false)
 {

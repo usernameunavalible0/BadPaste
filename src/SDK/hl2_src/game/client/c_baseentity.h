@@ -22,6 +22,8 @@
 #include "../../public/datamap.h"
 #include "../shared/usercmd.h"
 #include "../shared/ehandle.h"
+#include "../../public/model_types.h"
+#include "../../public/engine/ivmodelinfo.h"
 
 namespace I { inline int32* PredictionRandomSeed = nullptr; }
 namespace I { inline void** PredictionPlayer = nullptr; }
@@ -416,6 +418,19 @@ public:
 		}
 
 		return pEntity;
+	}
+
+	inline bool IsBSPModel()
+	{
+		if (this->GetSolid() == SOLID_BSP)
+			return true;
+
+		const model_t* pModel = I::ModelInfoClient->GetModel(this->m_nModelIndex());
+
+		if (this->GetSolid() == SOLID_VPHYSICS && I::ModelInfoClient->GetModelType(pModel) == mod_brush)
+			return true;
+
+		return false;
 	}
 };
 
