@@ -31,7 +31,7 @@ public:
 
 	virtual bool				DoSwingTrace(trace_t& trace) = 0;
 	virtual void				Smack(void) = 0;
-    virtual float               GetSmackTime(int idfk) = 0;
+    virtual float               GetSmackTime(int iWeaponMode) = 0;
 	virtual void				DoMeleeDamage(C_BaseEntity* ent, trace_t& trace) = 0;
 	virtual void				DoMeleeDamage(C_BaseEntity* ent, trace_t& trace, float flDamageMod) = 0;
 
@@ -50,6 +50,8 @@ public:
     
     //im just guessing here lol
     virtual void                PlaySwingSound(void) = 0;
+
+	bool DoSwingTraceInternal(trace_t& trace, CUtlVector<trace_t>* pTargetTraceVector, const QAngle vAngleOverride);
 };
 
 #endif // TF_WEAPONBASE_MELEE_H

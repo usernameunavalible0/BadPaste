@@ -167,7 +167,9 @@
     <ClCompile Include="Features\Aimbot\Aimbot.cpp" />
     <ClCompile Include="Features\Aimbot\AimbotGlobal\AimbotGlobal.cpp" />
     <ClCompile Include="Features\Aimbot\AimbotHitscan\AimbotHitscan.cpp" />
+    <ClCompile Include="Features\Aimbot\AimbotMelee\AimbotMelee.cpp" />
     <ClCompile Include="Features\Auto\Auto.cpp" />
+    <ClCompile Include="Features\Backtrack\Backtrack.cpp" />
     <ClCompile Include="Features\Chams\Chams.cpp" />
     <ClCompile Include="Features\Crithack\Crithack.cpp" />
     <ClCompile Include="Features\ESP\ESP.cpp" />
@@ -227,7 +229,9 @@
     <ClCompile Include="SDK\hl2_src\game\client\tf\c_tf_player.cpp" />
     <ClCompile Include="SDK\hl2_src\game\client\view_scene.cpp" />
     <ClCompile Include="SDK\hl2_src\game\shared\tf\tf_weaponbase.cpp" />
+    <ClCompile Include="SDK\hl2_src\game\shared\tf\tf_weaponbase_melee.cpp" />
     <ClCompile Include="SDK\hl2_src\game\shared\tf\tf_weapon_knife.cpp" />
+    <ClCompile Include="SDK\hl2_src\game\shared\tf\tf_weapon_medigun.cpp" />
     <ClCompile Include="SDK\hl2_src\mathlib\camera.cpp" />
     <ClCompile Include="SDK\hl2_src\tier1\KeyValues.cpp" />
     <ClCompile Include="SDK\SDK.cpp" />
@@ -329,7 +333,9 @@
     <ClInclude Include="Features\Aimbot\Aimbot.h" />
     <ClInclude Include="Features\Aimbot\AimbotGlobal\AimbotGlobal.h" />
     <ClInclude Include="Features\Aimbot\AimbotHitscan\AimbotHitscan.h" />
+    <ClInclude Include="Features\Aimbot\AimbotMelee\AimbotMelee.h" />
     <ClInclude Include="Features\Auto\Auto.h" />
+    <ClInclude Include="Features\Backtrack\Backtrack.h" />
     <ClInclude Include="Features\Chams\Chams.h" />
     <ClInclude Include="Features\Crithack\Crithack.h" />
     <ClInclude Include="Features\ESP\ESP.h" />
@@ -349,6 +355,7 @@
     <ClInclude Include="SDK\hl2_src\engine\client.h" />
     <ClInclude Include="SDK\hl2_src\engine\net.h" />
     <ClInclude Include="SDK\hl2_src\engine\net_chan.h" />
+    <ClInclude Include="SDK\hl2_src\game\client\animationlayer.h" />
     <ClInclude Include="SDK\hl2_src\game\client\cdll_util.h" />
     <ClInclude Include="SDK\hl2_src\game\client\clientmode_shared.h" />
     <ClInclude Include="SDK\hl2_src\game\client\c_team.h" />
@@ -361,6 +368,7 @@
     <ClInclude Include="SDK\hl2_src\game\client\input.h" />
     <ClInclude Include="SDK\hl2_src\game\client\iviewrender.h" />
     <ClInclude Include="SDK\hl2_src\game\client\kbutton.h" />
+    <ClInclude Include="SDK\hl2_src\game\client\lerp_functions.h" />
     <ClInclude Include="SDK\hl2_src\game\client\prediction.h" />
     <ClInclude Include="SDK\hl2_src\game\client\view_scene.h" />
     <ClInclude Include="SDK\hl2_src\game\shared\ai_activity.h" />
@@ -382,6 +390,7 @@
     <ClInclude Include="SDK\hl2_src\public\mathlib\aabb.h" />
     <ClInclude Include="SDK\hl2_src\public\mathlib\camera.h" />
     <ClInclude Include="SDK\hl2_src\public\tier1\KeyValues.h" />
+    <ClInclude Include="SDK\hl2_src\public\tier1\rangecheckedvar.h" />
     <ClInclude Include="SDK\hl2_src\public\vgui_controls\FocusNavGroup.h" />
     <ClInclude Include="SDK\hl2_src\public\vgui_controls\PHandle.h" />
     <ClInclude Include="SDK\hl2_src\public\vstdlib\random.h" />

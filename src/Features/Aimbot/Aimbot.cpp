@@ -1,5 +1,6 @@
 #include "Aimbot.h"
 #include "AimbotHitscan/AimbotHitscan.h"
+#include "AimbotMelee/AimbotMelee.h"
 #include "../Vars.h"
 
 void CFeatures_Aimbot::Run(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CUserCmd* cmd)
@@ -34,6 +35,9 @@ void CFeatures_Aimbot::Run(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CUserCmd
 	case EWeaponType::HITSCAN: {
 		A::Hitscan.Run(pLocal, pWeapon, cmd);
 		break;
+	}
+	case EWeaponType::MELEE: {
+		A::Melee.Run(pLocal, pWeapon, cmd);
 	}
 	default: break;
 	}

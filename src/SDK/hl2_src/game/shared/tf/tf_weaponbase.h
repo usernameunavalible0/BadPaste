@@ -102,6 +102,47 @@ public:
 #define TF_PARTICLE_WEAPON_RED_1  Vector( 0.72, 0.22, 0.23 )
 #define TF_PARTICLE_WEAPON_RED_2  Vector( 0.5, 0.18, 0.125 )
 
+class CTraceFilterIgnoreTeammates : public CTraceFilterSimple
+{
+public:
+	CTraceFilterIgnoreTeammates(const IHandleEntity* passentity, int collisionGroup, int iIgnoreTeam)
+		: CTraceFilterSimple(passentity, collisionGroup), m_iIgnoreTeam(iIgnoreTeam)
+	{
+	}
+
+	virtual bool ShouldHitEntity(IHandleEntity* pServerEntity, int contentsMask)
+	{
+		C_BaseEntity* pEntity = EntityFromEntityHandle(pServerEntity);
+
+		if ((pEntity->IsPlayer() || pEntity->IsCombatItem()) && (pEntity->GetTeamNumber() == m_iIgnoreTeam || m_iIgnoreTeam == TEAM_ANY))
+		{
+			return false;
+		}
+
+		return CTraceFilterSimple::ShouldHitEntity(pServerEntity, contentsMask);
+	}
+
+	int m_iIgnoreTeam;
+};
+
+class CTraceFilterIgnorePlayers : public CTraceFilterSimple
+{
+public:
+	CTraceFilterIgnorePlayers(const IHandleEntity* passentity, int collisionGroup)
+		: CTraceFilterSimple(passentity, collisionGroup)
+	{
+	}
+
+	virtual bool ShouldHitEntity(IHandleEntity* pServerEntity, int contentsMask)
+	{
+		C_BaseEntity* pEntity = EntityFromEntityHandle(pServerEntity);
+		if (pEntity && pEntity->IsPlayer())
+			return false;
+
+		return CTraceFilterSimple::ShouldHitEntity(pServerEntity, contentsMask);
+	}
+};
+
 class CTraceFilterIgnoreFriendlyCombatItems : public CTraceFilterSimple
 {
 public:
@@ -264,6 +305,11 @@ public:
 	inline bool CanHeadShot()
 	{
 		return ((GetDamageType() & DMG_USE_HITLOCATIONS) && CanFireCiriticalShotHelper(true));
+	}
+
+	inline int& m_iWeaponMode()
+	{
+		return *reinterpret_cast<int*>(reinterpret_cast<DWORD>(this) + 0x0B24);
 	}
 };
 

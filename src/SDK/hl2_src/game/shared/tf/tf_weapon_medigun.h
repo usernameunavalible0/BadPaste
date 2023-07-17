@@ -68,6 +68,16 @@ public:
 	M_NETVAR(m_flChargeLevel, float, "CWeaponMedigun", "m_flChargeLevel");
 	M_NETVAR(m_nChargeResistType, int, "CWeaponMedigun", "m_nChargeResistType");
 
+	bool AllowedToHealTarget(C_BaseEntity* pTarget);
+
+	inline bool HealingTarget(C_BaseEntity* pTarget)
+	{
+		if (pTarget == m_hHealingTarget())
+			return true;
+		
+		return false;
+	}
+
 	struct targetdetachtimes_t
 	{
 		float	flTime;

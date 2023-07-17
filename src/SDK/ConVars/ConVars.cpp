@@ -17,6 +17,18 @@ bool CConVars::Initialize()
 	cl_wpn_sway_interp = I::Cvar->FindVar("cl_wpn_sway_interp");
 	CHECKVAR(cl_wpn_sway_interp);
 
+	sv_unlag = I::Cvar->FindVar("sv_unlag");
+	CHECKVAR(sv_unlag);
+
+	sv_lagcompensation_teleport_dist = I::Cvar->FindVar("sv_lagcompensation_teleport_dist");
+	CHECKVAR(sv_lagcompensation_teleport_dist);
+
+	sv_maxunlag = I::Cvar->FindVar("sv_maxunlag");
+	CHECKVAR(sv_maxunlag);
+
+	sv_unlag_fixstuck = I::Cvar->FindVar("sv_unlag_fixstuck");
+	CHECKVAR(sv_unlag_fixstuck);
+
 	//If we arrive here, return success.
 	return true;
 }

@@ -318,7 +318,7 @@ public:
 	M_NETVAR(m_flSimulationTime, float, "CBaseEntity", "m_flSimulationTime");
 	M_NETVAR(m_ubInterpolationFrame, int, "CBaseEntity", "m_ubInterpolationFrame");
 	M_NETVAR(m_vecOrigin, Vector, "CBaseEntity", "m_vecOrigin");
-	M_NETVAR(m_angRotation, Vector, "CBaseEntity", "m_angRotation");
+	M_NETVAR(m_angRotation, QAngle, "CBaseEntity", "m_angRotation");
 	M_NETVAR(m_nModelIndex, int, "CBaseEntity", "m_nModelIndex");
 	M_NETVAR(m_fEffects, int, "CBaseEntity", "m_fEffects");
 	M_NETVAR(m_nRenderMode, int, "CBaseEntity", "m_nRenderMode");

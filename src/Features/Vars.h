@@ -77,7 +77,18 @@ namespace Vars
 			inline CVar<bool> SpectatedSmooth{ true, L"Spectated Smooth"};
 			inline CVar<int> SmoothingAmount{ 4, L"Smoothing"};
 			inline CVar<bool> WaitForHeadshot{ true, L"Wait For Headshot"};
-			inline CVar<bool> WaitForCharge{ true, L"Wait For Charge"};
+			inline CVar<bool> WaitForCharge{ false, L"Wait For Charge"};
+		}
+
+		namespace Melee
+		{
+			inline CVar<bool> Enabled{true, L"Enabled"};
+			inline CVar<int> AimMethod{ 2, L"Aim Method" };
+			inline CVar<int> SortMethod{ 1, L"Sort Method" };
+			inline CVar<float> AimFOV{ 45.0f, L"Aim FOV" };
+			inline CVar<float> SmoothingAmount{ 8.0f, L"Smoothing Amount" };
+			inline CVar<bool> RangeCheck{ true, L"Range Check" };
+			inline CVar<bool> WhipTeam{ true, L"Whip Teammates" };
 		}
 	}
 

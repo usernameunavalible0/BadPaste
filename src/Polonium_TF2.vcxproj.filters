@@ -162,6 +162,10 @@
     <ClCompile Include="Features\Aimbot\AimbotHitscan\AimbotHitscan.cpp" />
     <ClCompile Include="SDK\hl2_src\game\shared\tf\tf_weapon_knife.cpp" />
     <ClCompile Include="Features\Auto\Auto.cpp" />
+    <ClCompile Include="SDK\hl2_src\game\shared\tf\tf_weapon_medigun.cpp" />
+    <ClCompile Include="Features\Backtrack\Backtrack.cpp" />
+    <ClCompile Include="SDK\hl2_src\game\shared\tf\tf_weaponbase_melee.cpp" />
+    <ClCompile Include="Features\Aimbot\AimbotMelee\AimbotMelee.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entry\Entry.h" />
@@ -553,6 +557,11 @@
     <ClInclude Include="Features\Aimbot\AimbotHitscan\AimbotHitscan.h" />
     <ClInclude Include="SDK\hl2_src\game\shared\econ\attribute_manager.h" />
     <ClInclude Include="Features\Auto\Auto.h" />
+    <ClInclude Include="Features\Backtrack\Backtrack.h" />
+    <ClInclude Include="SDK\hl2_src\game\client\animationlayer.h" />
+    <ClInclude Include="SDK\hl2_src\public\tier1\rangecheckedvar.h" />
+    <ClInclude Include="SDK\hl2_src\game\client\lerp_functions.h" />
+    <ClInclude Include="Features\Aimbot\AimbotMelee\AimbotMelee.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="SDK\hl2_src\game\server\base.txt" />

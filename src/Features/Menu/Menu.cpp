@@ -590,6 +590,10 @@ void CFeatures_Menu::Run()
 
 			switch (Tab)
 			{
+			case EMainTabs::TAB_AIM:
+			{
+				break;
+			}
 			case EMainTabs::TAB_VISUALS:
 			{
 				static EVisualsTabs Tab = EVisualsTabs::TAB_ESP;
