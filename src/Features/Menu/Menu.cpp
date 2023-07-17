@@ -1,4 +1,4 @@
-#include "Menu.h"
+﻿#include "Menu.h"
 
 void CFeatures_Menu::Separator()
 {
@@ -432,12 +432,12 @@ bool CFeatures_Menu::InputColor(Color& Var, const wchar_t* Label)
 
 bool CFeatures_Menu::InputString(const wchar_t* Label, std::wstring& output)
 {
-    return false;
+	return false;
 }
 
 bool CFeatures_Menu::InputKey(CVar<int>& output, bool bAllowNone)
 {
-    return false;
+	return false;
 }
 
 void CFeatures_Menu::GroupBoxStart()
@@ -470,6 +470,122 @@ void CFeatures_Menu::GroupBoxEnd(const wchar_t* Label, int Width)
 	m_LastWidget.x -= Vars::Menu::SpacingX;
 	m_LastWidget.y += Vars::Menu::SpacingY * 2;
 	m_LastGroupBox.height = h;
+}
+
+void CFeatures_Menu::MultiSelect(bool* Var, const wchar_t* Title, const std::vector<CVar<bool>>& List)
+{
+	static bool bOpened = false;
+
+	int ListAmount = List.size();
+
+	int x = m_LastWidget.x;
+	int y = m_LastWidget.y + m_LastWidget.height + Vars::Menu::SpacingY;
+	int w = Vars::Menu::ComboBoxW;
+	int h1 = Vars::Menu::ComboBoxH;
+
+	auto GetListTotalHeight = [&]() -> int
+	{
+		int nHeight = h1;
+
+		for (size_t n = 0; n < List.size(); n++)
+		{
+			nHeight += G::Draw.GetFontHeight(FONT_MENU) + 4;
+		}
+
+		return nHeight;
+	};
+
+	auto GetActiveItemsStr = [&]() -> std::wstring
+	{
+		std::wstring result = L"";
+		const wchar_t* seperator = L", ";
+
+		int nCount = 0;
+
+		for (size_t n = 0; n < List.size(); n++)
+		{
+			if (List[n].m_Var == true)
+			{
+				result += List[n].m_szDisplayName;
+				result += seperator;
+				nCount++;
+			}
+		}
+
+		if (nCount == 1)
+		{
+			result.erase(result.length() - 2);
+		}
+
+		int txtWidth, txtHeight;
+		I::MatSystemSurface->GetTextSize(G::Draw.m_Fonts.Element(G::Draw.m_Fonts.Find(FONT_MENU)).m_hFont, result.c_str(), txtWidth, txtHeight);
+
+		while (txtWidth > w)
+		{
+			result.erase(result.length() - 1);
+			I::MatSystemSurface->GetTextSize(G::Draw.m_Fonts.Element(G::Draw.m_Fonts.Find(FONT_MENU)).m_hFont, result.c_str(), txtWidth, txtHeight);
+		}
+
+		return result;
+	};
+
+	if (g_InputHelper.m_nMouseX > x && g_InputHelper.m_nMouseX < x + w && g_InputHelper.m_nMouseY > y && g_InputHelper.m_nMouseY < y + h1)
+	{
+		if (!bOpened)
+		{
+			if (g_InputHelper.IsPressed(VK_LBUTTON))
+				bOpened = true;
+
+			G::Draw.GradientRect(x, y, x + w, y + h1, Vars::Menu::Colors::WidgetActive, Vars::Menu::Colors::Widget, false);
+		}
+		else if (bOpened)
+		{
+			if (g_InputHelper.IsPressed(VK_LBUTTON))
+				bOpened = false;
+		}
+	}
+	if (bOpened)
+	{
+		int nDrawY = y + h1;
+		static int FontHeight = G::Draw.GetFontHeight(FONT_MENU) + 4;
+
+		for (size_t n = 0; n < List.size(); n++)
+		{
+			if (g_InputHelper.m_nMouseX > x && g_InputHelper.m_nMouseX < x + w && g_InputHelper.m_nMouseY > nDrawY && g_InputHelper.m_nMouseY < nDrawY + FontHeight)
+			{
+				if (g_InputHelper.IsPressed(VK_LBUTTON))
+					Var[n] = !Var[n];
+
+				G::Draw.GradientRect(x, nDrawY, x + w, nDrawY + FontHeight, Vars::Menu::Colors::WidgetActive, Vars::Menu::Colors::Widget, false);
+			}
+
+			G::Draw.OutlinedRect(x, nDrawY, w, FontHeight, Vars::Menu::Colors::OutlineMenu);
+			std::wstring concatStr = Var[n] ? L"[x] " : L"[ ] ";
+			concatStr.append(List[n].m_szDisplayName);
+			G::Draw.String(FONT_MENU, x + (w / 2), nDrawY + (FontHeight / 2), Vars::Menu::Colors::Text, TXT_CENTERXY, concatStr.c_str());
+			nDrawY += FontHeight - 1;
+		}
+
+		nDrawY -= FontHeight;
+
+		if (g_InputHelper.m_nMouseX < x && g_InputHelper.m_nMouseX > x + w && g_InputHelper.m_nMouseY < y && g_InputHelper.m_nMouseY > y + GetListTotalHeight())
+			bOpened = false;
+	}
+	else
+		bOpened = false;
+
+	G::Draw.OutlinedRect(x, y, w, h1 + 1, Vars::Menu::Colors::OutlineMenu);
+	if (GetActiveItemsStr() == L"")
+		G::Draw.String(FONT_MENU, x + (w / 2), y + (h1 / 2), Vars::Menu::Colors::Text, TXT_CENTERXY, L"None");
+	else
+		G::Draw.String(FONT_MENU, x + (w / 2), y + (h1 / 2), Vars::Menu::Colors::Text, TXT_CENTERXY, GetActiveItemsStr().c_str());
+
+	G::Draw.String(FONT_MENU, x + w + Vars::Menu::SpacingText, y + (h1 / 2), Vars::Menu::Colors::Text, TXT_CENTERY, Title);
+
+	m_LastWidget.x = x;
+	m_LastWidget.y = y;
+	m_LastWidget.width = w;
+	m_LastWidget.height = bOpened ? GetListTotalHeight() : h1;
 }
 
 void CFeatures_Menu::DrawTooltip()
@@ -592,6 +708,8 @@ void CFeatures_Menu::Run()
 			{
 			case EMainTabs::TAB_AIM:
 			{
+				
+
 				break;
 			}
 			case EMainTabs::TAB_VISUALS:

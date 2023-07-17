@@ -78,6 +78,30 @@ namespace Vars
 			inline CVar<int> SmoothingAmount{ 4, L"Smoothing"};
 			inline CVar<bool> WaitForHeadshot{ true, L"Wait For Headshot"};
 			inline CVar<bool> WaitForCharge{ false, L"Wait For Charge"};
+
+			//Experimental
+			inline bool ScanHitboxes[HITBOX_MAX] = {
+				false, //HITBOX_HEAD
+				false, //HITBOX_NECK
+				false, //HITBOX_LOWER_NECK
+				false, //HITBOX_PELVIS
+				false, //HITBOX_BODY
+				false, //HITBOX_THORAX
+				false, //HITBOX_CHEST
+				false, //HITBOX_UPPER_CHEST
+				false, //HITBOX_RIGHT_THIGH
+				false, //HITBOX_LEFT_THIGH
+				false, //HITBOX_RIGHT_CALF
+				false, //HITBOX_LEFT_CALF
+				false, //HITBOX_RIGHT_FOOT
+				false, //HITBOX_LEFT_FOOT
+				false, //HITBOX_RIGHT_HAND
+				false, //HITBOX_LEFT_HAND
+				false, //HITBOX_RIGHT_UPPER_ARM
+				false, //HITBOX_LEFT_UPPER_ARM
+				false, //HITBOX_LEFT_FOREARM
+				false  //HITBOX_MAX
+			};
 		}
 
 		namespace Melee
