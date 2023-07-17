@@ -88,7 +88,7 @@ bool CAimbot_Melee::GetTargets(C_TFPlayer* pLocal, C_TFWeaponBaseMelee* pWeapon)
 	Vector vecSrc = pLocal->Weapon_ShootPosition();
 	QAngle vecAngles; I::EngineClient->GetViewAngles(vecAngles);
 
-	if (Vars::Aimbot::Global::AimPlayers.m_Var)
+	if (Vars::Aimbot::Global::Targets[0])
 	{
 		const bool bWhipTeam = (pWeapon->m_iItemDefinitionIndex() == Soldier_t_TheDisciplinaryAction && Vars::Aimbot::Melee::WhipTeam.m_Var);
 
@@ -99,16 +99,16 @@ bool CAimbot_Melee::GetTargets(C_TFPlayer* pLocal, C_TFWeaponBaseMelee* pWeapon)
 			if (pPlayer->deadflag() || pPlayer->IsHalloweenGhostMode())
 				continue;
 
-			if (Vars::Aimbot::Global::IgnoreInvulnerable.m_Var && pPlayer->IsInvulnerable())
+			if (Vars::Aimbot::Global::Ignores[0] && pPlayer->IsInvulnerable())
 				continue;
 
-			if (Vars::Aimbot::Global::IgnoreCloaked.m_Var && pPlayer->IsCloaked())
+			if (Vars::Aimbot::Global::Ignores[1] && pPlayer->IsCloaked())
 				continue;
 
-			if (Vars::Aimbot::Global::IgnoreTaunting.m_Var && pPlayer->IsTaunting())
+			if (Vars::Aimbot::Global::Ignores[2] && pPlayer->IsTaunting())
 				continue;
 
-			if (Vars::Aimbot::Global::IgnoreFriends.m_Var && pPlayer->IsPlayerOnSteamFriendsList())
+			if (Vars::Aimbot::Global::Ignores[3] && pPlayer->IsPlayerOnSteamFriendsList())
 				continue;
 
 			Vector vecBody; pPlayer->GetHitboxPosition(HITBOX_BODY, vecBody);
@@ -123,7 +123,7 @@ bool CAimbot_Melee::GetTargets(C_TFPlayer* pLocal, C_TFWeaponBaseMelee* pWeapon)
 		}
 	}
 
-	if (Vars::Aimbot::Global::AimBuildings.m_Var)
+	if (Vars::Aimbot::Global::Targets[1])
 	{
 		for (auto pEntity : G::EntityCache.GetGroup(EEntGroup::BUILDINGS_ENEMIES))
 		{

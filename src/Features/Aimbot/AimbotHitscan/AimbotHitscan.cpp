@@ -24,7 +24,7 @@ void CAimbot_Hitscan::Run(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CUserCmd*
 
 int CAimbot_Hitscan::GetBestHitbox(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon)
 {
-	switch (Vars::Aimbot::Hitscan::AimHitbox.m_Var)
+	switch (Vars::Aimbot::Hitscan::PreferedHitbox.m_Var)
 	{
 	case 0: return HITBOX_HEAD;
 	case 1: return HITBOX_BODY;
@@ -170,7 +170,7 @@ bool CAimbot_Hitscan::GetTargets(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon)
 	Vector vShootPos = pLocal->Weapon_ShootPosition();
 	QAngle va; I::EngineClient->GetViewAngles(va);
 
-	if (Vars::Aimbot::Global::AimPlayers.m_Var)
+	if (Vars::Aimbot::Global::Targets[0])
 	{
 		int iBestHitbox = GetBestHitbox(pLocal, pWeapon);
 
@@ -181,16 +181,16 @@ bool CAimbot_Hitscan::GetTargets(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon)
 			if (pPlayer->deadflag() || pPlayer->IsHalloweenGhostMode())
 				continue;
 
-			if (Vars::Aimbot::Global::IgnoreInvulnerable.m_Var && pPlayer->IsInvulnerable())
+			if (Vars::Aimbot::Global::Ignores[0] && pPlayer->IsInvulnerable())
 				continue;
 
-			if (Vars::Aimbot::Global::IgnoreCloaked.m_Var && pPlayer->IsCloaked())
+			if (Vars::Aimbot::Global::Ignores[1] && pPlayer->IsCloaked())
 				continue;
 
-			if (Vars::Aimbot::Global::IgnoreTaunting.m_Var && pPlayer->IsTaunting())
+			if (Vars::Aimbot::Global::Ignores[2] && pPlayer->IsTaunting())
 				continue;
 
-			if (Vars::Aimbot::Global::IgnoreFriends.m_Var && pPlayer->IsPlayerOnSteamFriendsList())
+			if (Vars::Aimbot::Global::Ignores[3] && pPlayer->IsPlayerOnSteamFriendsList())
 				continue;
 
 			Vector vPosition; pPlayer->GetHitboxPosition(iBestHitbox, vPosition);
@@ -205,7 +205,7 @@ bool CAimbot_Hitscan::GetTargets(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon)
 		}
 	}
 
-	if (Vars::Aimbot::Global::AimBuildings.m_Var)
+	if (Vars::Aimbot::Global::Targets[1])
 	{
 		for (auto pEntity : G::EntityCache.GetGroup(EEntGroup::BUILDINGS_ENEMIES))
 		{
@@ -236,12 +236,43 @@ bool CAimbot_Hitscan::GetTarget(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, Tar
 
 	A::Global.SortTargets(GetSortMethod());
 
-	Vector vShootPos = pLocal->Weapon_ShootPosition();
+	Vector vecSrc = pLocal->Weapon_ShootPosition();
 
 	for (Target_t& Target : A::Global.m_vecTargets)
 	{
-		if (!G::Util.IsVisible(vShootPos, Target.m_vPos))
-			continue;
+		if (!G::Util.IsVisible(vecSrc, Target.m_vPos))
+		{
+			if (Target.m_TargetType == ETargetType::PLAYER)
+			{
+				C_TFPlayer* pPlayer = Target.m_pEntity->As<C_TFPlayer*>();
+
+				if (!pPlayer)
+					continue;
+
+				Vector vNewPos;
+				bool bFoundNew = false;
+
+				for (int n = 0; n < HITBOX_MAX; n++)
+				{
+					if (!Vars::Aimbot::Hitscan::ScanHitboxes[n])
+						continue;
+
+					if (pPlayer->GetHitboxPosition(n, vNewPos) && G::Util.IsVisible(vecSrc, vNewPos))
+					{
+						Target.m_vPos = vNewPos;
+						Target.m_vAngleTo = GetAngleToPosition(vecSrc, vNewPos);
+
+						bFoundNew = true;
+						break;
+					}
+				}
+
+				if (!bFoundNew)
+					continue;
+			}
+			else
+				continue;
+		}
 
 		Out = Target;
 		return true;

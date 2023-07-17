@@ -56,26 +56,32 @@ namespace Vars
 		namespace Global
 		{
 			inline CVar<bool> Enabled{ true, L"Enabled" };
-			inline CVar<int> AimKey { VK_XBUTTON2, L"Aim Key"};
 			inline CVar<bool> AutoShoot{ true, L"Auto Shoot"};
-			inline CVar<bool> AimPlayers{ true, L"Aim Players"};
-			inline CVar<bool> AimBuildings{ true, L"Aim Buildings"};
-			inline CVar<bool> IgnoreInvulnerable{ true, L"Ignore Invulnerable"};
-			inline CVar<bool> IgnoreCloaked{ true, L"Ignore Cloaked"};
-			inline CVar<bool> IgnoreTaunting{true, L"Ignore Taunting"};
-			inline CVar<bool> IgnoreFriends{ true, L"Ignore Friends"};
+			inline CVar<int> AimKey { VK_XBUTTON2, L"Aim Key"};
+
+			//Experimental
+			inline bool Targets[2] = {
+				true, //PLAYERS
+				true  //BUILDINGS
+			};
+
+			inline bool Ignores[4] = {
+				true, //Invulnerable
+				true, //Cloaked
+				false,//Taunting
+				true  //Friends
+			};
 		}
 
 		namespace Hitscan
 		{
 			inline CVar<bool> Enabled{ true, L"Enabled"};
+			inline CVar<int> AimMethod{ 2, L"Aim Type"};
+			inline CVar<int> PreferedHitbox{ 2, L"Hitbox"};
 			inline CVar<int> SortMethod{ 0, L"Sort"};
 			inline CVar<float> AimFOV{ 15.f, L"FOV"};
-			inline CVar<int> AimHitbox{ 2, L"Hitbox"};
-			inline CVar<int> AimMethod{ 2, L"Aim Type"};
-			inline CVar<bool> ScopedOnly{false, L"Scoped Only"};
 			inline CVar<bool> SpectatedSmooth{ true, L"Spectated Smooth"};
-			inline CVar<int> SmoothingAmount{ 4, L"Smoothing"};
+			inline CVar<float> SmoothingAmount{ 4.0f, L"Smoothing"};
 			inline CVar<bool> WaitForHeadshot{ true, L"Wait For Headshot"};
 			inline CVar<bool> WaitForCharge{ false, L"Wait For Charge"};
 
@@ -107,10 +113,10 @@ namespace Vars
 		namespace Melee
 		{
 			inline CVar<bool> Enabled{true, L"Enabled"};
-			inline CVar<int> AimMethod{ 2, L"Aim Method" };
-			inline CVar<int> SortMethod{ 1, L"Sort Method" };
-			inline CVar<float> AimFOV{ 45.0f, L"Aim FOV" };
-			inline CVar<float> SmoothingAmount{ 8.0f, L"Smoothing Amount" };
+			inline CVar<int> AimMethod{ 2, L"Aim Type" };
+			inline CVar<int> SortMethod{ 1, L"Sort" };
+			inline CVar<float> AimFOV{ 30.0f, L"FOV" };
+			inline CVar<float> SmoothingAmount{ 8.0f, L"Smoothing" };
 			inline CVar<bool> RangeCheck{ true, L"Range Check" };
 			inline CVar<bool> WhipTeam{ true, L"Whip Teammates" };
 		}

@@ -19,7 +19,7 @@ private:
 	bool InputKey(CVar<int>& output, bool bAllowNone = true);
 	void GroupBoxStart();
 	void GroupBoxEnd(const wchar_t* Label, int Width);
-	void MultiSelect(bool* Var, const wchar_t* Title, const std::vector<CVar<bool>>& List);
+	void MultiSelect(bool* Var, const wchar_t* Title, const std::vector<CVar<bool>>& List, bool& bOpened);
 	void DrawTooltip();
 
 private:

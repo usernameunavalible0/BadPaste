@@ -472,10 +472,8 @@ void CFeatures_Menu::GroupBoxEnd(const wchar_t* Label, int Width)
 	m_LastGroupBox.height = h;
 }
 
-void CFeatures_Menu::MultiSelect(bool* Var, const wchar_t* Title, const std::vector<CVar<bool>>& List)
+void CFeatures_Menu::MultiSelect(bool* Var, const wchar_t* Title, const std::vector<CVar<bool>>& List, bool& bOpened)
 {
-	static bool bOpened = false;
-
 	int ListAmount = List.size();
 
 	int x = m_LastWidget.x;
@@ -708,7 +706,87 @@ void CFeatures_Menu::Run()
 			{
 			case EMainTabs::TAB_AIM:
 			{
-				
+				m_LastWidget.y += Vars::Menu::SpacingY;
+				Rect_t checkpoint = m_LastWidget;
+				GroupBoxStart();
+				{
+					CheckBox(Vars::Aimbot::Global::Enabled, L"Master aimbot switch");
+					CheckBox(Vars::Aimbot::Global::AutoShoot, L"Should shoot while aimbotting");
+					InputKey(Vars::Aimbot::Global::AimKey, L"Key that enabled the aimbot");
+					static bool bOpened1 = false;
+					MultiSelect(Vars::Aimbot::Global::Targets, L"Targets", {
+						{Vars::Aimbot::Global::Targets[0], L"Players"},
+						{Vars::Aimbot::Global::Targets[1], L"Buildings"}
+						}, bOpened1);
+					static bool bOpened2 = false;
+					MultiSelect(Vars::Aimbot::Global::Ignores, L"Ignore", {
+						{Vars::Aimbot::Global::Ignores[0], L"Invulnerable"},
+						{Vars::Aimbot::Global::Ignores[1], L"Cloaked"},
+						{Vars::Aimbot::Global::Ignores[2], L"Taunting"},
+						{Vars::Aimbot::Global::Ignores[3], L"Friends"}
+						}, bOpened2);
+				}
+				GroupBoxEnd(L"Global", 160);
+
+				GroupBoxStart();
+				{
+					CheckBox(Vars::Aimbot::Melee::Enabled, L"Melee aimbot toggle");
+					ComboBox(Vars::Aimbot::Melee::AimMethod, { {0, L"Plain"}, {1, L"Smooth"}, {2, L"Silent"} });
+					ComboBox(Vars::Aimbot::Melee::SortMethod, { {0, L"FOV"}, {1, L"Distance"} });
+					InputFloat(Vars::Aimbot::Melee::AimFOV, 1.0f, 180.0f, 1.0f, L"%.0f");
+					InputFloat(Vars::Aimbot::Melee::SmoothingAmount, 1.0f, 10.0f, 1.0f, L"%.0f");
+					CheckBox(Vars::Aimbot::Melee::RangeCheck, L"Should we check if target is in melee range");
+					CheckBox(Vars::Aimbot::Melee::WhipTeam, L"Should we whip teammates with the Disciplinary Action");
+				}
+				GroupBoxEnd(L"Melee", 160);
+
+				checkpoint.x += 160 + Vars::Menu::SpacingX;
+				m_LastWidget = checkpoint;
+
+				GroupBoxStart();
+				{
+					CheckBox(Vars::Aimbot::Hitscan::Enabled, L"Hitscan aimbot toggle");
+					ComboBox(Vars::Aimbot::Hitscan::AimMethod, { {0, L"Plain"}, {1, L"Smooth"}, {2, L"Silent"} });
+					ComboBox(Vars::Aimbot::Hitscan::PreferedHitbox, { {0, L"Head"}, {1, L"Body"}, {2, L"Auto"} });
+					ComboBox(Vars::Aimbot::Hitscan::SortMethod, { {0, L"FOV"}, {1, L"Distance"} });
+					static bool bOpened3 = false;
+					MultiSelect(Vars::Aimbot::Hitscan::ScanHitboxes, L"Scan", {
+						{Vars::Aimbot::Hitscan::ScanHitboxes[0], L"HEAD"},
+						{Vars::Aimbot::Hitscan::ScanHitboxes[1], L"NECK"},
+						{Vars::Aimbot::Hitscan::ScanHitboxes[2], L"LOWER_NECK"},
+						{Vars::Aimbot::Hitscan::ScanHitboxes[3], L"PELVIS"},
+						{Vars::Aimbot::Hitscan::ScanHitboxes[4], L"BODY"},
+						{Vars::Aimbot::Hitscan::ScanHitboxes[5], L"THORAX"},
+						{Vars::Aimbot::Hitscan::ScanHitboxes[6], L"CHEST"},
+						{Vars::Aimbot::Hitscan::ScanHitboxes[7], L"UPPER_CHEST"},
+						{Vars::Aimbot::Hitscan::ScanHitboxes[8], L"RIGHT_THIGH"},
+						{Vars::Aimbot::Hitscan::ScanHitboxes[9], L"LEFT_THIGH"},
+						{Vars::Aimbot::Hitscan::ScanHitboxes[10], L"RIGHT_CALF"},
+						{Vars::Aimbot::Hitscan::ScanHitboxes[11], L"LEFT_CALF"},
+						{Vars::Aimbot::Hitscan::ScanHitboxes[12], L"RIGHT_FOOT"},
+						{Vars::Aimbot::Hitscan::ScanHitboxes[13], L"LEFT_FOOT"},
+						{Vars::Aimbot::Hitscan::ScanHitboxes[14], L"RIGHT_HAND"},
+						{Vars::Aimbot::Hitscan::ScanHitboxes[15], L"LEFT_HAND"},
+						{Vars::Aimbot::Hitscan::ScanHitboxes[16], L"RIGHT_UPPER_ARM"},
+						{Vars::Aimbot::Hitscan::ScanHitboxes[17], L"LEFT_UPPER_ARM"},
+						{Vars::Aimbot::Hitscan::ScanHitboxes[18], L"LEFT_FOREARM"}
+						}, bOpened3);
+					InputFloat(Vars::Aimbot::Hitscan::AimFOV, 1.0f, 180.0f, 1.0f, L"%.0f");
+					InputFloat(Vars::Aimbot::Hitscan::SmoothingAmount, 1.0f, 10.0f, 1.0f, L"%.0f");
+					CheckBox(Vars::Aimbot::Hitscan::SpectatedSmooth, L"Should we change aim type to smooth when being spectated");
+					CheckBox(Vars::Aimbot::Hitscan::WaitForHeadshot, L"Should we wait until we can headshot the target");
+					CheckBox(Vars::Aimbot::Hitscan::WaitForCharge, L"Should we wait until we are charged enough to kill the target");
+				}
+				GroupBoxEnd(L"Hitscan", 160);
+
+				checkpoint.x += 160 + Vars::Menu::SpacingX;
+				m_LastWidget = checkpoint;
+
+				GroupBoxStart();
+				{
+
+				}
+				GroupBoxEnd(L"Projectile", 160);
 
 				break;
 			}
