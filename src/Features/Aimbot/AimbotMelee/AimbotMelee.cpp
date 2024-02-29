@@ -25,7 +25,15 @@ void CAimbot_Melee::Run(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CUserCmd* c
 	if (Vars::Aimbot::Global::AutoShoot.m_Var)
 		cmd->buttons |= IN_ATTACK;
 
-	Aim(pLocal, cmd, Target.m_vAngleTo);
+	if (Vars::Aimbot::Melee::AimMethod.m_Var == 2)
+	{
+		if (IsAttacking(cmd, pMelee))
+		{
+			Aim(pLocal, cmd, Target.m_vAngleTo);
+			g_Globals.m_bSilentTime = true;
+		}
+	}
+	else Aim(pLocal, cmd, Target.m_vAngleTo);
 }
 
 const ESortMethod CAimbot_Melee::GetSortMethod()
@@ -42,7 +50,7 @@ bool CAimbot_Melee::IsAttacking(CUserCmd* cmd, C_TFWeaponBaseMelee* pWeapon)
 	if (pWeapon->GetWeaponID() == TF_WEAPON_KNIFE)
 		return ((cmd->buttons & IN_ATTACK) && pWeapon->CanAttack());
 	else
-		return fabsf(pWeapon->GetSmackTime(pWeapon->m_iWeaponMode()) - I::GlobalVars->curtime) < I::GlobalVars->interval_per_tick * 2.0f;
+		return fabsf(pWeapon->m_flSmackTime() - I::GlobalVars->curtime) < I::GlobalVars->interval_per_tick * 2.0f;
 }
 
 void CAimbot_Melee::Aim(C_TFPlayer* pLocal, CUserCmd* cmd, QAngle& vAngle)

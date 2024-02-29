@@ -891,15 +891,30 @@ void CFeatures_Menu::Run()
 
 					if (Vars::Chams::Players::Material.m_Var == 1)
 					{
+						Rect_t checkpoint = m_LastWidget;
+
 						GroupBoxStart();
 						{
-							InputColor(Vars::Chams::Players::FresnelVars::BaseColor, L"Base Color");
-							InputColor(Vars::Chams::Players::FresnelVars::GlowColor, L"Glow Color");
-							InputFloat(Vars::Chams::Players::FresnelVars::FresnelX, -10.f, 10.f, 0.1f, L"%.1f");
-							InputFloat(Vars::Chams::Players::FresnelVars::FresnelY, -10.f, 10.f, 0.1f, L"%.1f");
-							InputFloat(Vars::Chams::Players::FresnelVars::FresnelZ, -10.f, 10.f, 0.1f, L"%.1f");
+							InputColor(Vars::Chams::Players::FresnelVars::Enemies::BaseColor, L"Base Color");
+							InputColor(Vars::Chams::Players::FresnelVars::Enemies::GlowColor, L"Glow Color");
+							InputFloat(Vars::Chams::Players::FresnelVars::Enemies::FresnelX, -10.f, 10.f, 0.1f, L"%.1f");
+							InputFloat(Vars::Chams::Players::FresnelVars::Enemies::FresnelY, -10.f, 10.f, 0.1f, L"%.1f");
+							InputFloat(Vars::Chams::Players::FresnelVars::Enemies::FresnelZ, -10.f, 10.f, 0.1f, L"%.1f");
 						}
-						GroupBoxEnd(L"Fresnel Vars", 210);
+						GroupBoxEnd(L"Fresnel Vars (Enemies)", 210);
+
+						checkpoint.x += 210 + Vars::Menu::SpacingX;
+						m_LastWidget = checkpoint;
+
+						GroupBoxStart();
+						{
+							InputColor(Vars::Chams::Players::FresnelVars::Teammates::BaseColor, L"Base Color");
+							InputColor(Vars::Chams::Players::FresnelVars::Teammates::GlowColor, L"Glow Color");
+							InputFloat(Vars::Chams::Players::FresnelVars::Teammates::FresnelX, -10.f, 10.f, 0.1f, L"%.1f");
+							InputFloat(Vars::Chams::Players::FresnelVars::Teammates::FresnelY, -10.f, 10.f, 0.1f, L"%.1f");
+							InputFloat(Vars::Chams::Players::FresnelVars::Teammates::FresnelZ, -10.f, 10.f, 0.1f, L"%.1f");
+						}
+						GroupBoxEnd(L"Fresnel Vars (Teammates)", 210);
 					}
 
 					break;

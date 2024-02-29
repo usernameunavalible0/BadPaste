@@ -12,12 +12,12 @@ bool CFeatures_Chams::Initialize()
 	pMatFresnel->SetString("$envmap", "skybox/sky_dustbowl_01");
 	pMatFresnel->SetString("$envmapfresnel", "1");
 	pMatFresnel->SetString("$phong", "1");
-	pMatFresnel->SetString("$phongfresnelranges", "[0.0 1.0 6.0]");
+	pMatFresnel->SetString("$phongfresnelranges", "[0.0 1.5 2]");
 	pMatFresnel->SetString("$selfillum", "1");
 	pMatFresnel->SetString("$selfillumfresnel", "1");
 	pMatFresnel->SetString("$selfillumfresnelminmaxexp", "[0.5 0.5 0]");
-	pMatFresnel->SetString("$selfillumtint", "[1 1 1]");
-	pMatFresnel->SetString("$envmaptint", "[1 1 1]");
+	pMatFresnel->SetString("$selfillumtint", "[0 0 0]");
+	pMatFresnel->SetString("$envmaptint", "[0 0 0]");
 	m_pMatFresnel = I::MaterialSystem->CreateMaterial("ChamsMaterialFresnel", pMatFresnel);
 
 	KeyValues* pMatGlow = new KeyValues("VertexLitGeneric");
@@ -125,16 +125,32 @@ bool CFeatures_Chams::Render(void* ecx, void* edx, const DrawModelState_t& state
 
 		if (Vars::Chams::Players::Material.m_Var == 1)
 		{
-			IMaterialVar* pFresnelRanges = m_pMatFresnel->FindVar("$phongfresnelranges", NULL, false);
-			pFresnelRanges->SetVecValue(Vars::Chams::Players::FresnelVars::FresnelX.m_Var, Vars::Chams::Players::FresnelVars::FresnelY.m_Var, Vars::Chams::Players::FresnelVars::FresnelZ.m_Var);
+			if (pPlayer->InLocalTeam()) // Teammates
+			{
+				IMaterialVar* pFresnelRanges = m_pMatFresnel->FindVar("$phongfresnelranges", NULL, false);
+				pFresnelRanges->SetVecValue(Vars::Chams::Players::FresnelVars::Teammates::FresnelX.m_Var, Vars::Chams::Players::FresnelVars::Teammates::FresnelY.m_Var, Vars::Chams::Players::FresnelVars::Teammates::FresnelZ.m_Var);
 
-			float fBaseColor[3]; Vars::Chams::Players::FresnelVars::BaseColor.AsFloat(fBaseColor);
-			IMaterialVar* pBaseColor = m_pMatFresnel->FindVar("$selfillumtint", NULL, false);
-			pBaseColor->SetVecValue(fBaseColor[0], fBaseColor[1], fBaseColor[2]);
+				float fBaseColor[3]; Vars::Chams::Players::FresnelVars::Teammates::BaseColor.AsFloat(fBaseColor);
+				IMaterialVar* pBaseColor = m_pMatFresnel->FindVar("$selfillumtint", NULL, false);
+				pBaseColor->SetVecValue(fBaseColor[0], fBaseColor[1], fBaseColor[2]);
 
-			float fGlowColor[3]; Vars::Chams::Players::FresnelVars::GlowColor.AsFloat(fGlowColor);
-			IMaterialVar* pGlowColor = m_pMatFresnel->FindVar("$envmaptint", NULL, false);
-			pGlowColor->SetVecValue(fGlowColor[0], fGlowColor[1], fGlowColor[2]);
+				float fGlowColor[3]; Vars::Chams::Players::FresnelVars::Teammates::GlowColor.AsFloat(fGlowColor);
+				IMaterialVar* pGlowColor = m_pMatFresnel->FindVar("$envmaptint", NULL, false);
+				pGlowColor->SetVecValue(fGlowColor[0], fGlowColor[1], fGlowColor[2]);
+			}
+			else // Enemies
+			{
+				IMaterialVar* pFresnelRanges = m_pMatFresnel->FindVar("$phongfresnelranges", NULL, false);
+				pFresnelRanges->SetVecValue(Vars::Chams::Players::FresnelVars::Enemies::FresnelX.m_Var, Vars::Chams::Players::FresnelVars::Enemies::FresnelY.m_Var, Vars::Chams::Players::FresnelVars::Enemies::FresnelZ.m_Var);
+
+				float fBaseColor[3]; Vars::Chams::Players::FresnelVars::Enemies::BaseColor.AsFloat(fBaseColor);
+				IMaterialVar* pBaseColor = m_pMatFresnel->FindVar("$selfillumtint", NULL, false);
+				pBaseColor->SetVecValue(fBaseColor[0], fBaseColor[1], fBaseColor[2]);
+
+				float fGlowColor[3]; Vars::Chams::Players::FresnelVars::Enemies::GlowColor.AsFloat(fGlowColor);
+				IMaterialVar* pGlowColor = m_pMatFresnel->FindVar("$envmaptint", NULL, false);
+				pGlowColor->SetVecValue(fGlowColor[0], fGlowColor[1], fGlowColor[2]);
+			}
 		}
 
 		Func.Original<FN>()(ecx, edx, state, pInfo, pCustomBoneToWorld);
@@ -170,16 +186,32 @@ bool CFeatures_Chams::Render(void* ecx, void* edx, const DrawModelState_t& state
 
 		if (Vars::Chams::Players::Material.m_Var == 1)
 		{
-			IMaterialVar* pFresnelRanges = m_pMatFresnel->FindVar("$phongfresnelranges", NULL, false);
-			pFresnelRanges->SetVecValue(Vars::Chams::Players::FresnelVars::FresnelX.m_Var, Vars::Chams::Players::FresnelVars::FresnelY.m_Var, Vars::Chams::Players::FresnelVars::FresnelZ.m_Var);
+			if (pWearable->InLocalTeam()) // Teammates
+			{
+				IMaterialVar* pFresnelRanges = m_pMatFresnel->FindVar("$phongfresnelranges", NULL, false);
+				pFresnelRanges->SetVecValue(Vars::Chams::Players::FresnelVars::Teammates::FresnelX.m_Var, Vars::Chams::Players::FresnelVars::Teammates::FresnelY.m_Var, Vars::Chams::Players::FresnelVars::Teammates::FresnelZ.m_Var);
 
-			float fBaseColor[3]; Vars::Chams::Players::FresnelVars::BaseColor.AsFloat(fBaseColor);
-			IMaterialVar* pBaseColor = m_pMatFresnel->FindVar("$selfillumtint", NULL, false);
-			pBaseColor->SetVecValue(fBaseColor[0], fBaseColor[1], fBaseColor[2]);
+				float fBaseColor[3]; Vars::Chams::Players::FresnelVars::Teammates::BaseColor.AsFloat(fBaseColor);
+				IMaterialVar* pBaseColor = m_pMatFresnel->FindVar("$selfillumtint", NULL, false);
+				pBaseColor->SetVecValue(fBaseColor[0], fBaseColor[1], fBaseColor[2]);
 
-			float fGlowColor[3]; Vars::Chams::Players::FresnelVars::GlowColor.AsFloat(fGlowColor);
-			IMaterialVar* pGlowColor = m_pMatFresnel->FindVar("$envmaptint", NULL, false);
-			pGlowColor->SetVecValue(fGlowColor[0], fGlowColor[1], fGlowColor[2]);
+				float fGlowColor[3]; Vars::Chams::Players::FresnelVars::Teammates::GlowColor.AsFloat(fGlowColor);
+				IMaterialVar* pGlowColor = m_pMatFresnel->FindVar("$envmaptint", NULL, false);
+				pGlowColor->SetVecValue(fGlowColor[0], fGlowColor[1], fGlowColor[2]);
+			}
+			else // Enemies
+			{
+				IMaterialVar* pFresnelRanges = m_pMatFresnel->FindVar("$phongfresnelranges", NULL, false);
+				pFresnelRanges->SetVecValue(Vars::Chams::Players::FresnelVars::Enemies::FresnelX.m_Var, Vars::Chams::Players::FresnelVars::Enemies::FresnelY.m_Var, Vars::Chams::Players::FresnelVars::Enemies::FresnelZ.m_Var);
+
+				float fBaseColor[3]; Vars::Chams::Players::FresnelVars::Enemies::BaseColor.AsFloat(fBaseColor);
+				IMaterialVar* pBaseColor = m_pMatFresnel->FindVar("$selfillumtint", NULL, false);
+				pBaseColor->SetVecValue(fBaseColor[0], fBaseColor[1], fBaseColor[2]);
+
+				float fGlowColor[3]; Vars::Chams::Players::FresnelVars::Enemies::GlowColor.AsFloat(fGlowColor);
+				IMaterialVar* pGlowColor = m_pMatFresnel->FindVar("$envmaptint", NULL, false);
+				pGlowColor->SetVecValue(fGlowColor[0], fGlowColor[1], fGlowColor[2]);
+			}
 		}
 
 		Func.Original<FN>()(ecx, edx, state, pInfo, pCustomBoneToWorld);

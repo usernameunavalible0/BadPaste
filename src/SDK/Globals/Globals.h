@@ -14,6 +14,7 @@ public:
 	bool m_bIsInGame = false;
 	bool m_bIsGameUIVisible = false;
 	bool m_bIsBeingSpectated = false;
+	bool m_bSilentTime = false;
 };
 
 inline CGlobals g_Globals;

@@ -311,6 +311,12 @@ public:
 	{
 		return *reinterpret_cast<int*>(reinterpret_cast<DWORD>(this) + 0x0B24);
 	}
+
+	float& m_flSmackTime()
+	{
+		static int nOffset = GetNetVar("CTFWeaponBase", "m_nInspectStage") + 0x1C;
+		return *reinterpret_cast<float*>(reinterpret_cast<DWORD>(this) + nOffset);
+	}
 };
 
 #endif //TF_WEAPONBASE_H

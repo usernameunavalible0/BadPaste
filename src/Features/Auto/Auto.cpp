@@ -34,7 +34,7 @@ void CFeatures_Auto::AutoBackstab(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, C
 				if (trace.m_pEnt && trace.m_pEnt == pTarget)
 				{
 					if (pKnife->CanPerformBackstabAgainstTarget(pTarget, vAngleTo))
-					{
+					{			
 						G::Util.FixMovement(vAngleTo, cmd);
 						cmd->viewangles = vAngleTo;
 						cmd->buttons |= IN_ATTACK;

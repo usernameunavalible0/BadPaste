@@ -181,11 +181,23 @@ namespace Vars
 
 			namespace FresnelVars
 			{
-				inline CVar<float> FresnelX{ 0.0, L"Fresnel X" };
-				inline CVar<float> FresnelY{ 1.0, L"Fresnel Y" };
-				inline CVar<float> FresnelZ{ 6.0, L"Fresnel Z" };
-				inline Color BaseColor = COLOR_WHITE;
-				inline Color GlowColor = COLOR_WHITE;
+				namespace Enemies
+				{
+					inline CVar<float> FresnelX{ 0.0, L"Fresnel X" };
+					inline CVar<float> FresnelY{ 1.0, L"Fresnel Y" };
+					inline CVar<float> FresnelZ{ 6.0, L"Fresnel Z" };
+					inline Color BaseColor = COLOR_WHITE;
+					inline Color GlowColor = COLOR_WHITE;
+				}
+
+				namespace Teammates
+				{
+					inline CVar<float> FresnelX{ 0.0, L"Fresnel X" };
+					inline CVar<float> FresnelY{ 1.0, L"Fresnel Y" };
+					inline CVar<float> FresnelZ{ 6.0, L"Fresnel Z" };
+					inline Color BaseColor = COLOR_WHITE;
+					inline Color GlowColor = COLOR_WHITE;
+				}
 			}
 		}
 	}
