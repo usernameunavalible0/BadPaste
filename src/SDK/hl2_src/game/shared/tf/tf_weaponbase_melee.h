@@ -51,7 +51,7 @@ public:
     //im just guessing here lol
     virtual void                PlaySwingSound(void) = 0;
 
-	bool DoSwingTraceInternal(trace_t& trace, CUtlVector<trace_t>* pTargetTraceVector, const QAngle vAngleOverride);
+	bool DoSwingTraceInternal(trace_t& trace, CUtlVector<trace_t>* pTargetTraceVector, const QAngle vAngleOverride = QAngle(VEC_T_NAN, VEC_T_NAN, VEC_T_NAN));
 };
 
 #endif // TF_WEAPONBASE_MELEE_H

@@ -36,7 +36,7 @@ bool C_TFKnife::DoSwingTraceKnife(trace_t& trace, QAngle vAngleOverride)
 	//CALL_ATTRIB_HOOK_FLOAT(fSwingRange, melee_range_multiplier);
 
 	Vector vecForward;
-	AngleVectors(vAngleOverride, &vecForward);
+	AngleVectors(vAngleOverride.IsValid() ? vAngleOverride : pPlayer->EyeAngles(), &vecForward);
 	Vector vecSwingStart = pPlayer->Weapon_ShootPosition();
 	Vector vecSwingEnd = vecSwingStart + vecForward * fSwingRange;
 

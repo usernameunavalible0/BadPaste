@@ -41,7 +41,7 @@ public:
 
 public:
 
-	bool DoSwingTraceKnife(trace_t& trace, QAngle vAngleOverride);
+	bool DoSwingTraceKnife(trace_t& trace, QAngle vAngleOverride = QAngle(VEC_T_NAN, VEC_T_NAN, VEC_T_NAN));
 
 	bool CanPerformBackstabAgainstTarget(C_TFPlayer* pTarget, QAngle vAngleTo);
 	bool IsBehindAndFacingTarget(C_TFPlayer* pTarget, QAngle vAngleTo);
