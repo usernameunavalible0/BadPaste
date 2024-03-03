@@ -44,6 +44,8 @@ public:
 	DWORD m_dwInCond = 0x0;
 	DWORD m_dwCalcViewModelView = 0x0;
 	DWORD m_dwAttribHookValue = 0x0;
+	DWORD m_dwGetNumAnimOverlays = 0x0;
+	DWORD m_dwGetAnimOverlay = 0x0;
 };
 
 namespace U { inline CUtil_Offsets Offsets; }

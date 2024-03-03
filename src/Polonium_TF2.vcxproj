@@ -169,6 +169,7 @@
     <ClCompile Include="Features\Aimbot\AimbotHitscan\AimbotHitscan.cpp" />
     <ClCompile Include="Features\Aimbot\AimbotMelee\AimbotMelee.cpp" />
     <ClCompile Include="Features\Auto\Auto.cpp" />
+    <ClCompile Include="Features\Backtrack\Backtrack.cpp" />
     <ClCompile Include="Features\Chams\Chams.cpp" />
     <ClCompile Include="Features\Crithack\Crithack.cpp" />
     <ClCompile Include="Features\ESP\ESP.cpp" />
@@ -334,6 +335,7 @@
     <ClInclude Include="Features\Aimbot\AimbotHitscan\AimbotHitscan.h" />
     <ClInclude Include="Features\Aimbot\AimbotMelee\AimbotMelee.h" />
     <ClInclude Include="Features\Auto\Auto.h" />
+    <ClInclude Include="Features\Backtrack\Backtrack.h" />
     <ClInclude Include="Features\Chams\Chams.h" />
     <ClInclude Include="Features\Crithack\Crithack.h" />
     <ClInclude Include="Features\ESP\ESP.h" />

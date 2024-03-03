@@ -1,4 +1,5 @@
 #include "Auto.h"
+#include "../Backtrack/Backtrack.h"
 #include "../Vars.h"
 
 void CFeatures_Auto::Run(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CUserCmd* cmd)

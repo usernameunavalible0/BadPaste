@@ -1,5 +1,6 @@
 #include "../Hooks.h"
 #include "../../Features/Visual/Visual.h"
+#include "../../Features/Backtrack/Backtrack.h"
 
 DEFINE_HOOK(IBaseClientDLL_FrameStageNotify, void, __fastcall, void* ecx, void* edx, ClientFrameStage_t curStage)
 {
@@ -20,6 +21,8 @@ DEFINE_HOOK(IBaseClientDLL_FrameStageNotify, void, __fastcall, void* ecx, void* 
 			g_Globals.m_nMaxClients = I::EngineClient->GetMaxClients();
 			g_Globals.m_nMaxEntities = I::ClientEntityList->GetMaxEntities();
 			G::EntityCache.Fill();
+
+			//F::Backtrack.FrameUpdatePostEntityThink();
 
 			g_Globals.m_bIsBeingSpectated = false;
 			if (C_TFPlayer* pLocal = G::EntityCache.GetLocal())
