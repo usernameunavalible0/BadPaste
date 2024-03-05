@@ -166,6 +166,8 @@
     <ClCompile Include="SDK\hl2_src\game\shared\tf\tf_weaponbase_melee.cpp" />
     <ClCompile Include="Features\Aimbot\AimbotMelee\AimbotMelee.cpp" />
     <ClCompile Include="Features\Backtrack\Backtrack.cpp" />
+    <ClCompile Include="Features\Glow\Glow.cpp" />
+    <ClCompile Include="Features\AntiHack\AntiHack.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entry\Entry.h" />
@@ -562,6 +564,9 @@
     <ClInclude Include="SDK\hl2_src\game\client\lerp_functions.h" />
     <ClInclude Include="Features\Aimbot\AimbotMelee\AimbotMelee.h" />
     <ClInclude Include="Features\Backtrack\Backtrack.h" />
+    <ClInclude Include="Features\Glow\Glow.h" />
+    <ClInclude Include="Features\AntiHack\AntiHack.h" />
+    <ClInclude Include="SDK\hl2_src\game\shared\Multiplayer\multiplayer_animstate.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="SDK\hl2_src\game\server\base.txt" />

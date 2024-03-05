@@ -1,6 +1,8 @@
 #include "Chams.h"
 #include "../Vars.h"
 #include "../../Hooks/Hooks.h"
+#include "../Glow/Glow.h"
+#include "../AntiHack/AntiHack.h"
 
 using namespace Hooks::IVModelRender_DrawModelExecute;
 
@@ -67,6 +69,10 @@ bool CFeatures_Chams::Render(void* ecx, void* edx, const DrawModelState_t& state
 	if (!Vars::Chams::Enabled.m_Var || g_Globals.m_bIsGameUIVisible)
 		return false;
 
+	// Is this draw call coming from glow?
+	if (F::Glow.m_bIsDrawing)
+		return false;
+
 	C_TFPlayer* pLocal = G::EntityCache.GetLocal();
 
 	if (!pLocal)
@@ -106,6 +112,8 @@ bool CFeatures_Chams::Render(void* ecx, void* edx, const DrawModelState_t& state
 	case ETFClientClass::CTFPlayer:
 	{
 		C_TFPlayer* pPlayer = pEntity->As<C_TFPlayer*>();
+
+		F::AntiHack.Render(ecx, edx, state, pInfo, pCustomBoneToWorld);
 
 		if (Vars::Chams::Players::IgnoreTeam.m_Var && pPlayer->InLocalTeam())
 			return false;

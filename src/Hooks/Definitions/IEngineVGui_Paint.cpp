@@ -26,7 +26,6 @@ DEFINE_HOOK(IEngineVGui_Paint, void, __fastcall, void* ecx, void* edx, int mode)
 				{
 					F::ESP.Render(pLocal);
 
-					F::Visual.Thirdperson(pLocal);
 					F::Visual.WeaponSway();
 
 					//F::Backtrack.DrawLagRecordsBasic();

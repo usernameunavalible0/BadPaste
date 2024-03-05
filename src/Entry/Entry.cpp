@@ -1,5 +1,6 @@
 #include "Entry.h"
 #include "../Features/Chams/Chams.h"
+#include "../Features/Glow/Glow.h"
 
 #define _VALIDATE(x) if (!x) { Error(#x); m_bShouldUnload = true; return; }
 
@@ -25,6 +26,7 @@ void CModuleEntry::Load()
 	_VALIDATE(G::Hooks.Initialize());
 
 	_VALIDATE(F::Chams.Initialize());
+	_VALIDATE(F::Glow.Initialize());
 
 	//I::EngineClient->ClientCmd_Unrestricted("r_drawtracers_firstperson 1");
 }

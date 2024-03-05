@@ -5,6 +5,7 @@
 #include "../../Features/Crithack/Crithack.h"
 #include "../../Features/Aimbot/Aimbot.h"
 #include "../../Features/Auto/Auto.h"
+#include "../../Features/AntiHack/AntiHack.h"
 
 DEFINE_HOOK(ClientModeShared_CreateMove, bool, __fastcall, void* ecx, void* edx, float flInputSampleTime, CUserCmd* cmd)
 {
@@ -33,6 +34,7 @@ DEFINE_HOOK(ClientModeShared_CreateMove, bool, __fastcall, void* ecx, void* edx,
 				//Run aimbot, triggerbot etc. here
 				F::Aimbot.Run(pLocal, pWeapon, cmd);
 				F::Auto.Run(pLocal, pWeapon, cmd);
+				F::AntiHack.Run(cmd, pbSendPacket);
 			}
 			F::Prediction.Finish(pLocal);
 
@@ -40,6 +42,7 @@ DEFINE_HOOK(ClientModeShared_CreateMove, bool, __fastcall, void* ecx, void* edx,
 		}
 
 		F::Misc.Run(pLocal, cmd);
+		g_Globals.m_vViewAngles = cmd->viewangles;
 
 		//Credit to Spook953
 		if (pLocal->IsTaunting() && pLocal->m_bAllowMoveDuringTaunt())

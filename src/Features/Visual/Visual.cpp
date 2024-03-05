@@ -1,6 +1,7 @@
 #include "Visual.h"
 #include "../Vars.h"
 #include "../../SDK/hl2_src/materialsystem/imaterialinternal.h"
+#include "../../SDK/hl2_src/game/shared/Multiplayer/multiplayer_animstate.h"
 
 void CFeatures_Visual::FOV(CViewSetup* pSetup)
 {
@@ -35,6 +36,14 @@ void CFeatures_Visual::Thirdperson(C_TFPlayer* pLocal)
 			pLocal->m_nForceTauntCam() = static_cast<int>(bToggle = !bToggle);
 			flLastHit = I::EngineClient->Time();
 		}
+	}
+
+	if (bToggle)
+	{
+		I::ClientPrediction->SetLocalViewAngles(g_Globals.m_vRealViewAngles);
+
+		//if (CMultiPlayerAnimState* pAnimState = pLocal->GetAnimState())
+		//	pAnimState->m_flCurrentFeetYaw = g_Globals.m_vRealViewAngles.y;
 	}
 }
 
@@ -82,7 +91,10 @@ void CFeatures_Visual::ModulateWorld()
 	}
 
 	//This makes the time it takes to load a map longer but I cannot find another solution to fix the scaling
+	//Disabled in debug due to constant reinjection
+#ifndef _DEBUG
 	I::MaterialSystem->ReloadMaterials(NULL);
+#endif
 
 	bWorldIsModulated = true;
 }

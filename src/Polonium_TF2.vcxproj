@@ -168,11 +168,13 @@
     <ClCompile Include="Features\Aimbot\AimbotGlobal\AimbotGlobal.cpp" />
     <ClCompile Include="Features\Aimbot\AimbotHitscan\AimbotHitscan.cpp" />
     <ClCompile Include="Features\Aimbot\AimbotMelee\AimbotMelee.cpp" />
+    <ClCompile Include="Features\AntiHack\AntiHack.cpp" />
     <ClCompile Include="Features\Auto\Auto.cpp" />
     <ClCompile Include="Features\Backtrack\Backtrack.cpp" />
     <ClCompile Include="Features\Chams\Chams.cpp" />
     <ClCompile Include="Features\Crithack\Crithack.cpp" />
     <ClCompile Include="Features\ESP\ESP.cpp" />
+    <ClCompile Include="Features\Glow\Glow.cpp" />
     <ClCompile Include="Features\Menu\InputHelper\InputHelper.cpp" />
     <ClCompile Include="Features\Menu\Menu.cpp" />
     <ClCompile Include="Features\Misc\Misc.cpp" />
@@ -334,11 +336,13 @@
     <ClInclude Include="Features\Aimbot\AimbotGlobal\AimbotGlobal.h" />
     <ClInclude Include="Features\Aimbot\AimbotHitscan\AimbotHitscan.h" />
     <ClInclude Include="Features\Aimbot\AimbotMelee\AimbotMelee.h" />
+    <ClInclude Include="Features\AntiHack\AntiHack.h" />
     <ClInclude Include="Features\Auto\Auto.h" />
     <ClInclude Include="Features\Backtrack\Backtrack.h" />
     <ClInclude Include="Features\Chams\Chams.h" />
     <ClInclude Include="Features\Crithack\Crithack.h" />
     <ClInclude Include="Features\ESP\ESP.h" />
+    <ClInclude Include="Features\Glow\Glow.h" />
     <ClInclude Include="Features\Menu\InputHelper\InputHelper.h" />
     <ClInclude Include="Features\Menu\Menu.h" />
     <ClInclude Include="Features\Misc\Misc.h" />
@@ -375,6 +379,7 @@
     <ClInclude Include="SDK\hl2_src\game\shared\econ\attribute_manager.h" />
     <ClInclude Include="SDK\hl2_src\game\shared\econ\econ_item_inventory.h" />
     <ClInclude Include="SDK\hl2_src\game\shared\econ\econ_wearable.h" />
+    <ClInclude Include="SDK\hl2_src\game\shared\Multiplayer\multiplayer_animstate.h" />
     <ClInclude Include="SDK\hl2_src\game\shared\tf\tf_item_wearable.h" />
     <ClInclude Include="SDK\hl2_src\game\shared\tf\tf_weaponbase_gun.h" />
     <ClInclude Include="SDK\hl2_src\game\shared\tf\tf_weaponbase_melee.h" />

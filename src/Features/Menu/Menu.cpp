@@ -979,6 +979,15 @@ void CFeatures_Menu::Run()
 				}
 				GroupBoxEnd(L"Main", 160);
 
+				GroupBoxStart();
+				{
+					CheckBox(Vars::AntiHack::AntiAim::Enabled, L"Anti-Aim master switch");
+					ComboBox(Vars::AntiHack::AntiAim::Pitch, { { 0, L"None" }, { 1, L"Up" }, { 2, L"Down" }, { 3, L"Fake Up" }, { 4, L"Fake Down" } });
+					ComboBox(Vars::AntiHack::AntiAim::YawReal, { { 0, L"None" }, { 1, L"Left" }, { 2, L"Right" }, { 3, L"Backwards" }, { 4, L"Emotion" } } );
+					ComboBox(Vars::AntiHack::AntiAim::YawFake, { { 0, L"None" }, { 1, L"Left" }, { 2, L"Right" }, { 3, L"Backwards" }, { 4, L"Random" } } );
+				}
+				GroupBoxEnd(L"Anti-Aim", 160);
+
 				break;
 			}
 

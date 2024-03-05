@@ -15,6 +15,9 @@ public:
 	bool m_bIsGameUIVisible = false;
 	bool m_bIsBeingSpectated = false;
 	bool m_bSilentTime = false;
+
+	QAngle m_vViewAngles;
+	QAngle m_vRealViewAngles;
 };
 
 inline CGlobals g_Globals;

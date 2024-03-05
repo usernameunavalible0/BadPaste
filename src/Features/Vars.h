@@ -127,6 +127,18 @@ namespace Vars
 		inline CVar<int> AutoBackstab{2, L"Auto Backstab"}; //0 = Disabled, 1 = Legit, 2 = Rage
 	}
 
+	namespace AntiHack
+	{
+		namespace AntiAim
+		{
+			inline CVar<bool> Enabled{ false, L"Enabled" };
+			inline CVar<int> Pitch{ 3, L"Pitch" };
+			inline CVar<int> YawReal{ 1, L"Yaw Real" };
+			inline CVar<int> YawFake{ 2, L"Yaw Fake" };
+			inline CVar<bool> DrawFakeAngles{ true, L"Draw Fake Angles" };
+		}
+	}
+
 	namespace ESP
 	{
 		inline CVar<bool> Enabled{ true, L"Enabled" };
@@ -199,6 +211,18 @@ namespace Vars
 					inline Color GlowColor = COLOR_WHITE;
 				}
 			}
+		}
+	}
+
+	namespace Glow
+	{
+		inline CVar<bool> Enabled{ true, L"Enabled" };
+
+		namespace Players
+		{
+			inline CVar<bool> Enabled{ true, L"Enabled" };
+			inline CVar<int> Material{ 1, L"Material" }; // 0=Off, 1=Wireframe
+			inline CVar<bool> IgnoreTeam{ true, L"Ignore Team" };
 		}
 	}
 

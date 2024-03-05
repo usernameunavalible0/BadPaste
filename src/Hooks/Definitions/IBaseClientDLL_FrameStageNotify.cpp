@@ -4,6 +4,13 @@
 
 DEFINE_HOOK(IBaseClientDLL_FrameStageNotify, void, __fastcall, void* ecx, void* edx, ClientFrameStage_t curStage)
 {
+	if (curStage == ClientFrameStage_t::FRAME_RENDER_START)
+	{
+		C_TFPlayer* pLocal = G::EntityCache.GetLocal();
+		if (pLocal)
+			F::Visual.Thirdperson(pLocal);
+	}
+
 	Func.Original<FN>()(ecx, edx, curStage);
 
 	if (curStage == ClientFrameStage_t::FRAME_NET_UPDATE_START)

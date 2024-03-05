@@ -16,6 +16,7 @@
 #include "../../shared/tf/tf_shareddefs.h"
 
 class C_TFWeaponBase;
+class CMultiPlayerAnimState;
 
 enum EBonusEffectFilter_t
 {
@@ -231,6 +232,11 @@ public:
 	{
 		static const int nOffset = GetNetVar("CTFPlayer", "m_flInvisChangeCompleteTime") - 0x8;
 		return *reinterpret_cast<float*>(reinterpret_cast<DWORD>(this) + nOffset);
+	}
+
+	inline CMultiPlayerAnimState* GetAnimState()
+	{
+		return *reinterpret_cast<CMultiPlayerAnimState**>(reinterpret_cast<DWORD>(this) + 0x1D88);
 	}
 
 	//Credits to KGB
