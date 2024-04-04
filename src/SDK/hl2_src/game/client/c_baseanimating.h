@@ -170,6 +170,15 @@ public:
 		return *reinterpret_cast<MDLHandle_t*>(reinterpret_cast<DWORD>(this) + nOffset);
 	}
 
+	inline void SetCycle(float flCycle)
+	{
+		if (m_flCycle() != flCycle)
+		{
+			m_flCycle() = flCycle;
+			InvalidatePhysicsRecursive(8); // ANIMATION_CHANGED
+		}
+	}
+
 public:
 	inline bool GetHitboxPosition(const int nHitbox, Vector& vPosition)
 	{

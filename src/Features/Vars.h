@@ -178,7 +178,7 @@ namespace Vars
 		inline CVar<int> ViewModel_Position_Offset_Forward{ 0, L"Forward/Backward Offset"};
 		inline CVar<int> ViewModel_Position_Offset_Right{ 0, L"Left/Right Offset"};
 		inline CVar<int> ViewModel_Position_Offset_Up{ 0, L"Up/Down Offset"};
-		inline CVar<bool> ModulateWorld{ true, L"ModulateWorld"};
+		inline CVar<bool> ModulateWorld{ false, L"ModulateWorld"};
 	}
 
 	namespace Chams
@@ -231,5 +231,13 @@ namespace Vars
 		inline CVar<bool> Bunnyhop{ true, L"Bunnyhop" };
 		inline CVar<bool> BypassPure{ true, L"Bypass Pure" };
 		inline CVar<bool> ForceMeleeCrits{ true, L"Force Melee Crits" };
+
+		namespace CL_Move
+		{
+			inline CVar<bool> Enabled{ true, L"Enabled" };
+			inline CVar<bool> Doubletap{ true, L"Double Tap" };
+			inline CVar<int> TeleportKey{ 'F', L"Teleport Key"};
+			inline CVar<int> RechargeKey{ 'R', L"Recharge Key"};
+		}
 	}
 }

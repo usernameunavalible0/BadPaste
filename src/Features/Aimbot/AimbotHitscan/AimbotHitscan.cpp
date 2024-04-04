@@ -1,5 +1,6 @@
 #include "AimbotHitscan.h"
 #include "../../Vars.h"
+#include "../../Backtrack/Backtrack.h"
 
 void CAimbot_Hitscan::Run(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CUserCmd* cmd)
 {
@@ -19,7 +20,17 @@ void CAimbot_Hitscan::Run(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CUserCmd*
 	Aim(pLocal, cmd, Target.m_vAngleTo);
 
 	if (ShouldFire(pLocal, pWeapon, cmd, Target))
+	{
 		cmd->buttons |= IN_ATTACK;
+
+		if (Vars::Misc::CL_Move::Enabled.m_Var && Vars::Misc::CL_Move::Doubletap.m_Var && (cmd->buttons & IN_ATTACK) && !g_Globals.m_nShifted && !g_Globals.m_nWaitForShift)
+		{
+			if (pLocal->m_iClass() == TF_CLASS_HEAVYWEAPONS && pWeapon->GetSlot() == 0 && !pLocal->m_vecVelocity().IsZero())
+				g_Globals.m_bShouldShift = false;
+			else
+				g_Globals.m_bShouldShift = true;
+		}
+	}
 }
 
 int CAimbot_Hitscan::GetBestHitbox(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon)

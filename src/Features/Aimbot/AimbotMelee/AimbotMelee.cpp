@@ -30,7 +30,7 @@ void CAimbot_Melee::Run(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CUserCmd* c
 		if (IsAttacking(cmd, pMelee))
 		{
 			Aim(pLocal, cmd, Target.m_vAngleTo);
-			g_Globals.m_bSilentTime = true;
+			g_Globals.m_bChoking = true;
 		}
 	}
 	else Aim(pLocal, cmd, Target.m_vAngleTo);

@@ -29,7 +29,7 @@ DEFINE_HOOK(IBaseClientDLL_FrameStageNotify, void, __fastcall, void* ecx, void* 
 			g_Globals.m_nMaxEntities = I::ClientEntityList->GetMaxEntities();
 			G::EntityCache.Fill();
 
-			//F::Backtrack.FrameUpdatePostEntityThink();
+			F::Backtrack.FrameUpdatePostEntityThink();
 
 			g_Globals.m_bIsBeingSpectated = false;
 			if (C_TFPlayer* pLocal = G::EntityCache.GetLocal())

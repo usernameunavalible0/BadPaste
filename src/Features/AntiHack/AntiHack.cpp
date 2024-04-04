@@ -1,6 +1,7 @@
 #include "AntiHack.h"
 #include "../Vars.h"
 #include "../../Hooks/Hooks.h"
+#include <random>
 
 using namespace Hooks::IVModelRender_DrawModelExecute;
 
@@ -76,7 +77,15 @@ void CFeatures_AntiHack::Run(CUserCmd* cmd, bool* pbSendPacket)
 		case 2: { cmd->viewangles.y -= 90.0f; flYawRealOffset = -90.0f; break; }
 		case 3: { cmd->viewangles.y += 180.0f; flYawRealOffset = 180.0f; break; }
 		case 4: { cmd->viewangles.y -= 89.99985719438652715f; flYawRealOffset = -89.99985719438652715f; break; }
-		default: { bYawSet = false; break; }
+		case 5: { 
+			std::random_device rd;
+			std::mt19937 gen(rd());
+			std::uniform_real_distribution<float> dis(-180.f, 180.f);
+			float flRand = dis(gen);
+			cmd->viewangles.y += flRand;
+			flYawRealOffset = flRand;
+			break; }
+		default: { bYawSet = false; flYawRealOffset = 0.0f; break; }
 		}
 
 		g_Globals.m_vRealViewAngles.y = cmd->viewangles.y;

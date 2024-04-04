@@ -51,8 +51,13 @@ void CFeatures_Visual::WeaponSway()
 {
 	if (Vars::Visual::ViewModelSway.m_Var)
 	{
-		if (C_TFWeaponBase* pWeapon = G::EntityCache.GetWeapon())
-			G::ConVars.cl_wpn_sway_interp->SetValue(pWeapon->GetWeaponID() == TF_WEAPON_COMPOUND_BOW ? 0.02f : 0.05f);
+		C_TFWeaponBase* pWeapon = G::EntityCache.GetWeapon();
+		if (!pWeapon)
+			return;
+
+		const float flDesiredInterp = pWeapon->GetWeaponID() == TF_WEAPON_COMPOUND_BOW ? 0.02f : 0.05f;
+		if (G::ConVars.cl_wpn_sway_interp->GetFloat() != flDesiredInterp)
+			G::ConVars.cl_wpn_sway_interp->SetValue(flDesiredInterp);
 	}
 	else
 	{

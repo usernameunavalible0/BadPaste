@@ -46,6 +46,10 @@ public:
 	DWORD m_dwAttribHookValue = 0x0;
 	DWORD m_dwGetNumAnimOverlays = 0x0;
 	DWORD m_dwGetAnimOverlay = 0x0;
+	DWORD m_dwSetLocalAngles = 0x0;
+	DWORD m_dwSetLocalOrigin = 0x0;
+	DWORD m_dwSetCollisionBounds = 0x0;
+	DWORD m_dwInvalidatePhysicsRecursive = 0x0;
 };
 
 namespace U { inline CUtil_Offsets Offsets; }

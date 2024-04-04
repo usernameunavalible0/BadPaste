@@ -9,7 +9,7 @@
 
 DEFINE_HOOK(ClientModeShared_CreateMove, bool, __fastcall, void* ecx, void* edx, float flInputSampleTime, CUserCmd* cmd)
 {
-	g_Globals.m_bSilentTime = false;
+	g_Globals.m_bChoking = false;
 
 	if (!cmd || cmd->command_number <= 0)
 		return Func.Original<FN>()(ecx, edx, flInputSampleTime, cmd);
@@ -64,7 +64,7 @@ DEFINE_HOOK(ClientModeShared_CreateMove, bool, __fastcall, void* ecx, void* edx,
 
 	static bool bWasSet = false;
 
-	if (g_Globals.m_bSilentTime) {
+	if (g_Globals.m_bChoking) {
 		*pbSendPacket = false;
 		bWasSet = true;
 	}
