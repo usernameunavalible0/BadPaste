@@ -18,6 +18,8 @@ public:
 
 	Color GetTeamColor(const int nTeam);
 	Color GetHealthColor(const int nHealth, const int nMaxHealth);
+
+	float GetClientInterpAmount();
 };
 
 namespace G { inline CUtil Util; }

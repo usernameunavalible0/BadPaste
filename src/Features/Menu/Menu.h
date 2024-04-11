@@ -15,6 +15,7 @@ private:
 	bool InputFloat(CVar<float>& Var, float Min, float Max, float Step = 1.0f, const wchar_t* Fmt = L"%f");
 	bool InputInt(CVar<int>& Var, int Min, int Max, int Step = 1);
 	bool InputColor(Color& Var, const wchar_t* Label);
+	bool InputColorNew(Color& Var, bool AllowAlpha);
 	bool InputString(const wchar_t* Label, std::wstring& output);
 	bool InputKey(CVar<int>& output, bool bAllowNone = true);
 	void GroupBoxStart();

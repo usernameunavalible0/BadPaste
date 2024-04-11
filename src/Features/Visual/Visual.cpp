@@ -2,6 +2,7 @@
 #include "../Vars.h"
 #include "../../SDK/hl2_src/materialsystem/imaterialinternal.h"
 #include "../../SDK/hl2_src/game/shared/Multiplayer/multiplayer_animstate.h"
+#include <vector>
 
 void CFeatures_Visual::FOV(CViewSetup* pSetup)
 {
@@ -67,6 +68,7 @@ void CFeatures_Visual::WeaponSway()
 }
 
 bool bWorldIsModulated = false;
+CUtlVector<const char*> m_vecNeedsToBeReloaded;
 
 void CFeatures_Visual::ModulateWorld()
 {
@@ -96,10 +98,8 @@ void CFeatures_Visual::ModulateWorld()
 	}
 
 	//This makes the time it takes to load a map longer but I cannot find another solution to fix the scaling
-	//Disabled in debug due to constant reinjection
-#ifndef _DEBUG
-	I::MaterialSystem->ReloadMaterials(NULL);
-#endif
+	//I::MaterialSystem->ReloadMaterials(NULL);
+	//Im having it only reload the actual materials we are changing instead of every material currently loaded
 
 	bWorldIsModulated = true;
 }

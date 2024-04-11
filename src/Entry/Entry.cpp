@@ -1,6 +1,7 @@
 #include "Entry.h"
 #include "../Features/Chams/Chams.h"
 #include "../Features/Glow/Glow.h"
+#include "../Features/ESP/ESP.h"
 
 #define _VALIDATE(x) if (!x) { Error(#x); m_bShouldUnload = true; return; }
 
@@ -21,7 +22,10 @@ void CModuleEntry::Load()
 	G::Draw.ReloadScreenSize();
 
 	if (I::EngineClient->IsInGame())
+	{
 		g_Globals.m_nLocalIndex = I::EngineClient->GetLocalPlayer();
+		F::ESP.LevelInitPostEntity();
+	}
 
 	_VALIDATE(G::Hooks.Initialize());
 

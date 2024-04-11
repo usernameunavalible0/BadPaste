@@ -47,3 +47,9 @@ Color CUtil::GetHealthColor(const int nHealth, const int nMaxHealth)
 
 	return { static_cast<byte>(nR), static_cast<byte>(nG), 0u, 255u };
 }
+
+//https://github.com/lua9520/source-engine-2018-hl2_src/blob/master/engine/client.cpp#L624
+float CUtil::GetClientInterpAmount()
+{
+	return max(G::ConVars.cl_interp_ratio->GetFloat() / G::ConVars.cl_updaterate->GetFloat(), G::ConVars.cl_interp->GetFloat());
+}

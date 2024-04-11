@@ -44,8 +44,8 @@ void CFeatures_ESP::Render(C_TFPlayer* pLocal)
 				const Color clrHealth = G::Util.GetHealthColor(nHealth, nMaxHealth);
 				const Color clrTeam = G::Util.GetTeamColor(pPlayer->GetTeamNumber());
 
-				const int nDrawX = x + (w / 2);
-				int nDrawY = y + (h / 2);
+				const int nDrawX = x + (w + 3);
+				int nDrawY = y;
 
 				player_info_t pi;
 				if (Vars::ESP::Players::Name.m_Var && I::EngineClient->GetPlayerInfo(n, &pi))
@@ -53,13 +53,13 @@ void CFeatures_ESP::Render(C_TFPlayer* pLocal)
 					uchar16 szName[MAX_PLAYER_NAME_LENGTH];
 					Q_UTF8ToUTF16(UTIL_SafeName(pi.name), szName, MAX_PLAYER_NAME_LENGTH);
 
-					G::Draw.String(EFonts::ESP_NAME, nDrawX, nDrawY, clrTeam, TXT_CENTERXY, szName);
+					G::Draw.String(EFonts::ESP_NAME, nDrawX, nDrawY, clrTeam, TXT_CENTERY, szName);
 					nDrawY += G::Draw.GetFontHeight(EFonts::ESP_NAME);
 				}
 
 				if (Vars::ESP::Players::HealthText.m_Var)
 				{
-					G::Draw.String(EFonts::ESP, nDrawX, nDrawY, clrHealth, TXT_CENTERXY, L"%i / %ihp", nHealth, nMaxHealth);
+					G::Draw.String(EFonts::ESP, nDrawX, nDrawY, clrHealth, TXT_CENTERY, L"%i / %ihp", nHealth, nMaxHealth);
 					nDrawY += G::Draw.GetFontHeight(EFonts::ESP);
 				}
 
@@ -68,10 +68,40 @@ void CFeatures_ESP::Render(C_TFPlayer* pLocal)
 					C_BaseCombatWeapon* pWeapon = pPlayer->GetActiveWeapon();
 
 					if (pWeapon)
+						G::Draw.String(EFonts::ESP_WEAPON, x + (w / 2), (y + h), COLOR_GREY, TXT_CENTERXY, pWeapon->GetName() + 10); //tf_weapon_
+				}
+
+				if (Vars::ESP::Players::Box.m_Var)
+				{
+					G::Draw.OutlinedRect(x, y, w, h, clrTeam);
+
+					if (Vars::ESP::Outlines.m_Var)
 					{
-						G::Draw.String(EFonts::ESP_WEAPON, nDrawX, nDrawY, COLOR_GREY, TXT_CENTERXY, pWeapon->GetName() + 10); //tf_weapon_
-						nDrawY += G::Draw.GetFontHeight(EFonts::ESP_WEAPON);
+						//Outline
+						G::Draw.OutlinedRect(x - 1, y - 1, w + 2, h + 2, COLOR_BLACK);
+
+						//Inline
+						G::Draw.OutlinedRect(x + 1, y + 1, w - 2, h - 2, COLOR_BLACK);
 					}
+				}
+
+				if (Vars::ESP::Players::HealthBar.m_Var)
+				{
+					x -= 1;
+
+					const float flMaxHealth = static_cast<float>(nMaxHealth);
+					const float flHealth = Clamp<float>(static_cast<float>(nHealth), 1.0f, flMaxHealth);
+
+					static const int nWidth = 2;
+					const int nHeight = (h + (flHealth < flMaxHealth ? 2 : 1));
+					const int nHeight2 = (h + 1);
+
+					const float flRatio = (flHealth / flMaxHealth);
+					G::Draw.Rect(static_cast<int>(((x - nWidth) - 2)), static_cast<int>((y + nHeight - (nHeight * flRatio))), nWidth, static_cast<int>((nHeight * flRatio)), clrHealth);
+					if (Vars::ESP::Outlines.m_Var)
+						G::Draw.OutlinedRect(static_cast<int>(((x - nWidth) - 2) - 1), static_cast<int>((y + nHeight - (nHeight * flRatio)) - 1), nWidth + 2, static_cast<int>((nHeight * flRatio) + 1), COLOR_BLACK);
+
+					x += 1;
 				}
 
 				break;
@@ -220,6 +250,61 @@ void CFeatures_ESP::Render(C_TFPlayer* pLocal)
 				break;
 		}
 	}
+}
+
+void CFeatures_ESP::LevelInitPostEntity()
+{
+	m_vecHealth.Purge();
+	{
+		//Normal
+		m_vecHealth.AddToTail(I::ModelInfoClient->GetModelIndex("models/items/medkit_large.mdl"));
+		m_vecHealth.AddToTail(I::ModelInfoClient->GetModelIndex("models/items/medkit_medium.mdl"));
+		m_vecHealth.AddToTail(I::ModelInfoClient->GetModelIndex("models/items/medkit_small.mdl"));
+		//Birthday
+		m_vecHealth.AddToTail(I::ModelInfoClient->GetModelIndex("models/items/medkit_large_bday.mdl"));
+		m_vecHealth.AddToTail(I::ModelInfoClient->GetModelIndex("models/items/medkit_medium_bday.mdl"));
+		m_vecHealth.AddToTail(I::ModelInfoClient->GetModelIndex("models/items/medkit_small_bday.mdl"));
+		//Halloween
+		m_vecHealth.AddToTail(I::ModelInfoClient->GetModelIndex("models/props_halloween/halloween_medkit_large.mdl"));
+		m_vecHealth.AddToTail(I::ModelInfoClient->GetModelIndex("models/props_halloween/halloween_medkit_medium.mdl"));
+		m_vecHealth.AddToTail(I::ModelInfoClient->GetModelIndex("models/props_halloween/halloween_medkit_small.mdl"));
+		//Medieval
+		m_vecHealth.AddToTail(I::ModelInfoClient->GetModelIndex("models/props_medieval/medieval_meat.mdl"));
+	}
+
+	m_vecAmmo.Purge();
+	{
+		//Normal
+		m_vecAmmo.AddToTail(I::ModelInfoClient->GetModelIndex("models/items/ammopack_large.mdl"));
+		m_vecAmmo.AddToTail(I::ModelInfoClient->GetModelIndex("models/items/ammopack_medium.mdl"));
+		m_vecAmmo.AddToTail(I::ModelInfoClient->GetModelIndex("models/items/ammopack_small.mdl"));
+		//Birthday
+		m_vecAmmo.AddToTail(I::ModelInfoClient->GetModelIndex("models/items/ammopack_large_bday.mdl"));
+		m_vecAmmo.AddToTail(I::ModelInfoClient->GetModelIndex("models/items/ammopack_medium_bday.mdl"));
+		m_vecAmmo.AddToTail(I::ModelInfoClient->GetModelIndex("models/items/ammopack_small_bday.mdl"));
+	}
+}
+
+bool CFeatures_ESP::IsHealth(const int nModelIndex)
+{
+	for (int i = 0; i < m_vecHealth.Count(); ++i)
+	{
+		if (m_vecHealth.Element(i) == nModelIndex)
+			return true;
+	}
+
+	return false;
+}
+
+bool CFeatures_ESP::IsAmmo(const int nModelIndex)
+{
+	for (int i = 0; i < m_vecAmmo.Count(); ++i)
+	{
+		if (m_vecAmmo.Element(i) == nModelIndex)
+			return true;
+	}
+
+	return false;
 }
 
 bool CFeatures_ESP::GetDynamicBounds(C_BaseEntity* pEntity, int& x, int& y, int& w, int& h)

@@ -3,6 +3,7 @@
 #include "../../Hooks/Hooks.h"
 #include "../Glow/Glow.h"
 #include "../AntiHack/AntiHack.h"
+#include "../ESP/ESP.h"
 
 using namespace Hooks::IVModelRender_DrawModelExecute;
 
@@ -64,6 +65,9 @@ bool CFeatures_Chams::Initialize()
 	return true;
 }
 
+// Used to reset color modulation
+const float fClear[3] = { 1.f, 1.f, 1.f };
+
 bool CFeatures_Chams::Render(void* ecx, void* edx, const DrawModelState_t& state, const ModelRenderInfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld)
 {
 	if (!Vars::Chams::Enabled.m_Var || g_Globals.m_bIsGameUIVisible)
@@ -92,7 +96,17 @@ bool CFeatures_Chams::Render(void* ecx, void* edx, const DrawModelState_t& state
 	{
 	case ETFClientClass::CTFViewModel:
 	{
-		I::ModelRender->ForcedMaterialOverride(m_pMatShaded);
+		if (!Vars::Chams::ViewModel::Enabled.m_Var)
+			return false;
+
+		I::ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
+			{
+				switch (Vars::Chams::ViewModel::Material.m_Var)
+				{
+				case 0: return m_pMatShaded;
+				default: return nullptr;
+				}
+			}());
 
 		//I feel this is somewhat inefficient.
 		const Color clrTeam = G::Util.GetTeamColor(pLocal->GetTeamNumber());
@@ -103,7 +117,64 @@ bool CFeatures_Chams::Render(void* ecx, void* edx, const DrawModelState_t& state
 
 		I::ModelRender->ForcedMaterialOverride(nullptr);
 
-		const float fClear[3] = { 1.f, 1.f, 1.f };
+		I::RenderView->SetColorModulation(fClear);
+
+		return true;
+	}
+
+	case ETFClientClass::CBaseAnimating:
+	{
+		C_BaseAnimating* pAnimModel = pEntity->As<C_BaseAnimating*>();
+
+		if (Vars::Chams::World::Healthpacks.m_Var)
+		{
+			if (F::ESP.IsHealth(pAnimModel->m_nModelIndex()))
+			{
+				I::ModelRender->ForcedMaterialOverride(m_pMatShaded);
+
+				static const float fGreen[3] = { 0.f, 1.f, 0.f };
+				I::RenderView->SetColorModulation(fGreen);
+
+				Func.Original<FN>()(ecx, edx, state, pInfo, pCustomBoneToWorld);
+
+				I::ModelRender->ForcedMaterialOverride(nullptr);
+
+				I::RenderView->SetColorModulation(fClear);
+
+				return true;
+			}
+		}
+
+		if (Vars::Chams::World::Ammopacks.m_Var)
+		{
+			if (F::ESP.IsAmmo(pAnimModel->m_nModelIndex()))
+			{
+				I::ModelRender->ForcedMaterialOverride(m_pMatShaded);
+
+				Func.Original<FN>()(ecx, edx, state, pInfo, pCustomBoneToWorld);
+
+				I::ModelRender->ForcedMaterialOverride(nullptr);
+
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	case ETFClientClass::CTFAmmoPack:
+	{
+		if (!Vars::Chams::World::Ammopacks.m_Var)
+			return false;
+
+		I::ModelRender->ForcedMaterialOverride(m_pMatShaded);
+
+		I::RenderView->SetColorModulation(fClear);
+
+		Func.Original<FN>()(ecx, edx, state, pInfo, pCustomBoneToWorld);
+
+		I::ModelRender->ForcedMaterialOverride(nullptr);
+
 		I::RenderView->SetColorModulation(fClear);
 
 		return true;
@@ -114,6 +185,9 @@ bool CFeatures_Chams::Render(void* ecx, void* edx, const DrawModelState_t& state
 		C_TFPlayer* pPlayer = pEntity->As<C_TFPlayer*>();
 
 		F::AntiHack.Render(ecx, edx, state, pInfo, pCustomBoneToWorld);
+
+		if (!Vars::Chams::Players::Enabled.m_Var)
+			return false;
 
 		if (Vars::Chams::Players::IgnoreTeam.m_Var && pPlayer->InLocalTeam())
 			return false;
@@ -170,6 +244,9 @@ bool CFeatures_Chams::Render(void* ecx, void* edx, const DrawModelState_t& state
 
 	case ETFClientClass::CTFWearable:
 	{
+		if (!Vars::Chams::Players::Enabled.m_Var)
+			return false;
+
 		C_TFWearable* pWearable = pEntity->As<C_TFWearable*>();
 
 		//This is probably not the best way to check if wearable is being worn

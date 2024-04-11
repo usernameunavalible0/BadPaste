@@ -5,9 +5,19 @@ class CFeatures_Glow
 {
 private:
 	IMaterial* m_pMatWireframe;
+	IMaterial* m_pMatGlowColor;
+	IMaterial* m_pMatDownsample;
+	IMaterial* m_pMatBlurX;
+	IMaterial* m_pMatBlurY;
+	IMaterial* m_pMatHaloAddToScreen;
+
+	ITexture* m_pRtFullFrame;
+	ITexture* m_pRtQuarterSize0;
+	ITexture* m_pRtQuarterSize1;
 
 public:
 	bool Initialize();
+	void UnInitialize();
 	void Render();
 
 	bool m_bIsDrawing;
@@ -29,7 +39,7 @@ private:
 	void ResetDrawInfo()
 	{
 		I::ModelRender->ForcedMaterialOverride(nullptr);
-		float fClear[3] = { 1.f, 1.f, 1.f };
+		static const float fClear[3] = { 1.f, 1.f, 1.f };
 		I::RenderView->SetColorModulation(fClear);
 		I::RenderView->SetBlend(1.0f);
 

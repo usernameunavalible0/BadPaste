@@ -51,8 +51,6 @@ void CFeatures_Auto::AutoBackstab(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, C
 
 void CFeatures_Auto::AutoHeal(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CUserCmd* cmd)
 {
-	static int n = 1;
-
 	C_WeaponMedigun* pMedigun = pWeapon->As<C_WeaponMedigun*>();
 
 	if (!pMedigun)
@@ -62,31 +60,20 @@ void CFeatures_Auto::AutoHeal(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CUser
 	//if (pLocal->deadflag() || !pLocal->IsClass(TF_CLASS_MEDIC))
 	//	return;
 
-	Vector vecSrc = pLocal->Weapon_ShootPosition();
+	// We are going to essentially use this function like a giant for loop. Every time CreateMove is called we will increase n by one.
+	static int n = 1; 
 
-	while (n < (g_Globals.m_nMaxClients + 1))
-	{
-		C_TFPlayer* pPlayer = UTIL_TFPlayerByIndex(n);
+	// If we have reached the maximum number of clients on the server, reset count and keep going
+	if (n < (g_Globals.m_nMaxClients + 1))
+		n = 1;
 
-		if (!pPlayer || pPlayer->IsDormant() || pPlayer->deadflag() || !pPlayer->InLocalTeam())
-			continue;
+	// We only want to heal a different person every other tick, or else it will stay healing the same person.
+	if (cmd->tick_count % 2)
+		return;
 
-		Vector vBody; if (!pPlayer->GetHitboxPosition(HITBOX_BODY, vBody)) { n++; continue; }
-		QAngle angTo = GetAngleToPosition(vecSrc, vBody);
-		Vector vecAiming = Vector(0, 0, 0); AngleVectors(angTo, &vecAiming);
+	C_TFPlayer* pPlayer = UTIL_TFPlayerByIndex(n);
 
-		Vector vecEnd = vecSrc + vecAiming * pMedigun->GetTargetRange();
-		trace_t tr;
-
-		UTIL_TraceLine(vecSrc, vecEnd, (MASK_SHOT & ~CONTENTS_HITBOX), pLocal, DMG_GENERIC, &tr);
-		if (tr.fraction != 1.0 && tr.m_pEnt && tr.m_pEnt == pPlayer)
-		{
-			G::Util.FixMovement(angTo, cmd);
-			cmd->viewangles = angTo;
-			cmd->buttons |= IN_ATTACK;
-			break;
-		}
-
-		n++;
-	}
+	// Any problems, increment and return
+	if (!pPlayer || pPlayer->IsDormant() || pPlayer->deadflag() || !pPlayer->InLocalTeam())
+		n++; return;
 }

@@ -142,13 +142,17 @@ namespace Vars
 	namespace ESP
 	{
 		inline CVar<bool> Enabled{ true, L"Enabled" };
+		inline CVar<bool> Outlines{ false, L"Outlines" };
 
 		namespace Players
 		{
 			inline CVar<bool> Enabled{ true, L"Enabled" };
 			inline CVar<bool> IgnoreTeam{ true, L"Ignore Team" };
 			inline CVar<bool> ActiveWeapon{ false, L"Active Weapon" };
-			inline CVar<bool> HealthText{ true, L"Health Text" };
+			inline CVar<bool> HealthText{ false, L"Health Text" };
+			inline CVar<bool> HealthBar{ true, L"Health Bar" };
+			inline CVar<bool> Box{ false, L"2D Box" };
+			//inline CVar<bool> ThreeDBox{ false, L"3D Box" };
 			inline CVar<bool> Name{ true, L"Name" };
 		}
 
@@ -185,9 +189,22 @@ namespace Vars
 	{
 		inline CVar<bool> Enabled{ true, L"Enabled" };
 		
+		namespace ViewModel
+		{
+			inline CVar<bool> Enabled{ false, L"Enabled" };
+			inline CVar<int> Material{ 0, L"Material" }; // 0=Shaded
+		}
+
+		namespace World
+		{
+			inline CVar<bool> Healthpacks{ true, L"Healthpacks" };
+			inline CVar<bool> Ammopacks{ true, L"Ammopacks" };
+		}
+
 		namespace Players
 		{
-			inline CVar<bool> Enabled{ true, L"Enabled" };
+			inline CVar<bool> Enabled{ false, L"Enabled" };
+			// TODO: Why is there an Off option when there is a Enabled flag?
 			inline CVar<int> Material{ 1, L"Material" }; // 0=Off, 1=Fresnel, 2=Glow, 3=Test, 4=Shaded, 5=Toxic
 			inline CVar<bool> IgnoreTeam{ true, L"Ignore Team" };
 
@@ -221,8 +238,11 @@ namespace Vars
 		namespace Players
 		{
 			inline CVar<bool> Enabled{ true, L"Enabled" };
-			inline CVar<int> Material{ 1, L"Material" }; // 0=Off, 1=Wireframe
+			inline CVar<int> Style{ 0, L"Style" }; // 0=Blur
 			inline CVar<bool> IgnoreTeam{ true, L"Ignore Team" };
+			inline CVar<float> BloomAmount{ 6.0f, L"Bloom Amount" };
+			inline CVar<int> GlowColorMode{ 1,L"Glow Color Mode" }; //0=Custom,1=Rainbow,2=Health
+			inline Color GlowColor = Color(255, 255, 255, 255);
 		}
 	}
 

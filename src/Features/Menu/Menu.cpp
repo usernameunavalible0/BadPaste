@@ -430,6 +430,11 @@ bool CFeatures_Menu::InputColor(Color& Var, const wchar_t* Label)
 	return callback;
 }
 
+bool CFeatures_Menu::InputColorNew(Color& Var, bool AllowAlpha)
+{
+	return false;
+}
+
 bool CFeatures_Menu::InputString(const wchar_t* Label, std::wstring& output)
 {
 	return false;
@@ -844,6 +849,7 @@ void CFeatures_Menu::Run()
 					GroupBoxStart();
 					{
 						CheckBox(Vars::ESP::Enabled, L"ESP Master Toggle");
+						CheckBox(Vars::ESP::Outlines, L"ESP Outline Master Toggle");
 					}
 					GroupBoxEnd(L"Main", 160);
 
@@ -853,6 +859,9 @@ void CFeatures_Menu::Run()
 						CheckBox(Vars::ESP::Players::IgnoreTeam, L"Ignore the local team");
 						CheckBox(Vars::ESP::Players::ActiveWeapon, L"Active Weapon text");
 						CheckBox(Vars::ESP::Players::HealthText, L"Player Health Text");
+						CheckBox(Vars::ESP::Players::HealthBar, L"Player Health Bar");
+						CheckBox(Vars::ESP::Players::Box, L"2D Player Box");
+						//CheckBox(Vars::ESP::Players::ThreeDBox, L"3D Player Box");
 						CheckBox(Vars::ESP::Players::Name, L"Name Text");
 					}
 					GroupBoxEnd(L"Players", 160);
@@ -875,6 +884,8 @@ void CFeatures_Menu::Run()
 
 				case EVisualsTabs::TAB_CHAMS:
 				{
+					Rect_t checkpoint = m_LastWidget;
+
 					GroupBoxStart();
 					{
 						CheckBox(Vars::Chams::Enabled, L"Chams Master Toggle");
@@ -889,9 +900,27 @@ void CFeatures_Menu::Run()
 					}
 					GroupBoxEnd(L"Players", 160);
 
+					Rect_t checkpoint1 = m_LastWidget;
+					checkpoint.x += 160 + Vars::Menu::SpacingX;
+					m_LastWidget = checkpoint;
+
+					GroupBoxStart();
+					{
+						CheckBox(Vars::Chams::ViewModel::Enabled, L"Player ViewModel Chams Toggle");
+						ComboBox(Vars::Chams::ViewModel::Material, { { 0, L"Shaded" } });
+					}
+					GroupBoxEnd(L"ViewModel", 160);
+
+					GroupBoxStart();
+					{
+						CheckBox(Vars::Chams::World::Healthpacks, L"World Healthpack Chams Toggle");
+						CheckBox(Vars::Chams::World::Ammopacks, L"World Ammopack Chams Toggle");
+					}
+					GroupBoxEnd(L"World", 160);
+
 					if (Vars::Chams::Players::Material.m_Var == 1)
 					{
-						Rect_t checkpoint = m_LastWidget;
+						m_LastWidget = checkpoint1;
 
 						GroupBoxStart();
 						{
@@ -903,8 +932,8 @@ void CFeatures_Menu::Run()
 						}
 						GroupBoxEnd(L"Fresnel Vars (Enemies)", 210);
 
-						checkpoint.x += 210 + Vars::Menu::SpacingX;
-						m_LastWidget = checkpoint;
+						checkpoint1.x += 210 + Vars::Menu::SpacingX;
+						m_LastWidget = checkpoint1;
 
 						GroupBoxStart();
 						{
@@ -916,6 +945,29 @@ void CFeatures_Menu::Run()
 						}
 						GroupBoxEnd(L"Fresnel Vars (Teammates)", 210);
 					}
+
+					break;
+				}
+
+				case EVisualsTabs::TAB_GLOW:
+				{
+					GroupBoxStart();
+					{
+						CheckBox(Vars::Glow::Enabled, L"Glow Master Toggle");
+					}
+					GroupBoxEnd(L"Main", 185);
+
+					GroupBoxStart();
+					{
+						CheckBox(Vars::Glow::Players::Enabled, L"Player Glow Toggle");
+						CheckBox(Vars::Glow::Players::IgnoreTeam, L"Ignore the Local Team");
+						ComboBox(Vars::Glow::Players::Style, { { 0, L"Blur" } });
+						InputFloat(Vars::Glow::Players::BloomAmount, 1.0f, 10.0f);
+						ComboBox(Vars::Glow::Players::GlowColorMode, { { 0, L"Custom" }, { 1, L"Rainbow" }, { 2, L"Health" } });
+						if (!Vars::Glow::Players::GlowColorMode.m_Var)
+							InputColor(Vars::Glow::Players::GlowColor, L"Color");
+					}
+					GroupBoxEnd(L"Players", 185);
 
 					break;
 				}
@@ -985,6 +1037,7 @@ void CFeatures_Menu::Run()
 					ComboBox(Vars::AntiHack::AntiAim::Pitch, { { 0, L"None" }, { 1, L"Up" }, { 2, L"Down" }, { 3, L"Fake Up" }, { 4, L"Fake Down" } });
 					ComboBox(Vars::AntiHack::AntiAim::YawReal, { { 0, L"None" }, { 1, L"Left" }, { 2, L"Right" }, { 3, L"Backwards" }, { 4, L"Emotion" }, { 5, L"Random" } });
 					ComboBox(Vars::AntiHack::AntiAim::YawFake, { { 0, L"None" }, { 1, L"Left" }, { 2, L"Right" }, { 3, L"Backwards" }, { 4, L"Random" } });
+					CheckBox(Vars::AntiHack::AntiAim::DrawFakeAngles, L"Toggle Anti-Aim Fake Angle Chams");
 				}
 				GroupBoxEnd(L"Anti-Aim", 160);
 
