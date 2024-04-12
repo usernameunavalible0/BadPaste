@@ -29,8 +29,6 @@ bool CUtil_Offsets::Initialize()
 	GETPATT(m_dwAttribHookValue, "client.dll", "55 8B EC 83 EC 10 8B 0D ? ? ? ? 53 56 57 33 FF");
 	GETPATT(m_dwGetAnimOverlay, "client.dll", "55 8B EC 6B 45 08 2C");
 	GETPATT(m_dwGetNumAnimOverlays, "client.dll", "8B 81 B4 08 ? ? C3");
-	GETPATT(m_dwSetLocalAngles, "client.dll", "55 8B EC 56 57 8B 7D 08 8B F1 F3 0F 10 07 0F 2E 86 F8 02 ? ? 9F");
-	GETPATT(m_dwSetLocalOrigin, "client.dll", "55 8B EC 56 57 8B 7D 08 8B F1 F3 0F 10 07 0F 2E 86 BC 02 ? ? 9F");
 	GETPATT(m_dwSetCollisionBounds, "client.dll", "55 8B EC 83 EC 28 53 8B 5D 08 56 8B 75 0C 57 8B 03");
 	GETPATT(m_dwInvalidatePhysicsRecursive, "client.dll", "55 8B EC 51 53 8B 5D 08 56 8B F3 83");
 

@@ -93,8 +93,9 @@ public:
 	void DrawLagRecordsBasic();
 
 	void BacktrackPlayer(C_BasePlayer* player, float flTargetTime);
+	void RestorePlayer(C_BasePlayer* player);
 
-private:
+public:
 
 	void ClearHistory()
 	{

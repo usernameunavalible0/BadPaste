@@ -143,6 +143,35 @@ void CFeatures_Backtrack::DrawLagRecordsBasic()
 }
 
 float g_flFractionScale = 0.95;
+static void RestorePlayerTo(C_BasePlayer* pPlayer, const Vector& vWantedPos)
+{
+	// Try to move to the wanted position from our current position.
+	trace_t tr;
+	UTIL_TraceEntity(pPlayer, vWantedPos, vWantedPos, MASK_PLAYERSOLID, pPlayer, COLLISION_GROUP_PLAYER_MOVEMENT, &tr);
+	if (tr.startsolid || tr.allsolid)
+	{
+		UTIL_TraceEntity(pPlayer, pPlayer->m_vecOrigin(), vWantedPos, MASK_PLAYERSOLID, pPlayer, COLLISION_GROUP_PLAYER_MOVEMENT, &tr);
+		if (tr.startsolid || tr.allsolid)
+		{
+			// In this case, the guy got stuck back wherever we lag compensated him to. Nasty.
+		}
+		else
+		{
+			// We can get to a valid place, but not all the way back to where we were.
+			Vector vPos;
+			VectorLerp(pPlayer->m_vecOrigin(), vWantedPos, tr.fraction * g_flFractionScale, vPos);
+			//UTIL_SetOrigin(pPlayer, vPos, true);
+			pPlayer->SetLocalOrigin(vPos);
+		}
+	}
+	else
+	{
+		// Cool, the player can go back to whence he came.
+		//UTIL_SetOrigin(pPlayer, tr.endpos, true);
+		pPlayer->SetLocalOrigin(tr.endpos);
+	}
+}
+
 void CFeatures_Backtrack::BacktrackPlayer(C_BasePlayer* pPlayer, float flTargetTime)
 {
 	Vector org;
@@ -425,4 +454,85 @@ void CFeatures_Backtrack::BacktrackPlayer(C_BasePlayer* pPlayer, float flTargetT
 	m_bNeedToRestore = true;  // we changed at least one player
 	restore->m_fFlags = flags; // we need to restore these flags
 	change->m_fFlags = flags; // we have changed these flags
+	change->m_flSimulationTime = record->m_flSimulationTime;
+}
+
+void CFeatures_Backtrack::RestorePlayer(C_BasePlayer* pPlayer)
+{
+	if (!m_bNeedToRestore)
+		return; // no player was changed at all
+
+	int pl_index = pPlayer->entindex() - 1;
+
+	if (!m_RestorePlayer.Get(pl_index))
+		return; // player wasn't changed by lag compensation
+
+	LagRecord* restore = &m_RestoreData[pl_index];
+	LagRecord* change = &m_ChangeData[pl_index];
+
+	bool restoreSimulationTime = false;
+
+	if (restore->m_fFlags & LC_SIZE_CHANGED)
+	{
+		restoreSimulationTime = true;
+
+		// see if simulation made any changes, if no, then do the restore, otherwise,
+		//  leave new values in
+		if (pPlayer->m_vecMinsPreScaled() == change->m_vecMinsPreScaled &&
+			pPlayer->m_vecMaxsPreScaled() == change->m_vecMaxsPreScaled)
+		{
+			// Restore it
+			pPlayer->SetCollisionBounds(restore->m_vecMinsPreScaled, restore->m_vecMaxsPreScaled);
+		}
+	}
+
+	if (restore->m_fFlags & LC_ANGLES_CHANGED)
+	{
+		restoreSimulationTime = true;
+
+		if (pPlayer->m_angRotation() == change->m_vecAngles)
+		{
+			pPlayer->SetLocalAngles(restore->m_vecAngles);
+		}
+	}
+
+	if (restore->m_fFlags & LC_ORIGIN_CHANGED)
+	{
+		restoreSimulationTime = true;
+
+		// Okay, let's see if we can do something reasonable with the change
+		Vector delta = pPlayer->m_vecOrigin() - change->m_vecOrigin;
+
+		// If it moved really far, just leave the player in the new spot!!!
+		if (delta.Length2DSqr() < m_flTeleportDistanceSqr)
+		{
+			RestorePlayerTo(pPlayer, restore->m_vecOrigin + delta);
+		}
+	}
+
+	if (restore->m_fFlags & LC_ANIMATION_CHANGED)
+	{
+		restoreSimulationTime = true;
+
+		pPlayer->SetSequence(restore->m_masterSequence);
+		pPlayer->SetCycle(restore->m_masterCycle);
+
+		int layerCount = pPlayer->GetNumAnimOverlays();
+		for (int layerIndex = 0; layerIndex < layerCount; ++layerIndex)
+		{
+			C_AnimationLayer* currentLayer = pPlayer->GetAnimOverlay(layerIndex);
+			if (currentLayer)
+			{
+				currentLayer->m_flCycle = restore->m_layerRecords[layerIndex].m_cycle;
+				currentLayer->m_nOrder = restore->m_layerRecords[layerIndex].m_order;
+				currentLayer->m_nSequence = restore->m_layerRecords[layerIndex].m_sequence;
+				currentLayer->m_flWeight = restore->m_layerRecords[layerIndex].m_weight;
+			}
+		}
+	}
+
+	if (restoreSimulationTime)
+	{
+		pPlayer->m_flSimulationTime() = restore->m_flSimulationTime;
+	}
 }

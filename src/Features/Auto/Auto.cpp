@@ -38,13 +38,55 @@ void CFeatures_Auto::AutoBackstab(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, C
 				{
 					if (pKnife->CanPerformBackstabAgainstTarget(pTarget, vAngleTo))
 					{			
-						G::Util.FixMovement(vAngleTo, cmd);
-						cmd->viewangles = vAngleTo;
-						cmd->buttons |= IN_ATTACK;
-						return;
+						//G::Util.FixMovement(vAngleTo, cmd);
+						//cmd->viewangles = vAngleTo;
+						//cmd->buttons |= IN_ATTACK;
+						//return;
 					}
 				}
 			}
+
+			float correct = 0.0f;
+
+			INetChannelInfo* nci = reinterpret_cast<INetChannelInfo*>(I::EngineClient->GetNetChannelInfo());
+
+			if (nci)
+			{
+				correct += nci->GetLatency(FLOW_INCOMING);
+				correct += nci->GetLatency(FLOW_OUTGOING);
+			}
+
+			int lerpTicks = TIME_TO_TICKS(G::Util.GetClientInterpAmount());
+
+			correct += TICKS_TO_TIME(lerpTicks);
+
+			correct = clamp(correct, 0.0f, G::ConVars.sv_maxunlag->GetFloat());
+
+			// TEST AMOUNT!!!!!! Please dont bully me :)
+			int wowhowmuchshouldweadd = TIME_TO_TICKS(0.04f);
+
+			int targettick = (cmd->tick_count - lerpTicks)+wowhowmuchshouldweadd;
+
+			F::Backtrack.BacktrackPlayer(pTarget, TICKS_TO_TIME(targettick));
+
+			pTarget->GetHitboxPosition(HITBOX_BODY, vBody);
+			vAngleTo = GetAngleToPosition(pLocal->Weapon_ShootPosition(), vBody);
+
+			if (pKnife->DoSwingTraceKnife(trace, vAngleTo) && pKnife->CanAttack())
+			{
+				if (trace.m_pEnt && trace.m_pEnt == pTarget)
+				{
+					if (pKnife->CanPerformBackstabAgainstTarget(pTarget, vAngleTo))
+					{
+						G::Util.FixMovement(vAngleTo, cmd);
+						cmd->viewangles = vAngleTo;
+						cmd->buttons |= IN_ATTACK;
+						cmd->tick_count = targettick + lerpTicks;
+					}
+				}
+			}
+
+			F::Backtrack.RestorePlayer(pTarget);
 		}
 	}
 }

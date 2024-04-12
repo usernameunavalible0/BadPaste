@@ -412,17 +412,25 @@ public:
 
 	inline void SetLocalOrigin(const Vector& origin)
 	{
-		reinterpret_cast<void(__thiscall*)(void*, const Vector&)>(U::Offsets.m_dwSetLocalOrigin)(this, origin);
+		if (m_vecOrigin() != origin)
+		{
+			InvalidatePhysicsRecursive(0x1); //POSITION_CHANGED
+			m_vecOrigin() = origin;
+		}
 	}
 
 	inline void SetLocalAngles(const QAngle& angles)
 	{
-		reinterpret_cast<void(__thiscall*)(void*, const QAngle&)>(U::Offsets.m_dwSetLocalAngles)(this, angles);
+		if (m_angRotation() != angles)
+		{
+			InvalidatePhysicsRecursive(0x2); //ANGLES_CHANGED
+			m_angRotation() = angles;
+		}
 	}
 
 	inline void SetCollisionBounds(const Vector& mins, const Vector& maxs)
 	{
-		reinterpret_cast<void(__thiscall*)(void*, const Vector&, const Vector&)>(U::Offsets.m_dwSetCollisionBounds)(this, mins, maxs);
+		//reinterpret_cast<void(__thiscall*)(void*, const Vector&, const Vector&)>(U::Offsets.m_dwSetCollisionBounds)(this, mins, maxs);
 	}
 
 public:
