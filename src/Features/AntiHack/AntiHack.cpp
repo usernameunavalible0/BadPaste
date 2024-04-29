@@ -110,6 +110,59 @@ void CFeatures_AntiHack::Run(CUserCmd* cmd, bool* pbSendPacket)
 	FixMovement(cmd, vOldAngles, fOldSideMove, fOldForwardMove);
 }
 
+void CFeatures_AntiHack::ResolvePlayer(C_TFPlayer* pTarget)
+{
+	if (!Vars::AntiHack::Resolver::Enabled.m_Var)
+		return;
+
+	if (!Vars::AntiHack::Resolver::Mode.m_Var)
+	{
+		// Auto
+		// TODO!!!
+	}
+	else
+	{
+		// Manual
+		CMultiPlayerAnimState* pAnimState = pTarget->GetAnimState();
+
+		if (!pAnimState)
+			return;
+
+		pTarget->InvalidateBoneCache();
+
+		float flOldFrameTime = I::GlobalVars->frametime;
+		int nOldSequence = pTarget->m_nSequence();
+		float flOldCycle = pTarget->m_flCycle();
+		auto pOldPoseParams = pTarget->m_flPoseParameter();
+		char pOldAnimState[sizeof(CMultiPlayerAnimState)] = {};
+
+		memcpy(pOldAnimState, pAnimState, sizeof(CMultiPlayerAnimState));
+
+		auto Restore = [&]()
+			{
+				I::GlobalVars->frametime = flOldFrameTime;
+				pTarget->m_nSequence() = nOldSequence;
+				pTarget->m_flCycle() = flOldCycle;
+				pTarget->m_flPoseParameter() = pOldPoseParams;
+				memcpy(pAnimState, pOldAnimState, sizeof(CMultiPlayerAnimState));
+			};
+
+		I::GlobalVars->frametime = 0.0f;
+
+		pAnimState->m_flCurrentFeetYaw = Vars::AntiHack::Resolver::ManualYaw.m_Var;
+		pAnimState->Update(Vars::AntiHack::Resolver::ManualYaw.m_Var, Vars::AntiHack::Resolver::ManualPitch.m_Var);
+
+		matrix3x4_t BoneMatrix[MAXSTUDIOBONES];
+
+		if (!pTarget->SetupBones(BoneMatrix, MAXSTUDIOBONES, BONE_USED_BY_ANYTHING, I::GlobalVars->curtime)) {
+			Restore();
+			return;
+		}
+
+		Restore();
+	}
+}
+
 void CFeatures_AntiHack::Render(void* ecx, void* edx, const DrawModelState_t& state, const ModelRenderInfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld)
 {
 	if (!Vars::AntiHack::AntiAim::DrawFakeAngles.m_Var || !Vars::AntiHack::AntiAim::Enabled.m_Var || !I::Input->CAM_IsThirdPerson())
@@ -132,12 +185,10 @@ void CFeatures_AntiHack::Render(void* ecx, void* edx, const DrawModelState_t& st
 
 	C_TFPlayer* pLocal = UTIL_TFPlayerByIndex(pInfo.entity_index);
 
+	//FIXME! Isnt rebuilding bone cache expensive?
+	pLocal->InvalidateBoneCache();
+
 	matrix3x4_t BoneMatrix[MAXSTUDIOBONES];
-
-	// Invalidate Bone Cache
-	*reinterpret_cast<int*>(reinterpret_cast<DWORD>(pLocal) + 0x59C) = -INT_MAX;
-	*reinterpret_cast<float*>(reinterpret_cast<DWORD>(pLocal) + 0x860) = -FLT_MAX;
-
 	if (!m_MatrixHelper.Create(pLocal, m_vFakeViewAngles.x, m_vFakeViewAngles.y, BoneMatrix))
 		return;
 

@@ -9,6 +9,8 @@ public:
 
 private:
 	void Bunnyhop(C_TFPlayer* pLocal, CUserCmd* cmd);
+	void FollowBot(C_TFPlayer* pLocal, CUserCmd* cmd);
+	void AntiBackstab(C_TFPlayer* pLocal, CUserCmd* cmd);
 	void AntiWarp(C_TFPlayer* pLocal, CUserCmd* cmd);
 };
 

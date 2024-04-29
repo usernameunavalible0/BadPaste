@@ -69,6 +69,7 @@ public:
 	M_NETVAR(m_nChargeResistType, int, "CWeaponMedigun", "m_nChargeResistType");
 
 	bool AllowedToHealTarget(C_BaseEntity* pTarget);
+	bool CanHealNewTarget(C_BaseEntity* pTarget, QAngle vAngleOverride);
 
 	inline bool HealingTarget(C_BaseEntity* pTarget)
 	{

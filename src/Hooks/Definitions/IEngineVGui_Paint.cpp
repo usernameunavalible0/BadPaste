@@ -28,7 +28,7 @@ DEFINE_HOOK(IEngineVGui_Paint, void, __fastcall, void* ecx, void* edx, int mode)
 
 					F::Visual.WeaponSway();
 
-					//F::Backtrack.DrawLagRecordsBasic();
+					F::Backtrack.DrawLagRecordsBasic();
 				}
 			}
 

@@ -1,18 +1,19 @@
 #pragma once
 #include "../../SDK/SDK.h"
 #include "../../SDK/hl2_src/public/bitvec.h"
+#include <functional>
 
 #define LC_NONE				0
 #define LC_ALIVE			(1<<0)
-
 #define LC_ORIGIN_CHANGED	(1<<8)
 #define LC_ANGLES_CHANGED	(1<<9)
 #define LC_SIZE_CHANGED		(1<<10)
 #define LC_ANIMATION_CHANGED (1<<11)
 
 #define LAG_COMPENSATION_EPS_SQR ( 0.1f * 0.1f )
+#define LAG_COMPENSATION_ERROR_EPS_SQR ( 4.0f * 4.0f )
 
-#define MAX_LAYER_RECORDS (15) // CBaseAnimatingOverlay::MAX_OVERLAYS
+#define MAX_LAYER_RECORDS (15) //CBaseAnimatingOverlay::MAX_OVERLAYS
 
 struct LayerRecord
 {
@@ -89,33 +90,35 @@ public:
 class CFeatures_Backtrack
 {
 public:
-	void FrameUpdatePostEntityThink();
+	void PostDataUpdate();
+
+	void StartBacktracking(C_BasePlayer* pPlayer, CUserCmd* cmd, std::function<bool()>);
+	void FinishBacktracking();
+
 	void DrawLagRecordsBasic();
-
-	void BacktrackPlayer(C_BasePlayer* player, float flTargetTime);
-	void RestorePlayer(C_BasePlayer* player);
-
-public:
 
 	void ClearHistory()
 	{
-		for (int i = 0; i < 100; i++) // MAX_PLAYERS
+		for (int i = 0; i < MAX_PLAYERS; i++)
 			m_PlayerTrack[i].Purge();
 	}
 
+	inline bool IsCurrentlyBacktracking() { return m_bIsCurrentlyBacktracking; }
+
+private:
+	void BacktrackPlayer(C_BasePlayer* pPlayer, LagRecord* record);
+
 	// keep a list of lag records for each player
-	CUtlFixedLinkedList< LagRecord >	m_PlayerTrack[100]; // MAX_PLAYERS
+	CUtlFixedLinkedList<LagRecord> m_PlayerTrack[MAX_PLAYERS];
 
-	CBitVec<100>			m_RestorePlayer; // MAX_PLAYERS
-	bool					m_bNeedToRestore;
+	CBitVec<MAX_PLAYERS> m_RestorePlayer;
+	bool m_bNeedToRestore;
 
-	LagRecord				m_RestoreData[100];	// MAX_PLAYERS; player data before we moved him back
-	LagRecord				m_ChangeData[100];	// MAX_PLAYERS; player data where we moved him back
+	LagRecord m_RestoreData[MAX_PLAYERS]; // player data before we moved him back
+	LagRecord m_ChangeData[MAX_PLAYERS]; // player data where we moved him back
 
-	// This is used by server to tell what player to use for tickcount. For client backtrack we are only going to use local player.
-	//C_BasePlayer				*m_pCurrentPlayer;	// The player we are doing lag compensation for
-
-	float					m_flTeleportDistanceSqr;
+	float m_flTeleportDistanceSqr;
+	bool m_bIsCurrentlyBacktracking;
 };
 
 namespace F { inline CFeatures_Backtrack Backtrack; }

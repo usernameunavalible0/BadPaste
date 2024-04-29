@@ -1,6 +1,7 @@
 #include "AimbotHitscan.h"
 #include "../../Vars.h"
 #include "../../Backtrack/Backtrack.h"
+#include "../../AntiHack/AntiHack.h"
 
 void CAimbot_Hitscan::Run(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CUserCmd* cmd)
 {
@@ -41,7 +42,7 @@ int CAimbot_Hitscan::GetBestHitbox(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon)
 	case 1: return HITBOX_BODY;
 	case 2:
 	{
-		int iDefIndex = pWeapon->m_iItemDefinitionIndex();
+		const int iDefIndex = pWeapon->m_iItemDefinitionIndex();
 
 		if (pLocal->IsClass(TF_CLASS_SNIPER))
 		{
@@ -54,7 +55,7 @@ int CAimbot_Hitscan::GetBestHitbox(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon)
 		}
 		else if (pLocal->IsClass(TF_CLASS_SPY))
 		{
-			bool bIsAmbassador = (iDefIndex == Spy_m_TheAmbassador || iDefIndex == Spy_m_FestiveAmbassador);
+			const bool bIsAmbassador = (iDefIndex == Spy_m_TheAmbassador || iDefIndex == Spy_m_FestiveAmbassador);
 			return (bIsAmbassador ? HITBOX_HEAD : HITBOX_BODY);
 		}
 		else
@@ -130,7 +131,7 @@ bool CAimbot_Hitscan::ShouldFire(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CU
 
 	if (pRifle)
 	{
-		bool bIsZoomed = pLocal->IsZoomed();
+		const bool bIsZoomed = pLocal->IsZoomed();
 
 		if (pRifle->MustBeZoomedToFire() && !bIsZoomed)
 			return false;
@@ -147,11 +148,7 @@ bool CAimbot_Hitscan::ShouldFire(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CU
 
 		if (Vars::Aimbot::Hitscan::WaitForCharge.m_Var && bIsZoomed)
 		{
-			//This slightly broken
-			float flDamage = pRifle->GetProjectileDamage() + 100.f;
-
-			if (static_cast<int>(flDamage) < Target.m_pEntity->GetHealth())
-				return false;
+			// FIXME?
 		}
 	}
 
@@ -203,6 +200,8 @@ bool CAimbot_Hitscan::GetTargets(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon)
 
 			if (Vars::Aimbot::Global::Ignores[3] && pPlayer->IsPlayerOnSteamFriendsList())
 				continue;
+
+			F::AntiHack.ResolvePlayer(pPlayer);
 
 			Vector vPosition; pPlayer->GetHitboxPosition(iBestHitbox, vPosition);
 			QAngle vAngleTo = GetAngleToPosition(vShootPos, vPosition);

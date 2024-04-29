@@ -115,9 +115,7 @@
     <ClCompile Include="Hooks\Definitions\WndProc.cpp" />
     <ClCompile Include="Hooks\Definitions\CBaseEntity_BaseInterpolatePart1.cpp" />
     <ClCompile Include="Hooks\Definitions\CBasePlayer_CalcPlayerView.cpp" />
-    <ClCompile Include="Hooks\Definitions\CL_LoadWhitelist.cpp" />
     <ClCompile Include="Hooks\Definitions\CL_Move.cpp" />
-    <ClCompile Include="Hooks\Definitions\CL_SendMove.cpp" />
     <ClCompile Include="Hooks\Definitions\IBaseClientDLL_LevelInitPreEntity.cpp" />
     <ClCompile Include="Hooks\Definitions\IBaseClientDLL_LevelInitPostEntity.cpp" />
     <ClCompile Include="Hooks\Definitions\IBaseClientDLL_LevelShutdown.cpp" />
@@ -168,6 +166,7 @@
     <ClCompile Include="Features\Backtrack\Backtrack.cpp" />
     <ClCompile Include="Features\Glow\Glow.cpp" />
     <ClCompile Include="Features\AntiHack\AntiHack.cpp" />
+    <ClCompile Include="Hooks\Definitions\CL_CheckForPureServerWhitelist.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entry\Entry.h" />

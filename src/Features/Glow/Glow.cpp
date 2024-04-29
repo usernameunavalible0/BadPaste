@@ -1,4 +1,5 @@
 #include "Glow.h"
+#include "../ESP/ESP.h"
 #include "../Vars.h"
 
 bool CFeatures_Glow::Initialize()
@@ -34,6 +35,22 @@ bool CFeatures_Glow::Initialize()
     m_pRtQuarterSize1->IncrementReferenceCount();
 
     return true;
+}
+
+void CFeatures_Glow::OnScreenSizeChanged()
+{
+    m_pRtQuarterSize0->DecrementReferenceCount();
+    m_pRtQuarterSize0->DeleteIfUnreferenced();
+    m_pRtQuarterSize0 = nullptr;
+
+    m_pRtQuarterSize1->DecrementReferenceCount();
+    m_pRtQuarterSize1->DeleteIfUnreferenced();
+    m_pRtQuarterSize1 = nullptr;
+
+    m_pRtQuarterSize0 = I::MaterialSystem->CreateNamedRenderTargetTextureEx("GlowRTQuarterSize0", m_pRtFullFrame->GetActualWidth(), m_pRtFullFrame->GetActualHeight(),
+        RT_SIZE_LITERAL, IMAGE_FORMAT_RGB888, MATERIAL_RT_DEPTH_SHARED, TEXTUREFLAGS_CLAMPS | TEXTUREFLAGS_CLAMPT | TEXTUREFLAGS_EIGHTBITALPHA, CREATERENDERTARGETFLAGS_HDR);
+    m_pRtQuarterSize1 = I::MaterialSystem->CreateNamedRenderTargetTextureEx("GlowRTQuarterSize1", m_pRtFullFrame->GetActualWidth(), m_pRtFullFrame->GetActualHeight(),
+        RT_SIZE_LITERAL, IMAGE_FORMAT_RGB888, MATERIAL_RT_DEPTH_SHARED, TEXTUREFLAGS_CLAMPS | TEXTUREFLAGS_CLAMPT | TEXTUREFLAGS_EIGHTBITALPHA, CREATERENDERTARGETFLAGS_HDR);
 }
 
 static void SetRenderTargetAndViewPort(ITexture* rt, int w, int h)
@@ -81,6 +98,44 @@ void CFeatures_Glow::Render()
 
         for (IClientEntity* pEntity : G::EntityCache.GetGroup(Vars::Glow::Players::IgnoreTeam.m_Var ? EEntGroup::PLAYERS_ENEMIES : EEntGroup::PLAYERS_ALL))
             DrawModel(pEntity);
+
+        //TODO: We should really cache these
+        for (int n = 1; n < (g_Globals.m_nMaxEntities + 1); n++)
+        {
+            if (n == g_Globals.m_nLocalIndex)
+                continue;
+
+            IClientEntity* pEntity = UTIL_EntityByIndex(n);
+
+            if (!pEntity || pEntity->IsDormant())
+                continue;
+
+            ClientClass* pCC = pEntity->GetClientClass();
+
+            if (!pCC)
+                continue;
+
+            if (pCC->GetTFClientClass() == ETFClientClass::CBaseAnimating)
+            {
+                C_BaseAnimating* pPickup = pEntity->As<C_BaseAnimating*>();
+
+                const int nModelIndex = pPickup->m_nModelIndex();
+
+                if ((Vars::Glow::World::Healthpacks.m_Var && F::ESP.IsHealth(nModelIndex)) || (Vars::Glow::World::Ammopacks.m_Var && F::ESP.IsAmmo(nModelIndex)))
+                    pPickup->DrawModel(STUDIO_RENDER | STUDIO_NOSHADOWS);
+            }
+            else if (Vars::Glow::World::Ammopacks.m_Var && pCC->GetTFClientClass() == ETFClientClass::CTFAmmoPack)
+                pEntity->DrawModel(STUDIO_RENDER | STUDIO_NOSHADOWS);
+            else if (pCC->GetTFClientClass() == ETFClientClass::CTFPlayer)
+            {
+                C_TFPlayer* pPlayer = pEntity->As<C_TFPlayer*>();
+
+                if (pPlayer->deadflag() || !pPlayer->IsPlayerOnSteamFriendsList())
+                    continue;
+
+                DrawModel(pPlayer);
+            }
+        }
 
         pRenderContext->OverrideDepthEnable(false, false);
         I::RenderView->SetBlend(flSavedBlend);
@@ -139,6 +194,63 @@ void CFeatures_Glow::Render()
                 }
 
                 DrawModel(pEntity);
+            }
+
+            //TODO: We should really cache these
+            for (int n = 1; n < (g_Globals.m_nMaxEntities + 1); n++)
+            {
+                if (n == g_Globals.m_nLocalIndex)
+                    continue;
+
+                IClientEntity* pEntity = UTIL_EntityByIndex(n);
+
+                if (!pEntity || pEntity->IsDormant())
+                    continue;
+
+                ClientClass* pCC = pEntity->GetClientClass();
+
+                if (!pCC)
+                    continue;
+
+                static const float fWhite[3] = { 1.f, 1.f, 1.f };
+
+                if (pCC->GetTFClientClass() == ETFClientClass::CBaseAnimating)
+                {
+                    C_BaseAnimating* pPickup = pEntity->As<C_BaseAnimating*>();
+
+                    const int nModelIndex = pPickup->m_nModelIndex();
+
+                    if (Vars::Glow::World::Healthpacks.m_Var && F::ESP.IsHealth(nModelIndex))
+                    {
+                        static const float fGreen[3] = { 0.f, 1.f, 0.f };
+                        I::RenderView->SetColorModulation(fGreen);
+                        pPickup->DrawModel(STUDIO_RENDER | STUDIO_NOSHADOWS);
+                    }
+
+                    if (Vars::Glow::World::Ammopacks.m_Var && F::ESP.IsAmmo(nModelIndex))
+                    {
+                        I::RenderView->SetColorModulation(fWhite);
+                        pPickup->DrawModel(STUDIO_RENDER | STUDIO_NOSHADOWS);
+                    }
+                }
+                else if (Vars::Glow::World::Ammopacks.m_Var && pCC->GetTFClientClass() == ETFClientClass::CTFAmmoPack)
+                {
+                    I::RenderView->SetColorModulation(fWhite);
+                    pEntity->DrawModel(STUDIO_RENDER | STUDIO_NOSHADOWS);
+                }
+                else if (pCC->GetTFClientClass() == ETFClientClass::CTFPlayer)
+                {
+                    //Shouldetn we use entity cache??
+                    C_TFPlayer* pPlayer = pEntity->As<C_TFPlayer*>();
+
+                    if (pPlayer->deadflag() || !pPlayer->IsPlayerOnSteamFriendsList())
+                        continue;
+
+                    static const float fTeal[3] = { 0.f, 1.f, 1.f };
+                    I::RenderView->SetColorModulation(fTeal);
+
+                    DrawModel(pPlayer);
+                }
             }
 
             I::ModelRender->ForcedMaterialOverride(nullptr);

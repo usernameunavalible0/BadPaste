@@ -23,7 +23,7 @@
 
 template <class T> static T AttribHookValue(T TValue, const char* pszAttribHook, const C_BaseEntity* pEntity, CUtlVector<C_BaseEntity*>* pItemList = NULL, bool bIsGlobalConstString = false)
 {
-	return reinterpret_cast<T(__cdecl*)(T, const char*, const C_BaseEntity*, CUtlVector<C_BaseEntity*>*, bool)>(U::Offsets.m_dwAttribHookValue)(TValue, pszAttribHook, pEntity, pItemList, bIsGlobalConstString);
+	return reinterpret_cast<T(__cdecl*)(T, const char*, const C_BaseEntity*, CUtlVector<C_BaseEntity*>*, bool)>(*reinterpret_cast<DWORD*>(U::Offsets.m_dwAttribHookValue) + U::Offsets.m_dwAttribHookValue + 0x4)(TValue, pszAttribHook, pEntity, pItemList, bIsGlobalConstString);
 }
 
 #endif // ATTRIBUTE_MANAGER_H

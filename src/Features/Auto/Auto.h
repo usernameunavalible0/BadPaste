@@ -9,6 +9,9 @@ public:
 private:
 	void AutoBackstab(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CUserCmd* cmd);
 	void AutoHeal(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CUserCmd* cmd);
+
+private:
+	CUtlVector<int> m_vecHealablePlayers;
 };
 
 namespace F { inline CFeatures_Auto Auto; }

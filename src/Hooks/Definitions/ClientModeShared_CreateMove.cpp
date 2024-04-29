@@ -6,6 +6,7 @@
 #include "../../Features/Aimbot/Aimbot.h"
 #include "../../Features/Auto/Auto.h"
 #include "../../Features/AntiHack/AntiHack.h"
+#include "../../Features/Vars.h"
 
 DEFINE_HOOK(ClientModeShared_CreateMove, bool, __fastcall, void* ecx, void* edx, float flInputSampleTime, CUserCmd* cmd)
 {
@@ -27,6 +28,8 @@ DEFINE_HOOK(ClientModeShared_CreateMove, bool, __fastcall, void* ecx, void* edx,
 	{
 		C_TFWeaponBase* pWeapon = pLocal->GetActiveTFWeapon();
 
+		F::Misc.Run(pLocal, cmd);
+
 		if (pWeapon)
 		{
 			F::Prediction.Start(pLocal, cmd);
@@ -41,8 +44,10 @@ DEFINE_HOOK(ClientModeShared_CreateMove, bool, __fastcall, void* ecx, void* edx,
 			F::Crithack.Run(pWeapon, cmd);
 		}
 
-		F::Misc.Run(pLocal, cmd);
 		g_Globals.m_vViewAngles = cmd->viewangles;
+
+		if (Vars::AntiHack::Fakelag.m_Var)
+			*pbSendPacket = I::EngineClient->GetNetChannelInfo()->m_nChokedPackets >= Vars::AntiHack::FakelagAmount.m_Var;
 
 		//Credit to Spook953
 		if (pLocal->IsTaunting() && pLocal->m_bAllowMoveDuringTaunt())

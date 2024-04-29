@@ -1,4 +1,5 @@
 #include "AimbotMelee.h"
+#include "../../Features/Backtrack/Backtrack.h"
 #include "../../Vars.h"
 
 void CAimbot_Melee::Run(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CUserCmd* cmd)
@@ -98,6 +99,7 @@ bool CAimbot_Melee::GetTargets(C_TFPlayer* pLocal, C_TFWeaponBaseMelee* pWeapon)
 
 	if (Vars::Aimbot::Global::Targets[0])
 	{
+		//TODO: Fixme??? Keeps trying to aim at ground for some reason.
 		const bool bWhipTeam = (pWeapon->m_iItemDefinitionIndex() == Soldier_t_TheDisciplinaryAction && Vars::Aimbot::Melee::WhipTeam.m_Var);
 
 		for (auto pEntity : G::EntityCache.GetGroup(bWhipTeam ? EEntGroup::PLAYERS_ALL : EEntGroup::PLAYERS_ENEMIES))

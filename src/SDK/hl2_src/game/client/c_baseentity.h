@@ -414,7 +414,7 @@ public:
 	{
 		if (m_vecOrigin() != origin)
 		{
-			InvalidatePhysicsRecursive(0x1); //POSITION_CHANGED
+			InvalidatePhysicsRecursive(1); //POSITION_CHANGED
 			m_vecOrigin() = origin;
 		}
 	}
@@ -423,14 +423,24 @@ public:
 	{
 		if (m_angRotation() != angles)
 		{
-			InvalidatePhysicsRecursive(0x2); //ANGLES_CHANGED
+			InvalidatePhysicsRecursive(2); //ANGLES_CHANGED
 			m_angRotation() = angles;
 		}
 	}
 
 	inline void SetCollisionBounds(const Vector& mins, const Vector& maxs)
 	{
-		//reinterpret_cast<void(__thiscall*)(void*, const Vector&, const Vector&)>(U::Offsets.m_dwSetCollisionBounds)(this, mins, maxs);
+		reinterpret_cast<void(__thiscall*)(void*, const Vector&, const Vector&)>(U::Offsets.m_dwSetCollisionBounds)(this, mins, maxs);
+	}
+
+	inline void SetAbsOrigin(const Vector& origin)
+	{
+		reinterpret_cast<void(__thiscall*)(void*, const Vector&)>(U::Offsets.m_dwSetAbsOrigin)(this, origin);
+	}
+
+	inline void SetAbsAngles(const QAngle& angles)
+	{
+		reinterpret_cast<void(__thiscall*)(void*, const QAngle&)>(U::Offsets.m_dwSetAbsAngles)(this, angles);
 	}
 
 public:

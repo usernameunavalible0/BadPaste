@@ -26,7 +26,7 @@ public:
 	DWORD m_dwPerformScreenSpaceEffects = 0x0;
 	DWORD m_dwCLMove = 0x0;
 	DWORD m_dwCLSendMove = 0x0;
-	DWORD m_dwCLLoadWhitelist = 0x0;
+	DWORD m_dwCLCheckForPureServerWhitelist = 0x0;
 	DWORD m_dwClientState = 0x0;
 	DWORD m_dwGetTracerType = 0x0;
 	DWORD m_dwFireBullet = 0x0;
@@ -48,6 +48,9 @@ public:
 	DWORD m_dwGetAnimOverlay = 0x0;
 	DWORD m_dwSetCollisionBounds = 0x0;
 	DWORD m_dwInvalidatePhysicsRecursive = 0x0;
+	DWORD m_dwInvalidateBoneCache = 0x0;
+	DWORD m_dwSetAbsOrigin = 0x0;
+	DWORD m_dwSetAbsAngles = 0x0;
 };
 
 namespace U { inline CUtil_Offsets Offsets; }

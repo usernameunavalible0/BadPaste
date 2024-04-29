@@ -10,9 +10,8 @@ bool CGlobal_Hooks::Initialize()
 
 	CBaseEntity_BaseInterpolatePart1::Initialize();
 	CBasePlayer_CalcPlayerView::Initialize();
-	CL_LoadWhitelist::Initialize();
+	CL_CheckForPureServerWhitelist::Initialize();
 	CL_Move::Initialize();
-	CL_SendMove::Initialize();
 	IBaseClientDLL_LevelInitPreEntity::Initialize();
 	IBaseClientDLL_LevelInitPostEntity::Initialize();
 	IBaseClientDLL_LevelShutdown::Initialize();

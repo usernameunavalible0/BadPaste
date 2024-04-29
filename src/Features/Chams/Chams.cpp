@@ -74,7 +74,7 @@ bool CFeatures_Chams::Render(void* ecx, void* edx, const DrawModelState_t& state
 		return false;
 
 	// Is this draw call coming from glow?
-	if (F::Glow.m_bIsDrawing)
+	if (F::Glow.IsDrawing())
 		return false;
 
 	C_TFPlayer* pLocal = G::EntityCache.GetLocal();

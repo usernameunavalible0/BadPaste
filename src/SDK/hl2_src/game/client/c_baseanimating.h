@@ -170,6 +170,11 @@ public:
 		return *reinterpret_cast<MDLHandle_t*>(reinterpret_cast<DWORD>(this) + nOffset);
 	}
 
+	inline CUtlVector<matrix3x4_t>& m_CachedBoneData()
+	{
+		return *reinterpret_cast<CUtlVector<matrix3x4_t>*>(reinterpret_cast<DWORD>(this) + 0x844);
+	}
+
 	inline void SetCycle(float flCycle)
 	{
 		if (m_flCycle() != flCycle)
@@ -177,6 +182,11 @@ public:
 			m_flCycle() = flCycle;
 			InvalidatePhysicsRecursive(8); // ANIMATION_CHANGED
 		}
+	}
+
+	inline void InvalidateBoneCache()
+	{
+		reinterpret_cast<void(__thiscall*)(void*)>(U::Offsets.m_dwInvalidateBoneCache)(this);
 	}
 
 public:

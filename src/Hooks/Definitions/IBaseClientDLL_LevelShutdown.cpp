@@ -1,4 +1,5 @@
 #include "../Hooks.h"
+#include "../../Features/Backtrack/Backtrack.h"
 
 DEFINE_HOOK(IBaseClientDLL_LevelShutdown, void, __fastcall, void* ecx, void* edx)
 {
@@ -11,5 +12,6 @@ DEFINE_HOOK(IBaseClientDLL_LevelShutdown, void, __fastcall, void* ecx, void* edx
 
 	Func.Original<FN>()(ecx, edx);
 
+	F::Backtrack.ClearHistory();
 	G::EntityCache.Clear();
 }

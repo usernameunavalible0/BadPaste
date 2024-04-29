@@ -5,9 +5,8 @@ class INetworkStringTable;
 
 CREATE_HOOK(CBaseEntity_BaseInterpolatePart1, U::Offsets.m_dwBaseInterpolatePart1, int, __fastcall, C_BaseEntity* pThis, void* edx, float& currentTime, Vector& oldOrigin, QAngle& oldAngles, Vector& oldVel, int& bNoMoreChanges);
 CREATE_HOOK(CBasePlayer_CalcPlayerView, U::Offsets.m_dwCalcPlayerView, void, __fastcall, C_BasePlayer* pThis, void* edx, Vector& eyeOrigin, QAngle& eyeAngles, float& fov);
-CREATE_HOOK(CL_LoadWhitelist, U::Offsets.m_dwCLLoadWhitelist, CPureServerWhitelist*, __cdecl, INetworkStringTable* pTable, const char* pName);
+CREATE_HOOK(CL_CheckForPureServerWhitelist, U::Offsets.m_dwCLCheckForPureServerWhitelist, void, __cdecl, IFileList* &pFilesToReload);
 CREATE_HOOK(CL_Move, U::Offsets.m_dwCLMove, void, __cdecl, float accumulated_extra_samples, bool bFinalTick);
-CREATE_HOOK(CL_SendMove, U::Offsets.m_dwCLSendMove, void, __fastcall, void* ecx, void* edx);
 CREATE_HOOK(IBaseClientDLL_LevelInitPreEntity, U::VFunc.Get<void*>(I::BaseClient, 5u), void, __fastcall, void* ecx, void* edx, char const* pMapName);
 CREATE_HOOK(IBaseClientDLL_LevelInitPostEntity, U::VFunc.Get<void*>(I::BaseClient, 6u), void, __fastcall, void* ecx, void* edx);
 CREATE_HOOK(IBaseClientDLL_LevelShutdown, U::VFunc.Get<void*>(I::BaseClient, 7u), void, __fastcall, void* ecx, void* edx);

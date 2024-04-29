@@ -45,7 +45,8 @@ bool C_TFWeaponBaseMelee::DoSwingTraceInternal(trace_t& trace, CUtlVector<trace_
     Vector vecSwingEnd = vecSwingStart + vecForward * fSwingRange;
 
     //We will never be playing AS the robots in MvM so we don't need to worry about this
-    bool bDontHitTeammates = true; //pPlayer->GetTeamNumber() == TF_TEAM_PVE_INVADERS && TFGameRules()->IsMannVsMachineMode();
+    // Unless we want to whip our teammates
+    bool bDontHitTeammates = !(this->m_iItemDefinitionIndex() == Soldier_t_TheDisciplinaryAction); //pPlayer->GetTeamNumber() == TF_TEAM_PVE_INVADERS && TFGameRules()->IsMannVsMachineMode();
     CTraceFilterIgnoreTeammates ignoreTeammatesFilter(pPlayer, COLLISION_GROUP_NONE, pPlayer->GetTeamNumber());
 
     if (bCleave)

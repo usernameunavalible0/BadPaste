@@ -6,6 +6,7 @@ class CFeatures_AntiHack
 {
 public:
 	void Run(CUserCmd* cmd, bool* pbSendPacket);
+	void ResolvePlayer(C_TFPlayer* pTarget);
 	void Render(void* ecx, void* edx, const DrawModelState_t& state, const ModelRenderInfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld);
 
 private:

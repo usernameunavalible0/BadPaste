@@ -19,6 +19,18 @@ enum RifleTypes_t
 	RIFLE_CLASSIC,
 };
 
+//=============================================================================
+//
+// Sniper Rifle Laser Dot class.
+//
+class C_SniperDot : public C_BaseEntity
+{
+public:
+	virtual						~C_SniperDot() = 0;
+
+	M_NETVAR(m_flChargeStartTime, float, "CSniperDot", "m_flChargeStartTime");
+};
+
 #define TF_WEAPON_SNIPERRIFLE_CHARGE_PER_SEC	50.0
 #define TF_WEAPON_SNIPERRIFLE_UNCHARGE_PER_SEC	75.0
 #define	TF_WEAPON_SNIPERRIFLE_DAMAGE_MIN		50

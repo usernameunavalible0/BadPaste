@@ -125,6 +125,7 @@ namespace Vars
 	namespace Auto
 	{
 		inline CVar<int> AutoBackstab{2, L"Auto Backstab"}; //0 = Disabled, 1 = Legit, 2 = Rage
+		inline CVar<int> AutoHeal{ 1, L"Auto Heal" }; //0=Disabled, 1=All, 2=Friends Only
 	}
 
 	namespace AntiHack
@@ -137,6 +138,17 @@ namespace Vars
 			inline CVar<int> YawFake{ 2, L"Yaw Fake" };
 			inline CVar<bool> DrawFakeAngles{ true, L"Draw Fake Angles" };
 		}
+
+		namespace Resolver
+		{
+			inline CVar<bool> Enabled{ false, L"Enabled" };
+			inline CVar<int> Mode{ 1, L"Mode" }; //0=Auto,1=Manual
+			inline CVar<float> ManualPitch{ 0.0f, L"Real Pitch" };
+			inline CVar<float> ManualYaw{ 0.0f, L"Real Yaw" };
+		}
+
+		inline CVar<bool> Fakelag{ false, L"Fakelag" };
+		inline CVar<int> FakelagAmount{ 14, L"Fakelag Amount" };
 	}
 
 	namespace ESP
@@ -169,7 +181,7 @@ namespace Vars
 	namespace Visual
 	{
 		inline CVar<bool> RemoveVisualRecoil{ true, L"Remove Visual Recoil" };
-		inline CVar<bool> Tracers{ false, L"Tracers" };
+		inline CVar<int> Tracers{ 0, L"Tracers" }; //0=Default,1=Disabled,2=MERASMUS!!!
 		inline CVar<bool> Snow{ false, L"Menu Snow" };
 		inline CVar<bool> ToolTips{ false, L"Menu tooltips" };
 		inline CVar<bool> RemoveScope{ true, L"Remove Scope"};
@@ -241,8 +253,14 @@ namespace Vars
 			inline CVar<int> Style{ 0, L"Style" }; // 0=Blur
 			inline CVar<bool> IgnoreTeam{ true, L"Ignore Team" };
 			inline CVar<float> BloomAmount{ 6.0f, L"Bloom Amount" };
-			inline CVar<int> GlowColorMode{ 1,L"Glow Color Mode" }; //0=Custom,1=Rainbow,2=Health
+			inline CVar<int> GlowColorMode{ 1, L"Glow Color Mode" }; //0=Custom,1=Rainbow,2=Health
 			inline Color GlowColor = Color(255, 255, 255, 255);
+		}
+
+		namespace World
+		{
+			inline CVar<bool> Healthpacks{ true, L"Healthpacks" };
+			inline CVar<bool> Ammopacks{ true, L"Ammopacks" };
 		}
 	}
 
@@ -251,6 +269,7 @@ namespace Vars
 		inline CVar<bool> Bunnyhop{ true, L"Bunnyhop" };
 		inline CVar<bool> BypassPure{ true, L"Bypass Pure" };
 		inline CVar<bool> ForceMeleeCrits{ true, L"Force Melee Crits" };
+		inline CVar<int> FollowFriendID{ 0, L"FollowBot FriendID" };
 
 		namespace CL_Move
 		{

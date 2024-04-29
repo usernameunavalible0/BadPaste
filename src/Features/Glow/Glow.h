@@ -17,9 +17,12 @@ private:
 
 public:
 	bool Initialize();
-	void UnInitialize();
+	void OnScreenSizeChanged();
 	void Render();
 
+	bool IsDrawing() const { return m_bIsDrawing; }
+
+private:
 	bool m_bIsDrawing;
 
 private:

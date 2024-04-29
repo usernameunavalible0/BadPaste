@@ -7,7 +7,7 @@ void CFeatures_Auto::Run(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CUserCmd* 
 	if (Vars::Auto::AutoBackstab.m_Var)
 		AutoBackstab(pLocal, pWeapon, cmd);
 
-	//AutoHeal(pLocal, pWeapon, cmd);
+	AutoHeal(pLocal, pWeapon, cmd);
 }
 
 void CFeatures_Auto::AutoBackstab(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CUserCmd* cmd)
@@ -24,98 +24,111 @@ void CFeatures_Auto::AutoBackstab(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, C
 	}
 	else if (Vars::Auto::AutoBackstab.m_Var == 2) //Rage
 	{
+		if (!pKnife->CanPrimaryAttack())
+			return;
+
 		for (auto pEntity : G::EntityCache.GetGroup(EEntGroup::PLAYERS_ENEMIES))
 		{
 			C_TFPlayer* pTarget = pEntity->As<C_TFPlayer*>();
 
-			Vector vBody; pTarget->GetHitboxPosition(HITBOX_BODY, vBody);
-			QAngle vAngleTo = GetAngleToPosition(pLocal->Weapon_ShootPosition(), vBody);
-
-			trace_t trace;
-			if (pKnife->DoSwingTraceKnife(trace, vAngleTo) && pKnife->CanAttack())
+			std::function<bool()> CanBackstab = [pTarget, pKnife, pLocal]()
 			{
-				if (trace.m_pEnt && trace.m_pEnt == pTarget)
-				{
-					if (pKnife->CanPerformBackstabAgainstTarget(pTarget, vAngleTo))
-					{			
-						//G::Util.FixMovement(vAngleTo, cmd);
-						//cmd->viewangles = vAngleTo;
-						//cmd->buttons |= IN_ATTACK;
-						//return;
-					}
-				}
+				Vector vBody; pTarget->GetHitboxPosition(HITBOX_BODY, vBody);
+				QAngle vAngleTo = GetAngleToPosition(pLocal->Weapon_ShootPosition(), vBody);
+
+				trace_t tr;
+				if (!pKnife->DoSwingTraceKnife(tr, vAngleTo))
+					return false;
+
+				if (!tr.m_pEnt || tr.m_pEnt != pTarget)
+					return false;
+
+				if (!pKnife->CanPerformBackstabAgainstTarget(pTarget, vAngleTo))
+					return false;
+
+				return true;
+			};
+
+			F::Backtrack.StartBacktracking(pTarget, cmd, CanBackstab);
+
+			if (CanBackstab())
+			{
+				Vector vBody; pTarget->GetHitboxPosition(HITBOX_BODY, vBody);
+				QAngle vAngleTo = GetAngleToPosition(pLocal->Weapon_ShootPosition(), vBody);
+				G::Util.FixMovement(vAngleTo, cmd);
+				cmd->viewangles = vAngleTo;
+				cmd->buttons |= IN_ATTACK;
+				g_Globals.m_bChoking = true;
 			}
 
-			float correct = 0.0f;
-
-			INetChannelInfo* nci = reinterpret_cast<INetChannelInfo*>(I::EngineClient->GetNetChannelInfo());
-
-			if (nci)
-			{
-				correct += nci->GetLatency(FLOW_INCOMING);
-				correct += nci->GetLatency(FLOW_OUTGOING);
-			}
-
-			int lerpTicks = TIME_TO_TICKS(G::Util.GetClientInterpAmount());
-
-			correct += TICKS_TO_TIME(lerpTicks);
-
-			correct = clamp(correct, 0.0f, G::ConVars.sv_maxunlag->GetFloat());
-
-			// TEST AMOUNT!!!!!! Please dont bully me :)
-			int wowhowmuchshouldweadd = TIME_TO_TICKS(0.04f);
-
-			int targettick = (cmd->tick_count - lerpTicks)+wowhowmuchshouldweadd;
-
-			F::Backtrack.BacktrackPlayer(pTarget, TICKS_TO_TIME(targettick));
-
-			pTarget->GetHitboxPosition(HITBOX_BODY, vBody);
-			vAngleTo = GetAngleToPosition(pLocal->Weapon_ShootPosition(), vBody);
-
-			if (pKnife->DoSwingTraceKnife(trace, vAngleTo) && pKnife->CanAttack())
-			{
-				if (trace.m_pEnt && trace.m_pEnt == pTarget)
-				{
-					if (pKnife->CanPerformBackstabAgainstTarget(pTarget, vAngleTo))
-					{
-						G::Util.FixMovement(vAngleTo, cmd);
-						cmd->viewangles = vAngleTo;
-						cmd->buttons |= IN_ATTACK;
-						cmd->tick_count = targettick + lerpTicks;
-					}
-				}
-			}
-
-			F::Backtrack.RestorePlayer(pTarget);
+			F::Backtrack.FinishBacktracking();
 		}
 	}
 }
 
 void CFeatures_Auto::AutoHeal(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CUserCmd* cmd)
 {
+	if (!Vars::Auto::AutoHeal.m_Var)
+		return;
+
 	C_WeaponMedigun* pMedigun = pWeapon->As<C_WeaponMedigun*>();
 
 	if (!pMedigun)
 		return;
 
-	// Basic checks if you do not have a C_WeaponMedigun class
-	//if (pLocal->deadflag() || !pLocal->IsClass(TF_CLASS_MEDIC))
-	//	return;
+	//Look for players to heal (only if no more players to heal)
+	if (m_vecHealablePlayers.IsEmpty())
+	{
+		for (IClientEntity* pEntity : G::EntityCache.GetGroup(EEntGroup::PLAYERS_TEAMMATES))
+		{
+			C_TFPlayer* pPlayer = pEntity->As<C_TFPlayer*>();
 
-	// We are going to essentially use this function like a giant for loop. Every time CreateMove is called we will increase n by one.
-	static int n = 1; 
+			Vector vecBody; pPlayer->GetHitboxPosition(HITBOX_BODY, vecBody);
+			QAngle angTo = GetAngleToPosition(pLocal->Weapon_ShootPosition(), vecBody);
 
-	// If we have reached the maximum number of clients on the server, reset count and keep going
-	if (n < (g_Globals.m_nMaxClients + 1))
-		n = 1;
+			if (pPlayer->deadflag() || !pMedigun->CanHealNewTarget(pPlayer, angTo) || (Vars::Auto::AutoHeal.m_Var == 2 && !pPlayer->IsPlayerOnSteamFriendsList()))
+				continue;
 
-	// We only want to heal a different person every other tick, or else it will stay healing the same person.
-	if (cmd->tick_count % 2)
-		return;
+			m_vecHealablePlayers.AddToTail(pPlayer->entindex());
+		}
+	}
 
-	C_TFPlayer* pPlayer = UTIL_TFPlayerByIndex(n);
+	//Heal Those Players
+	if (!m_vecHealablePlayers.IsEmpty() && pMedigun->CanPrimaryAttack())
+	{
+		for (int n : m_vecHealablePlayers)
+		{
+			C_TFPlayer* pPlayer = UTIL_TFPlayerByIndex(n);
 
-	// Any problems, increment and return
-	if (!pPlayer || pPlayer->IsDormant() || pPlayer->deadflag() || !pPlayer->InLocalTeam())
-		n++; return;
+			// Sometimes it just happens
+			if (!pPlayer)
+			{
+				m_vecHealablePlayers.FindAndFastRemove(n);
+				continue;
+			}
+
+			Vector vecBody; pPlayer->GetHitboxPosition(HITBOX_BODY, vecBody);
+			QAngle angTo = GetAngleToPosition(pLocal->Weapon_ShootPosition(), vecBody);
+
+			//Double check his ass
+			if (pPlayer->deadflag() || !pMedigun->CanHealNewTarget(pPlayer, angTo) || (Vars::Auto::AutoHeal.m_Var == 2 && !pPlayer->IsPlayerOnSteamFriendsList()))
+			{
+				m_vecHealablePlayers.FindAndFastRemove(n);
+				continue;
+			}
+			
+			if (!(cmd->command_number % 2))
+			{
+				cmd->buttons &= ~IN_ATTACK;
+				return;
+			}
+
+			m_vecHealablePlayers.FindAndFastRemove(n);
+			G::Util.FixMovement(angTo, cmd);
+			cmd->viewangles = angTo;
+			cmd->buttons |= IN_ATTACK;
+			g_Globals.m_bChoking = true;
+			return;
+		}
+	}
 }

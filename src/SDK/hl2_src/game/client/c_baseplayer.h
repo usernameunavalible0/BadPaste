@@ -17,7 +17,41 @@
 #include "../../public/PlayerState.h"
 #include "../../public/tier1/utlflags.h"
 
-class CSteamID;
+// Steam universes.  Each universe is a self-contained Steam instance.
+enum EUniverse
+{
+	k_EUniverseInvalid = 0,
+	k_EUniversePublic = 1,
+	k_EUniverseBeta = 2,
+	k_EUniverseInternal = 3,
+	k_EUniverseDev = 4,
+	// k_EUniverseRC = 5,				// no such universe anymore
+	k_EUniverseMax
+};
+
+#pragma pack( push, 1 )		
+
+// Steam ID structure (64 bits total)
+class CSteamID
+{
+public:
+	// 64 bits total
+	union SteamID_t
+	{
+		struct SteamIDComponent_t
+		{
+			uint32				m_unAccountID : 32;			// unique account identifier
+			unsigned int		m_unAccountInstance : 20;	// dynamic instance ID
+			unsigned int		m_EAccountType : 4;			// type of account - can't show as EAccountType, due to signed / unsigned difference
+			EUniverse			m_EUniverse : 8;	// universe this account belongs to
+		} m_comp;
+
+		uint64 m_unAll64Bits;
+	} m_steamid;
+};
+
+#pragma pack( pop )
+
 class IRagdoll;
 class CViewSetup;
 class CHintSystem;

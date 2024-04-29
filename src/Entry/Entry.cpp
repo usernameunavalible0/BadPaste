@@ -7,7 +7,7 @@
 
 void CModuleEntry::Load()
 {
-	while (!GetModuleHandleW(L"mss32.dll"))
+	while (!GetModuleHandleW(L"GameUI.dll"))
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
 	MathLib_Init();
@@ -27,10 +27,10 @@ void CModuleEntry::Load()
 		F::ESP.LevelInitPostEntity();
 	}
 
-	_VALIDATE(G::Hooks.Initialize());
-
 	_VALIDATE(F::Chams.Initialize());
 	_VALIDATE(F::Glow.Initialize());
+
+	_VALIDATE(G::Hooks.Initialize());
 
 	//I::EngineClient->ClientCmd_Unrestricted("r_drawtracers_firstperson 1");
 }

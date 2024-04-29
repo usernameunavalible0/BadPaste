@@ -437,7 +437,76 @@ bool CFeatures_Menu::InputColorNew(Color& Var, bool AllowAlpha)
 
 bool CFeatures_Menu::InputString(const wchar_t* Label, std::wstring& output)
 {
-	return false;
+	bool callback = false;
+
+	int x = m_LastWidget.x;
+	int y = m_LastWidget.y + m_LastWidget.height + Vars::Menu::SpacingY;
+	int w = Vars::Menu::InputBoxW;
+	int h = Vars::Menu::ButtonH;
+
+	static bool active = false;
+	static std::wstring active_str = {};
+
+	if (g_InputHelper.IsPressed(VK_LBUTTON))
+	{
+		if (g_InputHelper.m_nMouseX > x && g_InputHelper.m_nMouseX < x + w && g_InputHelper.m_nMouseY > y && g_InputHelper.m_nMouseY < y + h)
+			active = !active;
+
+		else active = false;
+	}
+
+	if (active)
+	{
+		m_bTyping = true;
+
+		if (g_InputHelper.IsPressed(VK_INSERT)) {
+			active = false;
+			return false;
+		}
+
+		if (active_str.length() < 21)
+		{
+			if (g_InputHelper.IsPressed(VK_SPACE))
+				active_str += char(VK_SPACE);
+
+			for (int16_t key = L'0'; key < L'9' + 1; key++)
+			{
+				if (g_InputHelper.IsPressed(key))
+					active_str += wchar_t(key);
+			}
+		}
+
+		if (g_InputHelper.IsPressedAndHeld(VK_BACK) && !active_str.empty())
+			active_str.erase(active_str.end() - 1);
+
+		if (g_InputHelper.IsPressed(VK_RETURN))
+		{
+			active = false;
+
+			if (!active_str.empty())
+			{
+				output = active_str;
+				callback = true;
+			}
+		}
+
+		G::Draw.String(FONT_MENU, x + (w / 2), y + (h / 2), Vars::Menu::Colors::Text, TXT_CENTERXY, "%ws", active_str.empty() ? L"Enter a FriendID" : active_str.c_str());
+	}
+
+	else
+	{
+		active_str = {};
+		G::Draw.String(FONT_MENU, x + (w / 2), y + (h / 2), Vars::Menu::Colors::Text, TXT_CENTERXY, "%ws", Label);
+	}
+
+	G::Draw.OutlinedRect(x, y, w, h, Vars::Menu::Colors::OutlineMenu);
+
+	m_LastWidget.x = x;
+	m_LastWidget.y = y;
+	m_LastWidget.width = w;
+	m_LastWidget.height = h;
+
+	return callback;
 }
 
 bool CFeatures_Menu::InputKey(CVar<int>& output, bool bAllowNone)
@@ -951,6 +1020,8 @@ void CFeatures_Menu::Run()
 
 				case EVisualsTabs::TAB_GLOW:
 				{
+					Rect_t checkpoint = m_LastWidget;
+
 					GroupBoxStart();
 					{
 						CheckBox(Vars::Glow::Enabled, L"Glow Master Toggle");
@@ -969,6 +1040,16 @@ void CFeatures_Menu::Run()
 					}
 					GroupBoxEnd(L"Players", 185);
 
+					checkpoint.x += 185 + Vars::Menu::SpacingX;
+					m_LastWidget = checkpoint;
+
+					GroupBoxStart();
+					{
+						CheckBox(Vars::Glow::World::Healthpacks, L"Health pack glow toggle");
+						CheckBox(Vars::Glow::World::Ammopacks, L"Ammo pack glow toggle");
+					}
+					GroupBoxEnd(L"World", 185);
+
 					break;
 				}
 
@@ -979,7 +1060,7 @@ void CFeatures_Menu::Run()
 					GroupBoxStart();
 					{
 						CheckBox(Vars::Visual::RemoveVisualRecoil, L"Removes visual weapon recoil");
-						CheckBox(Vars::Visual::Tracers, L"Bullet Tracers");
+						ComboBox(Vars::Visual::Tracers, { { 0, L"Default" }, { 1, L"Disabled" }, { 2, L"MERASMUS!!" } });
 						CheckBox(Vars::Visual::RemoveScope, L"Removes sniper scope overlay");
 						CheckBox(Vars::Visual::RemoveZoom, L"Removes sniper scope zoom");
 						InputInt(Vars::Visual::FOV, 40, 140);
@@ -1023,6 +1104,9 @@ void CFeatures_Menu::Run()
 
 			case EMainTabs::TAB_MISC:
 			{
+
+				Rect_t checkpoint = m_LastWidget;
+
 				GroupBoxStart();
 				{
 					CheckBox(Vars::Misc::ForceMeleeCrits, L"Forces criticals on melee weapons");
@@ -1038,8 +1122,35 @@ void CFeatures_Menu::Run()
 					ComboBox(Vars::AntiHack::AntiAim::YawReal, { { 0, L"None" }, { 1, L"Left" }, { 2, L"Right" }, { 3, L"Backwards" }, { 4, L"Emotion" }, { 5, L"Random" } });
 					ComboBox(Vars::AntiHack::AntiAim::YawFake, { { 0, L"None" }, { 1, L"Left" }, { 2, L"Right" }, { 3, L"Backwards" }, { 4, L"Random" } });
 					CheckBox(Vars::AntiHack::AntiAim::DrawFakeAngles, L"Toggle Anti-Aim Fake Angle Chams");
+					CheckBox(Vars::AntiHack::Fakelag, L"Fakelag master switch");
 				}
 				GroupBoxEnd(L"Anti-Aim", 160);
+
+				GroupBoxStart();
+				{
+					CheckBox(Vars::AntiHack::Resolver::Enabled, L"Resolver master switch");
+					ComboBox(Vars::AntiHack::Resolver::Mode, { { 0, L"Auto" }, { 1, L"Manual" } });
+					InputFloat(Vars::AntiHack::Resolver::ManualPitch, -89.f, 89.f);
+					InputFloat(Vars::AntiHack::Resolver::ManualYaw, -180.f, 180.f);
+				}
+				GroupBoxEnd(L"Resolver", 160);
+
+				checkpoint.x += 160 + Vars::Menu::SpacingX;
+				m_LastWidget = checkpoint;
+
+				GroupBoxStart();
+				{
+					ComboBox(Vars::Auto::AutoBackstab, { {0, L"Disabled"}, {1, L"Legit"}, {2, L"Rage"} });
+					ComboBox(Vars::Auto::AutoHeal, { {0, L"Disabled"}, {1, L"All"}, {2, L"Friends Only"} });
+					std::wstring friendid = std::to_wstring(Vars::Misc::FollowFriendID.m_Var);
+					if (InputString(std::to_wstring(Vars::Misc::FollowFriendID.m_Var).c_str(), friendid))
+					{
+						wchar_t* endPtr;
+						uint32 value = std::wcstoul(friendid.c_str(), &endPtr, 10);
+						Vars::Misc::FollowFriendID.m_Var = value;
+					}
+				}
+				GroupBoxEnd(L"Auto", 180);
 
 				break;
 			}

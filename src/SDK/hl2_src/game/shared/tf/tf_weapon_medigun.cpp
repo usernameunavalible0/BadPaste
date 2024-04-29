@@ -46,3 +46,29 @@ bool C_WeaponMedigun::AllowedToHealTarget(C_BaseEntity* pTarget)
 
     return false;
 }
+
+bool C_WeaponMedigun::CanHealNewTarget(C_BaseEntity* pTarget, QAngle vAngleOverride)
+{
+    C_TFPlayer* pOwner = this->m_hOwner().Get()->As<C_TFPlayer*>();
+    if (!pOwner)
+        return false;
+
+    Vector vecSrc = pOwner->Weapon_ShootPosition();
+
+    Vector vecAiming;
+    AngleVectors(vAngleOverride, &vecAiming);
+
+    Vector vecEnd = vecSrc + vecAiming * GetTargetRange();
+    trace_t tr;
+
+    UTIL_TraceLine(vecSrc, vecEnd, (MASK_SHOT & ~CONTENTS_HITBOX), pOwner, DMG_GENERIC, &tr);
+    if (tr.fraction != 1.0 && tr.m_pEnt)
+    {
+        if (!HealingTarget(tr.m_pEnt) && AllowedToHealTarget(tr.m_pEnt))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
