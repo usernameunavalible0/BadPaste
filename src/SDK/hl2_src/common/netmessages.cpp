@@ -6,14 +6,9 @@
 #include "../public/tier1/bitbuf.h"
 #include "../public/tier1/strtools.h"
 
-static char s_text[1024];
-
 const char* CLC_Move::ToString(void) const
 {
-	Q_snprintf(s_text, sizeof(s_text), "%s: backup %i, new %i, bytes %i",
-		GetName(), m_nNewCommands, m_nBackupCommands, Bits2Bytes(m_nLength));
-
-	return s_text;
+	return "CLC_Move";
 }
 
 bool CLC_Move::WriteToBuffer(bf_write& buffer)
@@ -40,7 +35,7 @@ bool CLC_Move::ReadFromBuffer(bf_read& buffer)
 	return buffer.SeekRelative(m_nLength);
 }
 
-bool CNetMessage::BIncomingMessageForProcessing(double dValue, int iValue)
+/*bool CNetMessage::BIncomingMessageForProcessing(double dValue, int iValue)
 {
 	if (!m_pRateLimitPolicy)
 		SetRatePolicy();
@@ -51,7 +46,7 @@ bool CNetMessage::BIncomingMessageForProcessing(double dValue, int iValue)
 void CNetMessage::SetRatePolicy()
 {
 	m_pRateLimitPolicy = new CNetMessageRatelimitPolicyNone();
-}
+}*/
 
 bool CNetMessageRatelimitPolicyNone::BIncomingMessageForProcessing(double dValue, int iValue)
 {

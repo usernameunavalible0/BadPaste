@@ -197,7 +197,7 @@ public:
 	M_NETVAR(m_hGroundEntity, EHANDLE, "CBasePlayer", "m_hGroundEntity");
 	M_NETVAR(m_vecVelocity, Vector, "CBasePlayer", "m_vecVelocity[0]");
 	M_NETVAR(m_vecBaseVelocity, Vector, "CBasePlayer", "m_vecBaseVelocity");
-	M_NETVAR(m_hConstraintEntity, int, "CBasePlayer", "m_hConstraintEntity");
+	M_NETVAR(m_hConstraintEntity, EHANDLE, "CBasePlayer", "m_hConstraintEntity");
 	M_NETVAR(m_vecConstraintCenter, Vector, "CBasePlayer", "m_vecConstraintCenter");
 	M_NETVAR(m_flConstraintRadius, float, "CBasePlayer", "m_flConstraintRadius");
 	M_NETVAR(m_flConstraintWidth, float, "CBasePlayer", "m_flConstraintWidth");
@@ -233,6 +233,12 @@ public:
 	inline int& m_nImpulse()
 	{
 		return *reinterpret_cast<int*>(reinterpret_cast<DWORD>(this) + 0x122C);
+	}
+
+	inline int& m_nButtons()
+	{
+		static const int nOffset = (GetNetVar("CBasePlayer", "m_hConstraintEntity") - 0x8);
+		return *reinterpret_cast<int*>(reinterpret_cast<DWORD>(this) + nOffset);
 	}
 
 	inline bool UsingStandardWeaponsInVehicle()

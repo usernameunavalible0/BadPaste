@@ -15,20 +15,21 @@ DEFINE_HOOK(ClientModeShared_CreateMove, bool, __fastcall, void* ecx, void* edx,
 	if (!cmd || cmd->command_number <= 0)
 		return Func.Original<FN>()(ecx, edx, flInputSampleTime, cmd);
 
-	uintptr_t _bp; __asm mov _bp, ebp;
-	bool* pbSendPacket = (bool*)(***(uintptr_t***)_bp - 0x1);
+	if (Func.Original<FN>()(ecx, edx, flInputSampleTime, cmd))
+		I::EngineClient->SetViewAngles(cmd->viewangles);
 
 	QAngle vOldAngles = cmd->viewangles;
 	float fOldSide = cmd->sidemove;
 	float fOldForward = cmd->forwardmove;
+
+	uintptr_t _bp; __asm mov _bp, ebp;
+	bool* pbSendPacket = (bool*)(***(uintptr_t***)_bp - 0x1);
 
 	C_TFPlayer* pLocal = UTIL_TFPlayerByIndex(g_Globals.m_nLocalIndex);
 
 	if (pLocal && pLocal->IsAlive())
 	{
 		C_TFWeaponBase* pWeapon = pLocal->GetActiveTFWeapon();
-
-		F::Misc.Run(pLocal, cmd);
 
 		if (pWeapon)
 		{
@@ -42,12 +43,17 @@ DEFINE_HOOK(ClientModeShared_CreateMove, bool, __fastcall, void* ecx, void* edx,
 			F::Prediction.Finish(pLocal);
 
 			F::Crithack.Run(pWeapon, cmd);
+
+			if (g_Globals.m_nShifted > 0 && g_Globals.m_bShouldShift)
+				*pbSendPacket = g_Globals.m_nShifted == (MAX_NEW_COMMANDS - 1);
+
+			if (g_Globals.m_bShouldShift && !*pbSendPacket)
+				cmd->buttons &= ~IN_ATTACK;
 		}
 
-		g_Globals.m_vViewAngles = cmd->viewangles;
+		F::Misc.Run(pLocal, cmd);
 
-		if (Vars::AntiHack::Fakelag.m_Var)
-			*pbSendPacket = I::EngineClient->GetNetChannelInfo()->m_nChokedPackets >= Vars::AntiHack::FakelagAmount.m_Var;
+		g_Globals.m_vViewAngles = cmd->viewangles;
 
 		//Credit to Spook953
 		if (pLocal->IsTaunting() && pLocal->m_bAllowMoveDuringTaunt())
@@ -64,6 +70,9 @@ DEFINE_HOOK(ClientModeShared_CreateMove, bool, __fastcall, void* ecx, void* edx,
 				cmd->viewangles.y = flYaw;
 			}
 			else flYaw = cmd->viewangles.y;
+
+			if (Vars::Misc::TauntControl.m_Var)
+				cmd->viewangles.x = (cmd->buttons & IN_BACK) ? 91.f : (cmd->buttons & IN_FORWARD) ? 0.f : 90.f;
 		}
 	}
 
@@ -87,7 +96,7 @@ DEFINE_HOOK(ClientModeShared_CreateMove, bool, __fastcall, void* ecx, void* edx,
 	}
 
 	//failsafe
-	{
+	/*{
 		static int nChoked = 0;
 
 		if (!*pbSendPacket)
@@ -97,7 +106,7 @@ DEFINE_HOOK(ClientModeShared_CreateMove, bool, __fastcall, void* ecx, void* edx,
 
 		if (nChoked > 14)
 			*pbSendPacket = true;
-	}
+	}*/
 
 	return false;
 }

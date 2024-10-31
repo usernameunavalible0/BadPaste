@@ -29,6 +29,21 @@ bool CConVars::Initialize()
 	sv_unlag_fixstuck = I::Cvar->FindVar("sv_unlag_fixstuck");
 	CHECKVAR(sv_unlag_fixstuck);
 
+	host_limitlocal = I::Cvar->FindVar("host_limitlocal");
+	CHECKVAR(host_limitlocal);
+
+	cl_cmdrate = I::Cvar->FindVar("cl_cmdrate");
+	CHECKVAR(cl_cmdrate);
+
+	sv_gravity = I::Cvar->FindVar("sv_gravity");
+	CHECKVAR(sv_gravity);
+
+	cl_flipviewmodels = I::Cvar->FindVar("cl_flipviewmodels");
+	CHECKVAR(cl_flipviewmodels);
+
+	sv_clockcorrection_msecs = I::Cvar->FindVar("sv_clockcorrection_msecs");
+	CHECKVAR(sv_clockcorrection_msecs);
+
 	//If we arrive here, return success.
 	return true;
 }

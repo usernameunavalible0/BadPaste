@@ -19,8 +19,11 @@ void CFeatures_Crithack::Run(C_TFWeaponBase* pWeapon, CUserCmd* cmd)
 	if (previousWeaponIdx != pMelee->entindex())
 	{
 		previousWeaponIdx = pMelee->entindex();
-		m_CritTicks.Purge();
+		Purge();
 	}
+
+	//"You're re-checking the 59 already once checked commands" -Lak3
+	static int cmdNum = cmd->command_number;
 
 	//Lets check the next 60 command numbers for seeds that result in critical hits
 	for (int n = 0; n < 60; n++)
@@ -29,8 +32,8 @@ void CFeatures_Crithack::Run(C_TFWeaponBase* pWeapon, CUserCmd* cmd)
 		if (m_CritTicks.Size() >= 256)
 			break;
 
-		//Variable to represent the command number we are checking
-		const int cmdNum = cmd->command_number + n;
+		//Set the variable used to represent the command number we are checking
+		cmdNum = cmd->command_number + n;
 		//Then lets set the seed used by the crit system to run our own check to see if this command number grants a critical hit
 		C_BaseEntity::SetPredictionRandomSeed(MD5_PseudoRandom(cmdNum) & INT_MAX);
 		//And finally lets run the check to see if we can get a crit and then if we can add this command number to our list
@@ -53,5 +56,6 @@ void CFeatures_Crithack::Run(C_TFWeaponBase* pWeapon, CUserCmd* cmd)
 		const int critTick = m_CritTicks.Random();
 		cmd->command_number = critTick;
 		cmd->random_seed = MD5_PseudoRandom(critTick) & INT_MAX;
+		m_CritTicks.FindAndFastRemove(critTick);
 	}
 }

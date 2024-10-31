@@ -11,7 +11,7 @@ private:
 	bool IsAttacking(CUserCmd* cmd, C_TFWeaponBaseMelee* pWeapon);
 	void Aim(C_TFPlayer* pLocal, CUserCmd* cmd, QAngle& vAngle);
 	bool GetTargets(C_TFPlayer* pLocal, C_TFWeaponBaseMelee* pWeapon);
-	bool GetTarget(C_TFPlayer* pLocal, C_TFWeaponBaseMelee* pWeapon, Target_t& Out);
+	bool GetTarget(C_TFPlayer* pLocal, C_TFWeaponBaseMelee* pWeapon, CUserCmd* cmd, Target_t& Out);
 };
 
 namespace A { inline CAimbot_Melee Melee; }

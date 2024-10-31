@@ -8,6 +8,9 @@ void CFeatures_Auto::Run(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CUserCmd* 
 		AutoBackstab(pLocal, pWeapon, cmd);
 
 	AutoHeal(pLocal, pWeapon, cmd);
+
+	if (Vars::Auto::AutoDisguise.m_Var)
+		AutoDisguise(pLocal, pWeapon, cmd);
 }
 
 void CFeatures_Auto::AutoBackstab(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CUserCmd* cmd)
@@ -31,37 +34,63 @@ void CFeatures_Auto::AutoBackstab(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, C
 		{
 			C_TFPlayer* pTarget = pEntity->As<C_TFPlayer*>();
 
-			std::function<bool()> CanBackstab = [pTarget, pKnife, pLocal]()
+			QAngle vAngleTo = GetAngleToPosition(pLocal->Weapon_ShootPosition(), pTarget->WorldSpaceCenter());
+			trace_t tr;
+			if (pKnife->DoSwingTraceKnife(tr, vAngleTo))
 			{
-				Vector vBody; pTarget->GetHitboxPosition(HITBOX_BODY, vBody);
-				QAngle vAngleTo = GetAngleToPosition(pLocal->Weapon_ShootPosition(), vBody);
-
-				trace_t tr;
-				if (!pKnife->DoSwingTraceKnife(tr, vAngleTo))
-					return false;
-
-				if (!tr.m_pEnt || tr.m_pEnt != pTarget)
-					return false;
-
-				if (!pKnife->CanPerformBackstabAgainstTarget(pTarget, vAngleTo))
-					return false;
-
-				return true;
-			};
-
-			F::Backtrack.StartBacktracking(pTarget, cmd, CanBackstab);
-
-			if (CanBackstab())
-			{
-				Vector vBody; pTarget->GetHitboxPosition(HITBOX_BODY, vBody);
-				QAngle vAngleTo = GetAngleToPosition(pLocal->Weapon_ShootPosition(), vBody);
-				G::Util.FixMovement(vAngleTo, cmd);
-				cmd->viewangles = vAngleTo;
-				cmd->buttons |= IN_ATTACK;
-				g_Globals.m_bChoking = true;
+				if (tr.m_pEnt && tr.m_pEnt == pTarget)
+				{
+					if (pKnife->CanPerformBackstabAgainstTarget(pTarget, vAngleTo))
+					{
+						G::Util.FixMovement(vAngleTo, cmd);
+						cmd->viewangles = vAngleTo;
+						cmd->buttons |= IN_ATTACK;
+						g_Globals.m_bChoking = true;
+						return;
+					}
+				}
 			}
 
-			F::Backtrack.FinishBacktracking();
+			//TODO: Backtrack
+			CUtlFixedLinkedList< LagRecord >* track = F::Backtrack.GetTrackForPlayer(pTarget);
+			if (track->Count() > 0)
+			{
+				for (int i = 0; i < track->Count(); i++)
+				{
+					LagRecord Record = track->Element(i);
+
+					if ((pTarget->m_flSimulationTime() - Record.m_flSimulationTime) > 0.2f)
+						continue;
+
+					QAngle vOrigAngles = pTarget->GetAbsAngles();
+					Vector vOrigOrigin = pTarget->GetAbsOrigin();
+
+					pTarget->SetAbsAngles(Record.m_vecAngles);
+					pTarget->SetAbsOrigin(Record.m_vecOrigin);
+					QAngle vAngleTo = GetAngleToPosition(pLocal->Weapon_ShootPosition(), pTarget->WorldSpaceCenter());
+					trace_t tr;
+					if (pKnife->DoSwingTraceKnife(tr, vAngleTo))
+					{
+						if (tr.m_pEnt && tr.m_pEnt == pTarget)
+						{
+							if (pKnife->CanPerformBackstabAgainstTarget(pTarget, vAngleTo))
+							{
+								G::Util.FixMovement(vAngleTo, cmd);
+								cmd->viewangles = vAngleTo;
+								cmd->buttons |= IN_ATTACK;
+								cmd->tick_count = TIME_TO_TICKS(Record.m_flSimulationTime + G::Util.GetClientInterpAmount());
+								g_Globals.m_bChoking = true;
+								pTarget->SetAbsAngles(vOrigAngles);
+								pTarget->SetAbsOrigin(vOrigOrigin);
+								return;
+							}
+						}
+					}
+
+					pTarget->SetAbsAngles(vOrigAngles);
+					pTarget->SetAbsOrigin(vOrigOrigin);
+				}
+			}
 		}
 	}
 }
@@ -131,4 +160,25 @@ void CFeatures_Auto::AutoHeal(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CUser
 			return;
 		}
 	}
+}
+
+void CFeatures_Auto::AutoDisguise(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CUserCmd* cmd)
+{
+	if (!pLocal->IsClass(TF_CLASS_SPY) || pLocal->IsDisguised())
+		return;
+
+	const int nRandomClass = I::UniformRandomStream->RandomInt(TF_CLASS_SCOUT, TF_CLASS_ENGINEER);
+
+	int nTeam = pLocal->GetTeamNumber();
+	if (nTeam == TF_TEAM_RED)
+		nTeam = 1;
+	else if (nTeam == TF_TEAM_BLUE)
+		nTeam = 2;
+	else
+		return;
+
+	char szDisguise[32];
+	snprintf(szDisguise, sizeof(szDisguise), "disguise %d %d", nRandomClass, nTeam);
+
+	I::EngineClient->ClientCmd_Unrestricted(szDisguise);
 }

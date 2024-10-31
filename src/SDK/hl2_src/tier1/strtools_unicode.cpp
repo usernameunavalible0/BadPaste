@@ -257,7 +257,7 @@ namespace // internal use only
 				if (bErr)
 				{
 #ifdef _DEBUG
-					Warning("invalid Unicode byte sequence");
+					//Warning("invalid Unicode byte sequence");
 #endif
 					if (ePolicy & _STRINGCONVERTFLAG_SKIP)
 					{
@@ -290,7 +290,7 @@ namespace // internal use only
 				if (bErr)
 				{
 #ifdef _DEBUG
-					Warning("invalid Unicode byte sequence");
+					//Warning("invalid Unicode byte sequence");
 #endif
 					if (ePolicy & _STRINGCONVERTFLAG_SKIP)
 					{

@@ -33,6 +33,14 @@ bool CUtil_Offsets::Initialize()
 	GETPATT(m_dwInvalidateBoneCache, "client.dll", "A1 ? ? ? ? 48 C7 81");
 	GETPATT(m_dwSetAbsOrigin, "client.dll", "55 8B EC 56 57 8B 7D 08 8B F1 E8");
 	GETPATT(m_dwSetAbsAngles, "client.dll", "55 8B EC 83 EC 60 56 57 8B 7D 08 8B");
+	GETPATT(m_dwAvoidPlayers, "client.dll", "55 8B EC 81 EC ? ? ? ? A1 ? ? ? ? 57 8B F9 89 7D CC");
+	GETPATT(m_dwEstimateAbsVelocity, "client.dll", "55 8B EC 83 EC 0C 56 8B F1 E8 ? ? ? ? 3B");
+	GETPATT(m_dwProcessMovement, "client.dll", "55 8B EC 56 57 8B 7D 08 8B F1 85 FF 0F 84 ? ? ? ? 83");
+	GETPATT(m_dwCalculateMaxSpeed, "client.dll", "55 8B EC 83 EC 18 83 3D ? ? ? ? ? 56");
+	GETPATT(m_dwTFPlayerMove, "client.dll", "55 8B EC 83 EC 6C 53 56 8B F1 57");
+	GETPATT(m_dwPlayerMove, "client.dll", "55 8B EC 51 56 57 8B F9 8B 07 FF 90 ? ? ? ? 8B 47");
+	GETPATT(m_dwFXFireBullets, "client.dll", "53 8B DC 83 EC 08 83 E4 F0 83 C4 04 55 8B 6B 04 89 6C 24 04 8B EC 81 EC C8 00 00 00 56 57 8B 7B");
+	GETPATT(m_dwDrawViewModels, "client.dll", "55 8B EC 81 EC ? ? ? ? 8B 15 ? ? ? ? 53 8B D9 33 C9 89 4D ? 89 4D ? 8B 02 89 5D ? 89 4D ? 89 4D ? 56 57 85 C0 74 ? 68 ? ? ? ? 68 ? ? ? ? 68 ? ? ? ? 68 ? ? ? ? 68 ? ? ? ? 51 51 51 51 8D 4D ? 51 50 8B 40 ? FF D0 8B 45 ? 83 C4 ? 8B 15 ? ? ? ? 89 45 ? 8B 45 ? 89 45 ? 80 7D");
 
 	GETPATT(m_dwLoadFromBuffer, "engine.dll", "55 8B EC 83 EC 38 53 8B 5D 0C");
 	GETPATT(m_dwCLMove, "engine.dll", "55 8B EC B8 2C 10 00 00 E8 ? ? ? ? 83");
@@ -40,6 +48,9 @@ bool CUtil_Offsets::Initialize()
 	GETPATT(m_dwSendDataGram, "engine.dll", "55 8B EC B8 ? ? ? ? E8 ? ? ? ? A1 ? ? ? ? 53 56 8B");
 	GETPATT(m_dwShutdown, "engine.dll", "55 8B EC 83 EC 10 56 8B F1 83 BE ? ? ? ? ? 0F 8C ? ? ? ?");
 	GETPATT(m_dwSendNetMsg, "engine.dll", "55 8B EC 57 8B F9 8D 8F 94 00 00 00 E8 ? ? ? ? 85 C0 75 07 B0 01 5F 5D C2 0C");
+	GETPATT(m_dwHost_ShouldRun, "engine.dll", "A1 ? ? ? ? 83 78 30 00 74 30 A1 ? ? ? ? 83 78 30 00 A1");
+	GETPATT(m_dwIsPaused, "engine.dll", "80 B9 ? ? ? ? ? 75 42");
+	GETPATT(m_dwProcessFixAngle, "engine.dll", "55 8B EC F3 0F 10 1D ? ? ? ? 83");
 
 	GETPATT(m_dwStartDrawing, "vguimatsurface.dll", "55 8B EC 64 A1 ? ? ? ? 6A FF 68 ? ? ? ? 50 64 89 25 ? ? ? ? 83 EC 14");
 	GETPATT(m_dwFinishDrawing, "vguimatsurface.dll", "55 8B EC 6A FF 68 ? ? ? ? 64 A1 ? ? ? ? 50 64 89 25 ? ? ? ? 51 56 6A 00");
@@ -50,8 +61,8 @@ bool CUtil_Offsets::Initialize()
 	if (const DWORD dwScreenSpaceFx = g_Pattern.Find("client.dll", "E8 ? ? ? ? 8B 0D ? ? ? ? 8B 01 FF 90 ? ? ? ? 83 F8 01"))
 		m_dwPerformScreenSpaceEffects = (dwScreenSpaceFx + 0x01);
 
-	if (const DWORD dwGlobalVars = g_Pattern.Find("engine.dll", "A1 ? ? ? ? 8B 11 68"))
-		m_dwGlobalVars = (dwGlobalVars + 0x08);
+	if (const DWORD dwGlobalVars = g_Pattern.Find("engine.dll", "68 ? ? ? ? 50 50 FF 12"))
+		m_dwGlobalVars = (dwGlobalVars + 0x01);
 
 	if (const DWORD dwClientState = g_Pattern.Find("engine.dll", "68 ? ? ? ? E8 ? ? ? ? 83 C4 08 5F 5E 5B 5D C3"))
 		m_dwClientState = (dwClientState + 0x01);
@@ -67,6 +78,15 @@ bool CUtil_Offsets::Initialize()
 
 	if (const DWORD dwAttribHookValue = g_Pattern.Find("client.dll", "E8 ? ? ? ? 83 C4 14 D9 E8"))
 		m_dwAttribHookValue = (dwAttribHookValue + 0x1);
+
+	if (const DWORD dwnet_time = g_Pattern.Find("engine.dll", "DD 1D ? ? ? ? 5D"))
+		m_dwnet_time = (dwnet_time + 0x02);
+
+	if (const DWORD dwhost_frametime_unbounded = g_Pattern.Find("engine.dll", "D9 05 ? ? ? ? DE C2"))
+		m_dwhost_frametime_unbounded = (dwhost_frametime_unbounded + 0x02);
+
+	if (const DWORD dwhost_frametime_stddeviation = g_Pattern.Find("engine.dll", "D9 1D ? ? ? ? 0F 85"))
+		m_dwhost_frametime_stddeviation = (dwhost_frametime_stddeviation + 0x02);
 
 	_CHECKPATT(m_dwGlobalVars == 0x0);
 	_CHECKPATT(m_dwPredictionRandomSeed == 0x0);

@@ -51,6 +51,20 @@ public:
 	DWORD m_dwInvalidateBoneCache = 0x0;
 	DWORD m_dwSetAbsOrigin = 0x0;
 	DWORD m_dwSetAbsAngles = 0x0;
+	DWORD m_dwHost_ShouldRun = 0x0;
+	DWORD m_dwnet_time = 0x0;
+	DWORD m_dwIsPaused = 0x0;
+	DWORD m_dwAvoidPlayers = 0x0;
+	DWORD m_dwEstimateAbsVelocity = 0x0;
+	DWORD m_dwProcessFixAngle = 0x0;
+	DWORD m_dwProcessMovement = 0x0;
+	DWORD m_dwCalculateMaxSpeed = 0x0;
+	DWORD m_dwTFPlayerMove = 0x0;
+	DWORD m_dwPlayerMove = 0x0;
+	DWORD m_dwFXFireBullets = 0x0;
+	DWORD m_dwhost_frametime_unbounded = 0x0;
+	DWORD m_dwhost_frametime_stddeviation = 0x0;
+	DWORD m_dwDrawViewModels = 0x0;
 };
 
 namespace U { inline CUtil_Offsets Offsets; }

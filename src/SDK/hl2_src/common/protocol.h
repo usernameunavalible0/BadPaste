@@ -54,7 +54,7 @@ enum
 
 // Largest # of commands to send in a packet
 #define NUM_NEW_COMMAND_BITS		4
-#define MAX_NEW_COMMANDS			((1 << NUM_NEW_COMMAND_BITS)-1) //22 //((1 << NUM_NEW_COMMAND_BITS)-1)
+#define MAX_NEW_COMMANDS			((1 << NUM_NEW_COMMAND_BITS)-1)
 
 // Max number of history commands to send ( 2 by default ) in case of dropped packets
 #define NUM_BACKUP_COMMAND_BITS		3

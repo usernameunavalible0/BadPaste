@@ -48,6 +48,12 @@ bool CGlobal_Hooks::Initialize()
 	KeyValues_SetInt::Initialize();
 	CTFPlayerShared_InCond::Initialize();
 	CTFViewModel_CalcViewModelView::Initialize();
+	CTFPlayer_AvoidPlayers::Initialize();
+	CClientState_ProcessFixAngle::Initialize();
+	CTFGameMovement_ProcessMovement::Initialize();
+	CTFGameMovement_PlayerMove::Initialize();
+	FX_FireBullets::Initialize();
+	CViewRender_DrawViewModels::Initialize();
 	WndProc::Initialize();
 
 	if (MH_EnableHook(MH_ALL_HOOKS) != MH_STATUS::MH_OK)

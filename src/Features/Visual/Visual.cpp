@@ -43,8 +43,8 @@ void CFeatures_Visual::Thirdperson(C_TFPlayer* pLocal)
 	{
 		I::ClientPrediction->SetLocalViewAngles(g_Globals.m_vRealViewAngles);
 
-		//if (CMultiPlayerAnimState* pAnimState = pLocal->GetAnimState())
-		//	pAnimState->m_flCurrentFeetYaw = g_Globals.m_vRealViewAngles.y;
+		if (CMultiPlayerAnimState* pAnimState = pLocal->GetAnimState())
+			pAnimState->m_flCurrentFeetYaw = g_Globals.m_vRealViewAngles.y;
 	}
 }
 

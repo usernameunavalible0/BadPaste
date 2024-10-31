@@ -858,7 +858,13 @@ void CFeatures_Menu::Run()
 
 				GroupBoxStart();
 				{
-
+					CheckBox(Vars::Aimbot::Projectile::Active, L"Projectile master switch");
+					CheckBox(Vars::Aimbot::Projectile::PerformanceMode, L"Only target enemy closest to crosshair");
+					ComboBox(Vars::Aimbot::Projectile::SortMethod, { { 0, L"FOV" }, { 1, L"Distance" } });
+					ComboBox(Vars::Aimbot::Projectile::AimMethod, { { 0, L"Normal" }, { 1, L"Silent" } });
+					ComboBox(Vars::Aimbot::Projectile::AimPosition, { { 0, L"Body" }, { 1, L"Feet" }, { 2, L"Auto" } });
+					InputFloat(Vars::Aimbot::Projectile::AimFOV, 1.0f, 180.0f, 1.0f, L"%.0f");
+					CheckBox(Vars::Aimbot::Projectile::UseMovesim, L"Tell the aimbot whether to use movesim prediction path or extrapolation");
 				}
 				GroupBoxEnd(L"Projectile", 160);
 
@@ -1050,6 +1056,12 @@ void CFeatures_Menu::Run()
 					}
 					GroupBoxEnd(L"World", 185);
 
+					GroupBoxStart();
+					{
+						CheckBox(Vars::Glow::Viewmodel::Enabled, L"Viewmodel glow toggle");
+					}
+					GroupBoxEnd(L"Viewmodel", 185);
+
 					break;
 				}
 
@@ -1087,11 +1099,16 @@ void CFeatures_Menu::Run()
 					GroupBoxStart();
 					{
 						CheckBox(Vars::Visual::ViewModelSway, L"Slight weapon sway when moving camera");
-						CheckBox(Vars::Visual::ViewModel_Active, L"Toggle to enable viewmodel offsets");
+						CheckBox(Vars::Visual::ViewModelOffset, L"Toggle to enable viewmodel offsets");
 						InputInt(Vars::Visual::ViewModel_Position_Offset_Forward, -30, 30);
 						InputInt(Vars::Visual::ViewModel_Position_Offset_Right, -30, 30);
 						InputInt(Vars::Visual::ViewModel_Position_Offset_Up, -30, 30);
+						CheckBox(Vars::Visual::ViewModelAngle, L"Toggle to enable viewmodel offsets");
+						InputInt(Vars::Visual::ViewModelAnglePitch, -30, 30);
+						InputInt(Vars::Visual::ViewModelAngleYaw, -30, 30);
+						InputInt(Vars::Visual::ViewModelAngleRoll, -89, 89);
 					}
+					GroupBoxEnd(L"Viewmodel", 190);
 
 					break;
 				}
@@ -1112,6 +1129,8 @@ void CFeatures_Menu::Run()
 					CheckBox(Vars::Misc::ForceMeleeCrits, L"Forces criticals on melee weapons");
 					CheckBox(Vars::Misc::Bunnyhop, L"Automatic jumping");
 					CheckBox(Vars::Misc::BypassPure, L"Bypass sv_pure");
+					CheckBox(Vars::Misc::NoPush, L"Don't let teammates push you around.");
+					CheckBox(Vars::Misc::NoServerChangeAngle, L"Don't let the server change your angles");
 				}
 				GroupBoxEnd(L"Main", 160);
 
@@ -1120,9 +1139,11 @@ void CFeatures_Menu::Run()
 					CheckBox(Vars::AntiHack::AntiAim::Enabled, L"Anti-Aim master switch");
 					ComboBox(Vars::AntiHack::AntiAim::Pitch, { { 0, L"None" }, { 1, L"Up" }, { 2, L"Down" }, { 3, L"Fake Up" }, { 4, L"Fake Down" } });
 					ComboBox(Vars::AntiHack::AntiAim::YawReal, { { 0, L"None" }, { 1, L"Left" }, { 2, L"Right" }, { 3, L"Backwards" }, { 4, L"Emotion" }, { 5, L"Random" } });
-					ComboBox(Vars::AntiHack::AntiAim::YawFake, { { 0, L"None" }, { 1, L"Left" }, { 2, L"Right" }, { 3, L"Backwards" }, { 4, L"Random" } });
+					ComboBox(Vars::AntiHack::AntiAim::YawFake, { { 0, L"None" }, { 1, L"Left" }, { 2, L"Right" }, { 3, L"Backwards" }, { 4, L"Random" }, { 5, L"Spin" } });
+					InputFloat(Vars::AntiHack::AntiAim::FakeYawSpinSpeed, 0.1f, 35.f, 0.1f, L"%.1f");
 					CheckBox(Vars::AntiHack::AntiAim::DrawFakeAngles, L"Toggle Anti-Aim Fake Angle Chams");
 					CheckBox(Vars::AntiHack::Fakelag, L"Fakelag master switch");
+					InputInt(Vars::AntiHack::FakelagAmount, 1, 14);
 				}
 				GroupBoxEnd(L"Anti-Aim", 160);
 
@@ -1132,6 +1153,7 @@ void CFeatures_Menu::Run()
 					ComboBox(Vars::AntiHack::Resolver::Mode, { { 0, L"Auto" }, { 1, L"Manual" } });
 					InputFloat(Vars::AntiHack::Resolver::ManualPitch, -89.f, 89.f);
 					InputFloat(Vars::AntiHack::Resolver::ManualYaw, -180.f, 180.f);
+					CheckBox(Vars::AntiHack::Resolver::ResolverSpew, L"Resolver information");
 				}
 				GroupBoxEnd(L"Resolver", 160);
 
@@ -1149,6 +1171,7 @@ void CFeatures_Menu::Run()
 						uint32 value = std::wcstoul(friendid.c_str(), &endPtr, 10);
 						Vars::Misc::FollowFriendID.m_Var = value;
 					}
+					CheckBox(Vars::Auto::AutoDisguise, L"Auto Disguise when Spy");
 				}
 				GroupBoxEnd(L"Auto", 180);
 

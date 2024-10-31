@@ -21,9 +21,13 @@ public:
 	void Render();
 
 	bool IsDrawing() const { return m_bIsDrawing; }
+	void SetView(const CViewSetup& viewRender) { m_viewRender = viewRender; }
+	void SetFrustum(VPlane* Frustum) { m_Frustum = Frustum; }
 
 private:
 	bool m_bIsDrawing;
+	CViewSetup m_viewRender;
+	VPlane* m_Frustum;
 
 private:
 	void DrawModel(IClientEntity* pEntity);

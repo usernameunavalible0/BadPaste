@@ -16,6 +16,7 @@
 #include "../../shared/tf/tf_shareddefs.h"
 
 class C_TFWeaponBase;
+class C_TFWeaponBaseGun;
 class CMultiPlayerAnimState;
 
 enum EBonusEffectFilter_t
@@ -179,7 +180,7 @@ public:
 	M_NETVAR(m_flHolsterAnimTime, float, "CTFPlayer", "m_flHolsterAnimTime");
 	M_NETVAR(m_hSwitchTo, EHANDLE, "CTFPlayer", "m_hSwitchTo");
 	M_NETVAR(m_hItem, EHANDLE, "CTFPlayer", "m_hItem");
-	M_NETVAR(m_angEyeAngles, Vector, "CTFPlayer", "m_angEyeAngles[0]");
+	M_NETVAR(m_angEyeAngles, QAngle , "CTFPlayer", "m_angEyeAngles[0]");
 	M_NETVAR(m_bIsCoaching, bool, "CTFPlayer", "m_bIsCoaching");
 	M_NETVAR(m_hCoach, EHANDLE, "CTFPlayer", "m_hCoach");
 	M_NETVAR(m_hStudent, EHANDLE, "CTFPlayer", "m_hStudent");
@@ -237,6 +238,11 @@ public:
 	inline CMultiPlayerAnimState* GetAnimState()
 	{
 		return *reinterpret_cast<CMultiPlayerAnimState**>(reinterpret_cast<DWORD>(this) + 0x1D88);
+	}
+
+	inline float TeamFortress_CalculateMaxSpeed(bool bIgnoreSpecialAbility = false)
+	{
+		return reinterpret_cast<float(__thiscall*)(void*, bool)>(U::Offsets.m_dwCalculateMaxSpeed)(this, bIgnoreSpecialAbility);
 	}
 
 	//Credits to KGB
@@ -324,6 +330,13 @@ public:
 			|| InCond(TF_COND_STEALTHED_BLINK)
 			|| InCond(TF_COND_STEALTHED_USER_BUFF)
 			|| InCond(TF_COND_STEALTHED_USER_BUFF_FADING);
+	}
+
+	inline bool IsDisguised()
+	{
+		return InCond(TF_COND_DISGUISED)
+			|| InCond(TF_COND_DISGUISING)
+			|| InCond(TF_COND_DISGUISE_WEARINGOFF);
 	}
 
 	inline bool IsZoomed()

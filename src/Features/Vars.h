@@ -110,6 +110,17 @@ namespace Vars
 			};
 		}
 
+		namespace Projectile
+		{
+			inline CVar<bool> Active{ true, L"Active" };
+			inline CVar<bool> PerformanceMode{ true, L"Performance Mode" };
+			inline CVar<int> SortMethod{ 0, L"Sort Method" };	//0 - FOV,		1 - Distance
+			inline CVar<int> AimMethod{ 1, L"Aim Method" };	//0 - Normal,	1 - Silent
+			inline CVar<int> AimPosition{ 2, L"Aim Position" };	//0 - Body,		1 - Feet,	2 - Auto
+			inline CVar<float> AimFOV{ 25.0f, L"Aim FOV" };
+			inline CVar<bool> UseMovesim{ true, L"Use Movesim" };
+		}
+
 		namespace Melee
 		{
 			inline CVar<bool> Enabled{true, L"Enabled"};
@@ -126,6 +137,7 @@ namespace Vars
 	{
 		inline CVar<int> AutoBackstab{2, L"Auto Backstab"}; //0 = Disabled, 1 = Legit, 2 = Rage
 		inline CVar<int> AutoHeal{ 1, L"Auto Heal" }; //0=Disabled, 1=All, 2=Friends Only
+		inline CVar<bool> AutoDisguise{ true, L"Auto Disguise" };
 	}
 
 	namespace AntiHack
@@ -136,6 +148,7 @@ namespace Vars
 			inline CVar<int> Pitch{ 3, L"Pitch" };
 			inline CVar<int> YawReal{ 1, L"Yaw Real" };
 			inline CVar<int> YawFake{ 2, L"Yaw Fake" };
+			inline CVar<float> FakeYawSpinSpeed{ 10.f, L"Fake Yaw Spin Speed" };
 			inline CVar<bool> DrawFakeAngles{ true, L"Draw Fake Angles" };
 		}
 
@@ -145,10 +158,12 @@ namespace Vars
 			inline CVar<int> Mode{ 1, L"Mode" }; //0=Auto,1=Manual
 			inline CVar<float> ManualPitch{ 0.0f, L"Real Pitch" };
 			inline CVar<float> ManualYaw{ 0.0f, L"Real Yaw" };
+			inline CVar<bool> ResolverSpew{ false, L"Resolver Spew" };
 		}
 
 		inline CVar<bool> Fakelag{ false, L"Fakelag" };
 		inline CVar<int> FakelagAmount{ 14, L"Fakelag Amount" };
+		inline CVar<bool> DrawFakeLag{ true, L"Draw Fakelag" };
 	}
 
 	namespace ESP
@@ -190,11 +205,17 @@ namespace Vars
 		inline CVar<bool> Thirdperson{ true, L"Enabled"};
 		inline CVar<int> ThirdpersonKey{ 'B', L"Toggle Key"};
 		inline CVar<bool> ViewModelSway{ true, L"View Model Sway"};
-		inline CVar<bool> ViewModel_Active{ true, L"ViewModel Offset"};
+		inline CVar<bool> ViewModelOffset{ true, L"ViewModel Offset"};
 		inline CVar<int> ViewModel_Position_Offset_Forward{ 0, L"Forward/Backward Offset"};
 		inline CVar<int> ViewModel_Position_Offset_Right{ 0, L"Left/Right Offset"};
 		inline CVar<int> ViewModel_Position_Offset_Up{ 0, L"Up/Down Offset"};
+		inline CVar<bool> ViewModelAngle{ true, L"ViewModel Angle" };
+		inline CVar<int> ViewModelAnglePitch{ 0, L"Forward/Backward Offset" };
+		inline CVar<int> ViewModelAngleYaw{ 0, L"Left/Right Offset" };
+		inline CVar<int> ViewModelAngleRoll{ 0, L"Up/Down Offset" };
 		inline CVar<bool> ModulateWorld{ false, L"ModulateWorld"};
+		inline CVar<float> ModelScale{ 2.3f, L"Player Model Scale" };
+		inline CVar<int> AimFOVAlpha{ 17, L"Aim FOV Alpha" };
 	}
 
 	namespace Chams
@@ -252,9 +273,14 @@ namespace Vars
 			inline CVar<bool> Enabled{ true, L"Enabled" };
 			inline CVar<int> Style{ 0, L"Style" }; // 0=Blur
 			inline CVar<bool> IgnoreTeam{ true, L"Ignore Team" };
-			inline CVar<float> BloomAmount{ 6.0f, L"Bloom Amount" };
+			inline CVar<float> BloomAmount{ 4.0f, L"Bloom Amount" };
 			inline CVar<int> GlowColorMode{ 1, L"Glow Color Mode" }; //0=Custom,1=Rainbow,2=Health
 			inline Color GlowColor = Color(255, 255, 255, 255);
+		}
+
+		namespace Viewmodel
+		{
+			inline CVar<bool> Enabled{ true, L"Enabled" };
 		}
 
 		namespace World
@@ -268,8 +294,11 @@ namespace Vars
 	{
 		inline CVar<bool> Bunnyhop{ true, L"Bunnyhop" };
 		inline CVar<bool> BypassPure{ true, L"Bypass Pure" };
+		inline CVar<bool> NoPush{ true, L"NoPush" };
 		inline CVar<bool> ForceMeleeCrits{ true, L"Force Melee Crits" };
 		inline CVar<int> FollowFriendID{ 0, L"FollowBot FriendID" };
+		inline CVar<bool> TauntControl{ true, L"Taunt Control" };
+		inline CVar<bool> NoServerChangeAngle{ true, L"Prevent Server Angle Change" };
 
 		namespace CL_Move
 		{

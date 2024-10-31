@@ -68,8 +68,9 @@ void CFeatures_Glow::Render()
         return;
 
     IMatRenderContext* pRenderContext = I::MaterialSystem->GetRenderContext();
+    C_TFPlayer* pLocal = G::EntityCache.GetLocal();
 
-    if (!pRenderContext)
+    if (!pRenderContext || !pLocal)
         return;
 
     // Setup
@@ -95,9 +96,13 @@ void CFeatures_Glow::Render()
         float flSavedBlend = I::RenderView->GetBlend();
         I::RenderView->SetBlend(0.0f);
         pRenderContext->OverrideDepthEnable(true, false);
+        pRenderContext->ClearBuffers(false, false, true);
 
-        for (IClientEntity* pEntity : G::EntityCache.GetGroup(Vars::Glow::Players::IgnoreTeam.m_Var ? EEntGroup::PLAYERS_ENEMIES : EEntGroup::PLAYERS_ALL))
-            DrawModel(pEntity);
+        if (!g_Globals.m_bIsDrawingViewmodels)
+        {
+            for (IClientEntity* pEntity : G::EntityCache.GetGroup(Vars::Glow::Players::IgnoreTeam.m_Var ? EEntGroup::PLAYERS_ENEMIES : EEntGroup::PLAYERS_ALL))
+                DrawModel(pEntity);
+        }
 
         //TODO: We should really cache these
         for (int n = 1; n < (g_Globals.m_nMaxEntities + 1); n++)
@@ -115,25 +120,43 @@ void CFeatures_Glow::Render()
             if (!pCC)
                 continue;
 
-            if (pCC->GetTFClientClass() == ETFClientClass::CBaseAnimating)
+            if (!g_Globals.m_bIsDrawingViewmodels)
             {
-                C_BaseAnimating* pPickup = pEntity->As<C_BaseAnimating*>();
+                if (pCC->GetTFClientClass() == ETFClientClass::CBaseAnimating)
+                {
+                    C_BaseAnimating* pPickup = pEntity->As<C_BaseAnimating*>();
 
-                const int nModelIndex = pPickup->m_nModelIndex();
+                    const int nModelIndex = pPickup->m_nModelIndex();
 
-                if ((Vars::Glow::World::Healthpacks.m_Var && F::ESP.IsHealth(nModelIndex)) || (Vars::Glow::World::Ammopacks.m_Var && F::ESP.IsAmmo(nModelIndex)))
-                    pPickup->DrawModel(STUDIO_RENDER | STUDIO_NOSHADOWS);
+                    if ((Vars::Glow::World::Healthpacks.m_Var && F::ESP.IsHealth(nModelIndex)) || (Vars::Glow::World::Ammopacks.m_Var && F::ESP.IsAmmo(nModelIndex)))
+                        pPickup->DrawModel(STUDIO_RENDER | STUDIO_NOSHADOWS);
+                }
+                else if (Vars::Glow::World::Ammopacks.m_Var && pCC->GetTFClientClass() == ETFClientClass::CTFAmmoPack)
+                    pEntity->DrawModel(STUDIO_RENDER | STUDIO_NOSHADOWS);
+                else if (pCC->GetTFClientClass() == ETFClientClass::CTFPlayer)
+                {
+                    C_TFPlayer* pPlayer = pEntity->As<C_TFPlayer*>();
+
+                    if (pPlayer->deadflag() || !pPlayer->IsPlayerOnSteamFriendsList())
+                        continue;
+
+                    DrawModel(pPlayer);
+                }
             }
-            else if (Vars::Glow::World::Ammopacks.m_Var && pCC->GetTFClientClass() == ETFClientClass::CTFAmmoPack)
-                pEntity->DrawModel(STUDIO_RENDER | STUDIO_NOSHADOWS);
-            else if (pCC->GetTFClientClass() == ETFClientClass::CTFPlayer)
+            else if (Vars::Glow::Viewmodel::Enabled.m_Var && pCC->GetTFClientClass() == ETFClientClass::CTFViewModel && !I::Input->CAM_IsThirdPerson())
             {
-                C_TFPlayer* pPlayer = pEntity->As<C_TFPlayer*>();
+                CViewSetup viewModelSetup(m_viewRender);
+                viewModelSetup.zNear = m_viewRender.zNearViewmodel;
+                viewModelSetup.zFar = m_viewRender.zFarViewmodel;
+                viewModelSetup.fov = m_viewRender.fovViewmodel;
+                viewModelSetup.m_flAspectRatio = I::EngineClient->GetScreenAspectRatio();
+                ITexture* pRTColor = NULL;
+                ITexture* pRTDepth = NULL;
+                I::RenderView->Push3DView(viewModelSetup, 0, pRTColor, m_Frustum, pRTDepth);
 
-                if (pPlayer->deadflag() || !pPlayer->IsPlayerOnSteamFriendsList())
-                    continue;
+                pEntity->DrawModel(STUDIO_RENDER | STUDIO_NOSHADOWS);
 
-                DrawModel(pPlayer);
+                I::RenderView->PopView(m_Frustum);
             }
         }
 
@@ -151,7 +174,7 @@ void CFeatures_Glow::Render()
             pRenderContext->SetRenderTarget(m_pRtQuarterSize0);
             pRenderContext->Viewport(0, 0, g_Globals.m_nScreenWidht, g_Globals.m_nScreenHeight);
             pRenderContext->ClearColor3ub(0, 0, 0);
-            pRenderContext->ClearBuffers(true, false, false);
+            pRenderContext->ClearBuffers(true, false, true);
 
             I::ModelRender->ForcedMaterialOverride(m_pMatGlowColor);
 
@@ -182,18 +205,21 @@ void CFeatures_Glow::Render()
                 I::RenderView->SetColorModulation(&vGlowColor[0]);
             }
 
-            for (IClientEntity* pEntity : G::EntityCache.GetGroup(Vars::Glow::Players::IgnoreTeam.m_Var ? EEntGroup::PLAYERS_ENEMIES : EEntGroup::PLAYERS_ALL))
+            if (!g_Globals.m_bIsDrawingViewmodels)
             {
-                C_BaseEntity* pBaseEntity = pEntity->As<C_BaseEntity*>();
-                if (Vars::Glow::Players::GlowColorMode.m_Var == 2 && pBaseEntity)
+                for (IClientEntity* pEntity : G::EntityCache.GetGroup(Vars::Glow::Players::IgnoreTeam.m_Var ? EEntGroup::PLAYERS_ENEMIES : EEntGroup::PLAYERS_ALL))
                 {
-                    I::RenderView->SetBlend(1.0f);
-                    Color clrHealth = G::Util.GetHealthColor(pBaseEntity->GetHealth(), pBaseEntity->GetMaxHealth());
-                    Vector vColorHealth = Vector(clrHealth.r() / 255.f, clrHealth.g() / 255.f, clrHealth.b() / 255.f);
-                    I::RenderView->SetColorModulation(&vColorHealth[0]);
-                }
+                    C_BaseEntity* pBaseEntity = pEntity->As<C_BaseEntity*>();
+                    if (Vars::Glow::Players::GlowColorMode.m_Var == 2 && pBaseEntity)
+                    {
+                        I::RenderView->SetBlend(1.0f);
+                        Color clrHealth = G::Util.GetHealthColor(pBaseEntity->GetHealth(), pBaseEntity->GetMaxHealth());
+                        Vector vColorHealth = Vector(clrHealth.r() / 255.f, clrHealth.g() / 255.f, clrHealth.b() / 255.f);
+                        I::RenderView->SetColorModulation(&vColorHealth[0]);
+                    }
 
-                DrawModel(pEntity);
+                    DrawModel(pEntity);
+                }
             }
 
             //TODO: We should really cache these
@@ -214,42 +240,60 @@ void CFeatures_Glow::Render()
 
                 static const float fWhite[3] = { 1.f, 1.f, 1.f };
 
-                if (pCC->GetTFClientClass() == ETFClientClass::CBaseAnimating)
+                if (!g_Globals.m_bIsDrawingViewmodels)
                 {
-                    C_BaseAnimating* pPickup = pEntity->As<C_BaseAnimating*>();
-
-                    const int nModelIndex = pPickup->m_nModelIndex();
-
-                    if (Vars::Glow::World::Healthpacks.m_Var && F::ESP.IsHealth(nModelIndex))
+                    if (pCC->GetTFClientClass() == ETFClientClass::CBaseAnimating)
                     {
-                        static const float fGreen[3] = { 0.f, 1.f, 0.f };
-                        I::RenderView->SetColorModulation(fGreen);
-                        pPickup->DrawModel(STUDIO_RENDER | STUDIO_NOSHADOWS);
-                    }
+                        C_BaseAnimating* pPickup = pEntity->As<C_BaseAnimating*>();
 
-                    if (Vars::Glow::World::Ammopacks.m_Var && F::ESP.IsAmmo(nModelIndex))
+                        const int nModelIndex = pPickup->m_nModelIndex();
+
+                        if (Vars::Glow::World::Healthpacks.m_Var && F::ESP.IsHealth(nModelIndex))
+                        {
+                            static const float fGreen[3] = { 0.f, 1.f, 0.f };
+                            I::RenderView->SetColorModulation(fGreen);
+                            pPickup->DrawModel(STUDIO_RENDER | STUDIO_NOSHADOWS);
+                        }
+
+                        if (Vars::Glow::World::Ammopacks.m_Var && F::ESP.IsAmmo(nModelIndex))
+                        {
+                            I::RenderView->SetColorModulation(fWhite);
+                            pPickup->DrawModel(STUDIO_RENDER | STUDIO_NOSHADOWS);
+                        }
+                    }
+                    else if (Vars::Glow::World::Ammopacks.m_Var && pCC->GetTFClientClass() == ETFClientClass::CTFAmmoPack)
                     {
                         I::RenderView->SetColorModulation(fWhite);
-                        pPickup->DrawModel(STUDIO_RENDER | STUDIO_NOSHADOWS);
+                        pEntity->DrawModel(STUDIO_RENDER | STUDIO_NOSHADOWS);
+                    }
+                    else if (pCC->GetTFClientClass() == ETFClientClass::CTFPlayer)
+                    {
+                        //Shouldetn we use entity cache??
+                        C_TFPlayer* pPlayer = pEntity->As<C_TFPlayer*>();
+
+                        if (pPlayer->deadflag() || !pPlayer->IsPlayerOnSteamFriendsList())
+                            continue;
+
+                        static const float fTeal[3] = { 0.f, 1.f, 1.f };
+                        I::RenderView->SetColorModulation(fTeal);
+
+                        DrawModel(pPlayer);
                     }
                 }
-                else if (Vars::Glow::World::Ammopacks.m_Var && pCC->GetTFClientClass() == ETFClientClass::CTFAmmoPack)
+                else if (Vars::Glow::Viewmodel::Enabled.m_Var && pCC->GetTFClientClass() == ETFClientClass::CTFViewModel && !I::Input->CAM_IsThirdPerson())
                 {
-                    I::RenderView->SetColorModulation(fWhite);
+                    CViewSetup viewModelSetup(m_viewRender);
+                    viewModelSetup.zNear = m_viewRender.zNearViewmodel;
+                    viewModelSetup.zFar = m_viewRender.zFarViewmodel;
+                    viewModelSetup.fov = m_viewRender.fovViewmodel;
+                    viewModelSetup.m_flAspectRatio = I::EngineClient->GetScreenAspectRatio();
+                    ITexture* pRTColor = NULL;
+                    ITexture* pRTDepth = NULL;
+                    I::RenderView->Push3DView(viewModelSetup, 0, pRTColor, m_Frustum, pRTDepth);
+
                     pEntity->DrawModel(STUDIO_RENDER | STUDIO_NOSHADOWS);
-                }
-                else if (pCC->GetTFClientClass() == ETFClientClass::CTFPlayer)
-                {
-                    //Shouldetn we use entity cache??
-                    C_TFPlayer* pPlayer = pEntity->As<C_TFPlayer*>();
 
-                    if (pPlayer->deadflag() || !pPlayer->IsPlayerOnSteamFriendsList())
-                        continue;
-
-                    static const float fTeal[3] = { 0.f, 1.f, 1.f };
-                    I::RenderView->SetColorModulation(fTeal);
-
-                    DrawModel(pPlayer);
+                    I::RenderView->PopView(m_Frustum);
                 }
             }
 
@@ -282,7 +326,7 @@ void CFeatures_Glow::Render()
                 s_bFirstPass = false;
                 SetRenderTargetAndViewPort(m_pRtQuarterSize1, m_pRtQuarterSize1->GetActualWidth(), m_pRtQuarterSize1->GetActualHeight());
                 pRenderContext->ClearColor3ub(0, 0, 0);
-                pRenderContext->ClearBuffers(true, false, false);
+                pRenderContext->ClearBuffers(true, false, true);
             }
 
             // Set the viewport

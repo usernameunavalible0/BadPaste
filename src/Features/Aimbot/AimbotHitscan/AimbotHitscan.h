@@ -11,8 +11,8 @@ private:
 	void Aim(C_TFPlayer* pLocal, CUserCmd* cmd, QAngle& vAngle);
 	const ESortMethod GetSortMethod();
 	bool ShouldFire(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CUserCmd* cmd, const Target_t& Target);
-	bool GetTargets(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon);
-	bool GetTarget(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, Target_t& Out);
+	bool GetTargets(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CUserCmd* cmd);
+	bool GetTarget(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CUserCmd* cmd, Target_t& Out);
 };
 
 namespace A { inline CAimbot_Hitscan Hitscan; }

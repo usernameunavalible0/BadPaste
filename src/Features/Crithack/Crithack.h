@@ -6,7 +6,9 @@ class CFeatures_Crithack
 public:
 	void Run(C_TFWeaponBase* pWeapon, CUserCmd* cmd);
 
-public:
+	inline void Purge() { m_CritTicks.Purge(); }
+
+private:
 	//NOTE: If you dont have CUtlVector avalible to you you can use std::vector instead
 	CUtlVector<int> m_CritTicks;
 };

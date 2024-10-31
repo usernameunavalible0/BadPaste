@@ -30,7 +30,7 @@ public:
 	virtual void	SetDataRate(float rate) = 0;
 	virtual bool	RegisterMessage(INetMessage* msg) = 0;
 	virtual bool	StartStreaming(unsigned int challengeNr) = 0;
-	virtual void	ResetStreaming(void) = 0;
+	//virtual void	ResetStreaming(void) = 0;
 	virtual void	SetTimeout(float seconds) = 0;
 	virtual void	SetDemoRecorder(IDemoRecorder* recorder) = 0;
 	virtual void	SetChallengeNr(unsigned int chnr) = 0;
@@ -40,7 +40,7 @@ public:
 	virtual void	Shutdown(const char* reason) = 0;
 
 	virtual void	ProcessPlayback(void) = 0;
-	virtual bool	ProcessStream(void) = 0;
+	//virtual bool	ProcessStream(void) = 0;
 	virtual void	ProcessPacket(struct netpacket_s* packet, bool bHasHeader) = 0;
 
 	virtual bool	SendNetMsg(INetMessage& msg, bool bForceReliable = false, bool bVoice = false) = 0;
@@ -84,6 +84,24 @@ public:
 	virtual int		GetMaxRoutablePayloadSize() = 0;
 
 	virtual int		GetProtocolVersion() = 0;
+
+	bool		m_bProcessingMessages;
+	bool		m_bClearedDuringProcessing;
+	bool		m_bShouldDelete;
+
+	// last send outgoing sequence number
+	int			m_nOutSequenceNr;
+	// last received incoming sequnec number
+	int			m_nInSequenceNr;
+	// last received acknowledge outgoing sequnce number
+	int			m_nOutSequenceNrAck;
+
+	// state of outgoing reliable data (0/1) flip flop used for loss detection
+	int			m_nOutReliableState;
+	// state of incoming reliable data
+	int			m_nInReliableState;
+
+	int			m_nChokedPackets;	//number of choked packets
 };
 
 #endif // INETCHANNEL_H

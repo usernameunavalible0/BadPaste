@@ -1,5 +1,5 @@
 #include "AimbotMelee.h"
-#include "../../Features/Backtrack/Backtrack.h"
+#include "../../Backtrack/Backtrack.h"
 #include "../../Vars.h"
 
 void CAimbot_Melee::Run(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CUserCmd* cmd)
@@ -13,6 +13,9 @@ void CAimbot_Melee::Run(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CUserCmd* c
 	if (!pMelee)
 		return;
 
+	if (GetSortMethod() == ESortMethod::FOV)
+		g_Globals.m_flCurAimFOV = Vars::Aimbot::Melee::AimFOV.m_Var;
+
 	Target_t Target = {};
 
 	const bool bShouldAim = (Vars::Aimbot::Global::AimKey.m_Var == VK_LBUTTON ? (cmd->buttons & IN_ATTACK) : A::Global.IsKeyDown());
@@ -20,7 +23,7 @@ void CAimbot_Melee::Run(C_TFPlayer* pLocal, C_TFWeaponBase* pWeapon, CUserCmd* c
 	if (!bShouldAim)
 		return;
 
-	if (!GetTarget(pLocal, pMelee, Target))
+	if (!GetTarget(pLocal, pMelee, cmd, Target))
 		return;
 
 	if (Vars::Aimbot::Global::AutoShoot.m_Var)
@@ -89,9 +92,6 @@ bool CAimbot_Melee::GetTargets(C_TFPlayer* pLocal, C_TFWeaponBaseMelee* pWeapon)
 {
 	const ESortMethod SortMethod = GetSortMethod();
 
-	if (SortMethod == ESortMethod::FOV)
-		g_Globals.m_flCurAimFOV = Vars::Aimbot::Melee::AimFOV.m_Var;
-
 	A::Global.m_vecTargets.RemoveAll();
 
 	Vector vecSrc = pLocal->Weapon_ShootPosition();
@@ -157,22 +157,26 @@ bool CAimbot_Melee::GetTargets(C_TFPlayer* pLocal, C_TFWeaponBaseMelee* pWeapon)
 	return !A::Global.m_vecTargets.IsEmpty();
 }
 
-bool CAimbot_Melee::GetTarget(C_TFPlayer* pLocal, C_TFWeaponBaseMelee* pWeapon, Target_t& Out)
+bool CAimbot_Melee::GetTarget(C_TFPlayer* pLocal, C_TFWeaponBaseMelee* pWeapon, CUserCmd* cmd, Target_t& Out)
 {
 	if (!GetTargets(pLocal, pWeapon))
 		return false;
 
 	A::Global.SortTargets(GetSortMethod());
 	
-	Vector vecSrc = pLocal->Weapon_ShootPosition();
+	const Vector vecSrc = pLocal->Weapon_ShootPosition();
 
 	for (Target_t& Target : A::Global.m_vecTargets)
 	{
 		if (Vars::Aimbot::Melee::RangeCheck.m_Var)
 		{
 			trace_t tr;
-			if (!pWeapon->DoSwingTraceInternal(tr, NULL, Target.m_vAngleTo))
-				continue;
+			if (pWeapon->DoSwingTraceInternal(tr, NULL, Target.m_vAngleTo))
+			{
+				if (!tr.m_pEnt || tr.m_pEnt != Target.m_pEntity)
+					continue;
+			}
+			else continue;
 		}
 		else
 		{

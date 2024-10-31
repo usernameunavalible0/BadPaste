@@ -443,6 +443,11 @@ public:
 		reinterpret_cast<void(__thiscall*)(void*, const QAngle&)>(U::Offsets.m_dwSetAbsAngles)(this, angles);
 	}
 
+	inline void EstimateAbsVelocity(Vector& vel)
+	{
+		reinterpret_cast<void(__thiscall*)(void*, Vector&)>(U::Offsets.m_dwEstimateAbsVelocity)(this, vel);
+	}
+
 public:
 	inline C_BaseEntity* GetRootMoveParent()
 	{

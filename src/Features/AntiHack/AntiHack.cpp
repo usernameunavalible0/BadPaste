@@ -1,11 +1,10 @@
 #include "AntiHack.h"
-#include "../Vars.h"
 #include "../../Hooks/Hooks.h"
 #include <random>
 
 using namespace Hooks::IVModelRender_DrawModelExecute;
 
-void FixMovement(CUserCmd* pCmd, QAngle vOldAngles, float fOldSideMove, float fOldForwardMove)
+static void FixMovement(CUserCmd* pCmd, QAngle vOldAngles, float fOldSideMove, float fOldForwardMove)
 {
 	QAngle curAngs = pCmd->viewangles;
 
@@ -33,10 +32,11 @@ void FixMovement(CUserCmd* pCmd, QAngle vOldAngles, float fOldSideMove, float fO
 	pCmd->sidemove = sin(DEG2RAD(fDelta)) * fOldForwardMove + sin(DEG2RAD(fDelta + 90.0f)) * fOldSideMove;
 }
 
-void CFeatures_AntiHack::Run(CUserCmd* cmd, bool* pbSendPacket)
+void CFeatures_AntiHack::Run(CUserCmd* cmd, bool *pbSendPacket)
 {
-	g_Globals.m_vRealViewAngles = g_Globals.m_vViewAngles;
-	m_vFakeViewAngles.x = g_Globals.m_vViewAngles.x;
+	if (!Vars::AntiHack::Fakelag.m_Var || (Vars::AntiHack::Fakelag.m_Var && I::ClientState->m_NetChannel->m_nChokedPackets >= Vars::AntiHack::FakelagAmount.m_Var))
+		g_Globals.m_vRealViewAngles = g_Globals.m_vViewAngles;
+	g_Globals.m_vFakeViewAngles = g_Globals.m_vViewAngles;
 
 	if (!Vars::AntiHack::AntiAim::Enabled.m_Var)
 		return;
@@ -63,14 +63,14 @@ void CFeatures_AntiHack::Run(CUserCmd* cmd, bool* pbSendPacket)
 	switch (Vars::AntiHack::AntiAim::Pitch.m_Var) {
 	case 1: { cmd->viewangles.x = -89.0f; g_Globals.m_vRealViewAngles.x = -89.0f; break; }
 	case 2: { cmd->viewangles.x = 89.0f; g_Globals.m_vRealViewAngles.x = 89.0f; break; }
-	case 3: { cmd->viewangles.x = -271.0f; g_Globals.m_vRealViewAngles.x = 89.0f; m_vFakeViewAngles.x = -89.0f; break; }
-	case 4: { cmd->viewangles.x = 271.0f; g_Globals.m_vRealViewAngles.x = -89.0f; m_vFakeViewAngles.x = 89.0f; break; }
+	case 3: { cmd->viewangles.x = -271.0f; g_Globals.m_vRealViewAngles.x = 89.0f; g_Globals.m_vFakeViewAngles.x = -89.0f; break; }
+	case 4: { cmd->viewangles.x = 271.0f; g_Globals.m_vRealViewAngles.x = -89.0f; g_Globals.m_vFakeViewAngles.x = 89.0f; break; }
 	default: { bPitchSet = false; break; }
 	}
 
 	static bool b = false;
 
-	if (b)
+	if (Vars::AntiHack::Fakelag.m_Var ? I::ClientState->m_NetChannel->m_nChokedPackets >= Vars::AntiHack::FakelagAmount.m_Var : b)
 	{
 		switch (Vars::AntiHack::AntiAim::YawReal.m_Var) {
 		case 1: { cmd->viewangles.y += 90.0f; flYawRealOffset = 90.0f; break; }
@@ -90,27 +90,31 @@ void CFeatures_AntiHack::Run(CUserCmd* cmd, bool* pbSendPacket)
 
 		g_Globals.m_vRealViewAngles.y = cmd->viewangles.y;
 	}
-
 	else
 	{
 		switch (Vars::AntiHack::AntiAim::YawFake.m_Var) {
-		case 1: { cmd->viewangles.y += 90.0f; m_vFakeViewAngles.y = 90.0f; break; }
-		case 2: { cmd->viewangles.y -= 90.0f; m_vFakeViewAngles.y = -90.0f; break; }
-		case 3: { cmd->viewangles.y += 180.0f; m_vFakeViewAngles.y = 180.0f; break; }
-		case 4: { float flRand = I::UniformRandomStream->RandomFloat(-180.0f, 180.0f); cmd->viewangles.y += flRand; m_vFakeViewAngles.y = flRand; break; }
-		default: { bYawSet = false; break; }
+		case 1: { cmd->viewangles.y += 90.0f; break; }
+		case 2: { cmd->viewangles.y -= 90.0f; break; }
+		case 3: { cmd->viewangles.y += 180.0f; break; }
+		case 4: { const float flRand = I::UniformRandomStream->RandomFloat(-180.0f, 180.0f); cmd->viewangles.y += flRand; break; }
+		case 5: {
+			static float flYaw = cmd->viewangles.y;
+			flYaw -= Vars::AntiHack::AntiAim::FakeYawSpinSpeed.m_Var;
+			NormalizeAngle(flYaw);
+			cmd->viewangles.y = flYaw;
+			break; }
+		default: { bYawSet = false; flYawRealOffset = 0.0f; break; }
 		}
 
-		// This shit is so dumb but it works so whatever
-		m_vFakeViewAngles.y = m_vFakeViewAngles.y - flYawRealOffset;
+		g_Globals.m_vFakeViewAngles.y = cmd->viewangles.y;
 	}
 
-	*pbSendPacket = b = !b;
+	*pbSendPacket = Vars::AntiHack::Fakelag.m_Var ? I::ClientState->m_NetChannel->m_nChokedPackets >= Vars::AntiHack::FakelagAmount.m_Var : b = !b;
 	//g_Globals.m_bAAActive = bPitchSet || bYawSet;
 	FixMovement(cmd, vOldAngles, fOldSideMove, fOldForwardMove);
 }
 
-void CFeatures_AntiHack::ResolvePlayer(C_TFPlayer* pTarget)
+void CFeatures_AntiHack::ResolvePlayer(C_TFPlayer* pTarget, CUserCmd* cmd)
 {
 	if (!Vars::AntiHack::Resolver::Enabled.m_Var)
 		return;
@@ -119,6 +123,54 @@ void CFeatures_AntiHack::ResolvePlayer(C_TFPlayer* pTarget)
 	{
 		// Auto
 		// TODO!!!
+		const int ent_idx = pTarget->entindex();
+
+		if (pTarget->IsClass(TF_CLASS_SNIPER) && pTarget->IsZoomed())
+		{
+			float flCorrectedPitch;
+			if (GetPitchFromSniperDot(pTarget, flCorrectedPitch) && m_ResolverData[ent_idx-1].x != flCorrectedPitch)
+			{
+				m_ResolverData[ent_idx - 1].x = flCorrectedPitch;
+				m_PitchValid[ent_idx - 1] = true;
+
+				player_info_t pi;
+				if (Vars::AntiHack::Resolver::ResolverSpew.m_Var && I::EngineClient->GetPlayerInfo(ent_idx, &pi))
+				{
+					uchar16 szName[MAX_PLAYER_NAME_LENGTH];
+					Q_UTF8ToUTF16(UTIL_SafeName(pi.name), szName, MAX_PLAYER_NAME_LENGTH);
+					const wchar_t* szMsg = L"Resolver: Corrected pitch on player ";
+					wchar_t* szFinalMsg = new wchar_t[wcslen(szMsg) + wcslen(szName) + 1];
+					wcscpy(szFinalMsg, szMsg);
+					wcscat(szFinalMsg, szName);
+					m_ResolverOutput.AddToTail({ szFinalMsg, I::EngineClient->Time() });
+				}
+			}
+		}
+
+		if (m_OnShotData.find(ent_idx) != m_OnShotData.end() && (pTarget->m_flSimulationTime() - m_OnShotData[ent_idx].m_flSimulationTime) < 0.2f)
+		{
+			m_ResolverData[ent_idx - 1] = m_OnShotData[ent_idx].m_angRotation;
+			m_PitchValid[ent_idx - 1] = true;
+			m_YawValid[ent_idx - 1] = true;
+			cmd->tick_count = TIME_TO_TICKS(m_OnShotData[ent_idx].m_flSimulationTime) + G::Util.GetClientInterpAmount();
+			m_OnShotData.erase(ent_idx);
+		}
+
+		CMultiPlayerAnimState* pAnimState = pTarget->GetAnimState();
+
+		if (!pAnimState)
+			return;
+
+		if (m_PitchValid[ent_idx - 1])
+		{
+			pTarget->m_angEyeAngles().x = m_ResolverData[ent_idx - 1].x;
+			pAnimState->Update(pAnimState->m_flEyeYaw, m_ResolverData[ent_idx - 1].x);
+		}
+		if (m_YawValid[ent_idx - 1])
+		{
+			pTarget->m_angEyeAngles().y = m_ResolverData[ent_idx - 1].y;
+			pAnimState->Update(m_ResolverData[ent_idx - 1].y, pAnimState->m_flEyePitch);
+		}
 	}
 	else
 	{
@@ -186,10 +238,18 @@ void CFeatures_AntiHack::Render(void* ecx, void* edx, const DrawModelState_t& st
 	C_TFPlayer* pLocal = UTIL_TFPlayerByIndex(pInfo.entity_index);
 
 	//FIXME! Isnt rebuilding bone cache expensive?
-	pLocal->InvalidateBoneCache();
+	if (!Vars::AntiHack::Fakelag.m_Var || !Vars::AntiHack::DrawFakeLag.m_Var)
+	{
+		pLocal->InvalidateBoneCache();
+	}
+	else
+	{
+		if (I::ClientState->m_NetChannel->m_nChokedPackets >= Vars::AntiHack::FakelagAmount.m_Var)
+			pLocal->InvalidateBoneCache();
+	}
 
 	matrix3x4_t BoneMatrix[MAXSTUDIOBONES];
-	if (!m_MatrixHelper.Create(pLocal, m_vFakeViewAngles.x, m_vFakeViewAngles.y, BoneMatrix))
+	if (!m_MatrixHelper.Create(pLocal, g_Globals.m_vFakeViewAngles.x, g_Globals.m_vFakeViewAngles.y, BoneMatrix))
 		return;
 
 	I::ModelRender->ForcedMaterialOverride(pMatShaded);
@@ -201,7 +261,34 @@ void CFeatures_AntiHack::Render(void* ecx, void* edx, const DrawModelState_t& st
 	m_MatrixHelper.Restore(pLocal, pLocal->GetAnimState());
 }
 
-bool CFeatures_AntiHack::CFakeAngleMatrixHelper::Create(C_TFPlayer* pPlayer, float flPitch, float flYawOffset, matrix3x4_t* pMatrixOut)
+void CFeatures_AntiHack::ResolverSpew()
+{
+	if (!Vars::AntiHack::Resolver::ResolverSpew.m_Var)
+		return;
+
+	int nDrawY = 5;
+	const float flOrigAlpha = I::MatSystemSurface->DrawGetAlphaMultiplier();
+	for (int i = 0; i < m_ResolverOutput.Size(); i++)
+	{
+		auto& spew = m_ResolverOutput[i];
+		if ((I::EngineClient->Time() - spew.m_flTimeAdded) >= spew.m_flDuration)
+		{
+			m_ResolverOutput.Remove(i);
+			if (m_ResolverOutput.Size() <= 0) return;
+		}
+		else
+			I::MatSystemSurface->DrawSetAlphaMultiplier(RemapValClamped((I::EngineClient->Time() - spew.m_flTimeAdded), 0.0f, spew.m_flDuration, 1.0f, 0.0f));
+		int text_w, text_h;
+		I::MatSystemSurface->GetTextSize(G::Draw.m_Fonts.Element(G::Draw.m_Fonts.Find(FONT_MENU)).m_hFont, spew.m_szMsg, text_w, text_h);
+		G::Draw.Rect(5, nDrawY, text_w + 10, G::Draw.GetFontHeight(FONT_MENU) + Vars::Menu::SpacingY, Vars::Menu::Colors::WindowBackground);
+		G::Draw.OutlinedRect(5, nDrawY, text_w + 10, G::Draw.GetFontHeight(FONT_MENU) + Vars::Menu::SpacingY, Vars::Menu::Colors::OutlineMenu);
+		G::Draw.String(FONT_MENU, 10, nDrawY + (Vars::Menu::SpacingText / 2), Vars::Menu::Colors::Text, TXT_DEFAULT, spew.m_szMsg);
+		nDrawY += G::Draw.GetFontHeight(FONT_MENU) + (Vars::Menu::SpacingY * 2);
+		I::MatSystemSurface->DrawSetAlphaMultiplier(flOrigAlpha);
+	}
+}
+
+bool CFeatures_AntiHack::CFakeAngleMatrixHelper::Create(C_TFPlayer* pPlayer, float flPitch, float flYaw, matrix3x4_t* pMatrixOut)
 {
 	if (!pPlayer || pPlayer->deadflag())
 		return false;
@@ -220,13 +307,33 @@ bool CFeatures_AntiHack::CFakeAngleMatrixHelper::Create(C_TFPlayer* pPlayer, flo
 
 	I::GlobalVars->frametime = 0.0f;
 
-	pAnimState->m_flCurrentFeetYaw = pAnimState->m_flCurrentFeetYaw + flYawOffset;
-	pAnimState->m_flGoalFeetYaw = pAnimState->m_flGoalFeetYaw + flYawOffset;
-	pAnimState->Update(pAnimState->m_flEyeYaw + flYawOffset, flPitch);
+	if (!Vars::AntiHack::Fakelag.m_Var || !Vars::AntiHack::DrawFakeLag.m_Var)
+	{
+		pAnimState->m_flCurrentFeetYaw = flYaw;
+		pAnimState->m_flGoalFeetYaw = flYaw;
+		pAnimState->Update(flYaw, flPitch);
 
-	if (!pPlayer->SetupBones(pMatrixOut, MAXSTUDIOBONES, BONE_USED_BY_ANYTHING, I::GlobalVars->curtime)) {
-		Restore(pPlayer, pAnimState);
-		return false;
+		if (!pPlayer->SetupBones(pMatrixOut, MAXSTUDIOBONES, BONE_USED_BY_ANYTHING, I::GlobalVars->curtime)) {
+			Restore(pPlayer, pAnimState);
+			return false;
+		}
+	}
+	else
+	{
+		static matrix3x4_t OldBoneMatrix[MAXSTUDIOBONES];
+		if (I::ClientState->m_NetChannel->m_nChokedPackets >= Vars::AntiHack::FakelagAmount.m_Var)
+		{
+			pAnimState->m_flCurrentFeetYaw = flYaw;
+			pAnimState->m_flGoalFeetYaw = flYaw;
+			pAnimState->Update(flYaw, flPitch);
+
+			if (!pPlayer->SetupBones(OldBoneMatrix, MAXSTUDIOBONES, BONE_USED_BY_ANYTHING, I::GlobalVars->curtime)) {
+				Restore(pPlayer, pAnimState);
+				return false;
+			}
+		}
+
+		memcpy(pMatrixOut->Base(), OldBoneMatrix->Base(), sizeof(matrix3x4_t) * MAXSTUDIOBONES);
 	}
 
 	return true;

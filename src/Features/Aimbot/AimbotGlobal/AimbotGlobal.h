@@ -17,6 +17,7 @@ struct Target_t
 	QAngle m_vAngleTo = {};
 	float m_flFOVTo = FLT_MAX;
 	float m_flDistTo = FLT_MAX;
+	int m_nAimedHitbox = HITBOX_MAX;
 };
 
 class CAimbot_Global

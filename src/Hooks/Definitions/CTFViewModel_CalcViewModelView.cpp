@@ -6,21 +6,29 @@ DEFINE_HOOK(CTFViewModel_CalcViewModelView, void, __fastcall, void* ecx, void* e
 {
 	C_TFPlayer* pLocal = G::EntityCache.GetLocal();
 
-	if (pLocal && !pLocal->deadflag() && Vars::Visual::ViewModel_Active.m_Var)
+	if (pLocal && !pLocal->deadflag())
 	{
-		Vector vForward, vRight, vUp;
-		AngleVectors(eyeAngles, &vForward, &vRight, &vUp);
+		Vector vEyePosition = eyePosition;
 
-		Vector vEyePosition = eyePosition + (
-			(vForward * Vars::Visual::ViewModel_Position_Offset_Forward.m_Var) +
-			(vRight * Vars::Visual::ViewModel_Position_Offset_Right.m_Var) +
-			(vUp * Vars::Visual::ViewModel_Position_Offset_Up.m_Var)
-			);
+		if (Vars::Visual::ViewModelOffset.m_Var)
+		{
+			Vector vForward, vRight, vUp;
+			AngleVectors(eyeAngles, &vForward, &vRight, &vUp);
 
-		Func.Original<FN>()(ecx, edx, owner, vEyePosition, eyeAngles);
-	}
-	else
-	{
-		Func.Original<FN>()(ecx, edx, owner, eyePosition, eyeAngles);
+			vEyePosition += (
+				(vForward * Vars::Visual::ViewModel_Position_Offset_Forward.m_Var) +
+				(vRight * Vars::Visual::ViewModel_Position_Offset_Right.m_Var) +
+				(vUp * Vars::Visual::ViewModel_Position_Offset_Up.m_Var)
+				);
+		}
+
+		QAngle vEyeAngles = eyeAngles;
+
+		if (Vars::Visual::ViewModelAngle.m_Var)
+		{
+			vEyeAngles += QAngle(Vars::Visual::ViewModelAnglePitch.m_Var, Vars::Visual::ViewModelAngleYaw.m_Var, Vars::Visual::ViewModelAngleRoll.m_Var);
+		}
+
+		Func.Original<FN>()(ecx, edx, owner, vEyePosition, vEyeAngles);
 	}
 }

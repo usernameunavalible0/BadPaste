@@ -10,6 +10,11 @@ void CFeatures_Misc::Run(C_TFPlayer* pLocal, CUserCmd* cmd)
 	FollowBot(pLocal, cmd);
 
 	AntiBackstab(pLocal, cmd);
+
+	TeleportSpam(pLocal, cmd);
+
+	if (g_Globals.m_nShifted > 0 && g_Globals.m_bShouldShift)
+		AntiWarp(pLocal, cmd);
 }
 
 void CFeatures_Misc::Bunnyhop(C_TFPlayer* pLocal, CUserCmd* cmd)
@@ -109,4 +114,56 @@ void CFeatures_Misc::AntiBackstab(C_TFPlayer* pLocal, CUserCmd* cmd)
 		G::Util.FixMovement(angTo, cmd);
 		cmd->viewangles = angTo;
 	}
+}
+
+void CFeatures_Misc::TeleportSpam(C_TFPlayer* pLocal, CUserCmd* cmd)
+{
+	auto WalkTo = [&](const Vector& vecFrom, const Vector& vecTo, float flScale) -> void
+		{
+			Vector vecDelta = vecTo - vecFrom;
+
+			if (vecDelta.Length() == 0.0f)
+				return;
+
+			Vector vecDeltaMove = { vecDelta.x, vecDelta.y, 0.0f };
+			QAngle vecDeltaDir = QAngle();
+			VectorAngles(vecDeltaMove, vecDeltaDir);
+			float flYaw = DEG2RAD(vecDeltaDir.y - cmd->viewangles.y);
+			cmd->forwardmove = cosf(flYaw) * (450.0f * flScale);
+			cmd->sidemove = -sinf(flYaw) * (450.0f * flScale);
+		};
+
+	for (IClientEntity* pEntity : G::EntityCache.GetGroup(EEntGroup::BUILDINGS_TEAMMATES))
+	{
+		C_ObjectTeleporter* pTeleporter = pEntity->As<C_ObjectTeleporter*>();
+
+		if (!pTeleporter || !pTeleporter->IsAlive() || pTeleporter->m_iObjectMode() != MODE_TELEPORTER_ENTRANCE)
+			continue;
+
+		C_TFPlayer* pOwner = pTeleporter->m_hBuilder().Get()->As<C_TFPlayer*>();
+
+		if (!pOwner || pOwner->deadflag() || !pOwner->IsPlayerOnSteamFriendsList())
+			continue;
+
+		WalkTo(pLocal->m_vecOrigin(), pTeleporter->m_vecOrigin(), 1.0f);
+		return;
+	}
+}
+
+void CFeatures_Misc::AntiWarp(C_TFPlayer* pLocal, CUserCmd* cmd)
+{
+	auto WalkTo = [&](const Vector& vecFrom, const Vector& vecTo, float flScale) -> void
+		{
+			Vector vecDelta = vecTo - vecFrom;
+
+			if (vecDelta.Length() == 0.0f)
+				return;
+
+			Vector vecDeltaMove = { vecDelta.x, vecDelta.y, 0.0f };
+			QAngle vecDeltaDir = QAngle();
+			VectorAngles(vecDeltaMove, vecDeltaDir);
+			float flYaw = DEG2RAD(vecDeltaDir.y - cmd->viewangles.y);
+			cmd->forwardmove = cosf(flYaw) * (450.0f * flScale);
+			cmd->sidemove = -sinf(flYaw) * (450.0f * flScale);
+		};
 }

@@ -51,14 +51,31 @@ public:
 class CClientState //: public CBaseClientState, public CClientFrameManager
 {
 public:
+	inline bool IsActive(void) const { return m_nSignonState == SIGNONSTATE_FULL; }
+	inline bool IsConnected(void) const { return m_nSignonState >= SIGNONSTATE_CONNECTED; }
+
+	inline bool IsPaused()
+	{
+		return reinterpret_cast<bool(__thiscall*)(void*)>(U::Offsets.m_dwIsPaused)(this);
+	}
+
+public:
 	byte pad0[0x10];
 	INetChannel* m_NetChannel;
-	byte pad1[0x140];
+	byte pad1[0x11C];
+	int m_nSignonState;
+	byte pad2[0x4];
+	double m_flNextCmdTime;
+	byte pad3[0x4];
+	int m_nServerCount;
+	unsigned __int64 m_ulGameServerSteamID;
+	int m_nCurrentSequence;
 	CClockDriftMgr_pad m_ClockDriftMgr;
 	int m_nDeltaTick;
-	byte pad2[0x110];
+	byte pad4[0x218];
 	int m_nMaxClients;
-	byte pad3[0x486C];
+	byte pad5[0x4868];
+	float m_frameTime;
 	int lastoutgoingcommand;
 	int chokedcommands;
 	int last_command_ack;

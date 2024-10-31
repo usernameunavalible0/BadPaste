@@ -3,6 +3,9 @@
 
 class INetworkStringTable;
 
+inline Vector g_vShiftStartOrigin = { };
+inline Vector g_vShiftStartVelocity = { };
+
 CREATE_HOOK(CBaseEntity_BaseInterpolatePart1, U::Offsets.m_dwBaseInterpolatePart1, int, __fastcall, C_BaseEntity* pThis, void* edx, float& currentTime, Vector& oldOrigin, QAngle& oldAngles, Vector& oldVel, int& bNoMoreChanges);
 CREATE_HOOK(CBasePlayer_CalcPlayerView, U::Offsets.m_dwCalcPlayerView, void, __fastcall, C_BasePlayer* pThis, void* edx, Vector& eyeOrigin, QAngle& eyeAngles, float& fov);
 CREATE_HOOK(CL_CheckForPureServerWhitelist, U::Offsets.m_dwCLCheckForPureServerWhitelist, void, __cdecl, IFileList* &pFilesToReload);
@@ -43,6 +46,12 @@ CREATE_HOOK(CTFPlayerShared_IsPlayerDominated, U::Offsets.m_dwIsPlayerDominated,
 CREATE_HOOK(KeyValues_SetInt, U::Offsets.m_dwSetInt, void, __fastcall, void* ecx, void* edx, const char* keyName, int value);
 CREATE_HOOK(CTFPlayerShared_InCond, U::Offsets.m_dwInCond, bool, __fastcall, void* ecx, void* edx, ETFCond eCond);
 CREATE_HOOK(CTFViewModel_CalcViewModelView, U::Offsets.m_dwCalcViewModelView, void, __fastcall, void* ecx, void* edx, C_BasePlayer* owner, const Vector& eyePosition, const QAngle& eyeAngles);
+CREATE_HOOK(CTFPlayer_AvoidPlayers, U::Offsets.m_dwAvoidPlayers, void, __fastcall, C_TFPlayer* pThis, void* edx, CUserCmd* pCmd);
+CREATE_HOOK(CClientState_ProcessFixAngle, U::Offsets.m_dwProcessFixAngle, bool, __fastcall, void* ecx, void* edx, SVC_FixAngle* msg);
+CREATE_HOOK(CTFGameMovement_ProcessMovement, U::Offsets.m_dwProcessMovement, void, __fastcall, void* ecx, void* edx, C_BasePlayer* pBasePlayer, CMoveData* pMove);
+CREATE_HOOK(CTFGameMovement_PlayerMove, U::Offsets.m_dwTFPlayerMove, void, __fastcall, void* ecx, void* edx);
+CREATE_HOOK(FX_FireBullets, U::Offsets.m_dwFXFireBullets, void, __cdecl, C_TFWeaponBase* pWpn, int iPlayer, const Vector& vecOrigin, const QAngle& vecAngles, int iWeapon, int iMode, int iSeed, float flSpread, float flDamage, bool bCritical);
+CREATE_HOOK(CViewRender_DrawViewModels, U::Offsets.m_dwDrawViewModels, void, __fastcall, IViewRender* ecx, void* edx, const CViewSetup& viewRender, bool drawViewmodel);
 
 class CGlobal_Hooks
 {
